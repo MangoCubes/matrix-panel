@@ -1,6 +1,9 @@
 import { Box, Typography, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next"
+import handleCommonErrors from "../../functions/handleCommonErrors";
+import { LoginQuery } from "../../query/LoginQuery";
+import { Homeserver, UserID } from "../../types/Types";
 
 const preset = process.env.REACT_APP_HOMESERVER && process.env.REACT_APP_HOMESERVER !== '' ? process.env.REACT_APP_HOMESERVER : null;
 
@@ -10,10 +13,21 @@ export function Login () {
 
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [homeserver, setHomeserver] = useState(preset === null ? '' : process.env.REACT_APP_HOMESERVER);
+	const [homeserver, setHomeserver] = useState(preset === null ? '': preset);
+	const [querying, setQuerying] = useState<boolean>(false);
 	
-	const login = () => {
-		
+	const login = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setQuerying(true);
+		try{
+			const req = new LoginQuery(homeserver as Homeserver, {uid: username as UserID, password: password}, null);
+			const res = await req.send();
+			console.log(res);
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+		}
 	}
 
 	return (

@@ -1,6 +1,8 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { Login } from "./root/login/Login";
+import 'react-toastify/dist/ReactToastify.css';
 
 export function App() {
 	const theme = createTheme({
@@ -18,6 +20,13 @@ export function App() {
 					<Route path='/*' element={<>123</>} />
 				</Routes>
 			</BrowserRouter>
+			<ToastContainer
+				position='bottom-right'
+				autoClose={5000}
+				closeOnClick
+				draggable
+				theme='dark'
+			/>
 		</ThemeProvider>
 	);
 }
