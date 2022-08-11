@@ -1,8 +1,10 @@
 import { Box, Typography, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify";
 import { HTTPError } from "../../class/error/HTTPError";
 import handleCommonErrors from "../../functions/handleCommonErrors";
+import { IsAdminQuery } from "../../query/IsAdminQuery";
 import { LoginQuery } from "../../query/LoginQuery";
 import { UserID } from "../../types/Types";
 
@@ -20,13 +22,23 @@ export function Login () {
 	const login = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setQuerying(true);
+		let auth = false;
 		try{
-			const req = new LoginQuery(homeserver, {uid: username as UserID, password: password}, null);
-			const res = await req.send();
+			const loginReq = new LoginQuery(homeserver, {uid: username as UserID, password: password}, null);
+			const loginRes = await loginReq.send();
+			auth = true;
+			const isAdminReq = new IsAdminQuery(homeserver, {uid: loginRes.user_id}, loginRes.access_token);
+			const isAdminRes = await isAdminReq.send();
+			
 		} catch (e) {
+			const locallyHandled = [403]
 			if (e instanceof Error) {
-				if(e instanceof HTTPError && e.errCode === 403){
-					
+				if(e instanceof HTTPError && locallyHandled.includes(e.errCode)){
+					if(e.errCode === 403) {
+						if (auth) toast.error(t('login.notAdmin'));
+						else toast.error(t('login.wrong'));
+					}
+					return;
 				}
 				handleCommonErrors(e, t);
 			}
