@@ -1,5 +1,5 @@
 import { HTTPError } from "../class/error/HTTPError";
-import { AccessToken, DeviceID, FullUserID, Homeserver, UserID } from "../types/Types";
+import { AccessToken, DeviceID, FullUserID, UserID } from "../types/Types";
 
 export enum QueryType{
 	Login
@@ -27,13 +27,13 @@ export abstract class Query<T extends QueryType>{
 	con: AbortController;
 	token: NeedToken<T>;
 	data: QueryParams[T];
-	homeserver: Homeserver;
+	homeserver: string;
 
-	constructor(homeserver: Homeserver, data: QueryParams[T], token: NeedToken<T>){
+	constructor(homeserver: string, data: QueryParams[T], token: NeedToken<T>){
 		this.con = new AbortController();
 		this.token = token;
 		this.data = data;
-		this.homeserver = /https?:\/\/.+/.test(homeserver) ? homeserver : `https://${homeserver}` as Homeserver;
+		this.homeserver = /https?:\/\/.+/.test(homeserver) ? homeserver : `https://${homeserver}`;
 	}
 
 	async send(){

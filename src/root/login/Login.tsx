@@ -1,9 +1,10 @@
 import { Box, Typography, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next"
+import { HTTPError } from "../../class/error/HTTPError";
 import handleCommonErrors from "../../functions/handleCommonErrors";
 import { LoginQuery } from "../../query/LoginQuery";
-import { Homeserver, UserID } from "../../types/Types";
+import { UserID } from "../../types/Types";
 
 const preset = process.env.REACT_APP_HOMESERVER && process.env.REACT_APP_HOMESERVER !== '' ? process.env.REACT_APP_HOMESERVER : null;
 
@@ -20,11 +21,15 @@ export function Login () {
 		e.preventDefault();
 		setQuerying(true);
 		try{
-			const req = new LoginQuery(homeserver as Homeserver, {uid: username as UserID, password: password}, null);
+			const req = new LoginQuery(homeserver, {uid: username as UserID, password: password}, null);
 			const res = await req.send();
-			console.log(res);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				if(e instanceof HTTPError && e.errCode === 403){
+					
+				}
+				handleCommonErrors(e, t);
+			}
 		} finally {
 			setQuerying(false);
 		}

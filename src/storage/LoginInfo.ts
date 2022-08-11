@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { MissingTokenError } from "../class/error/MissingTokenError";
-import { AccessToken, Homeserver, UserID } from "../types/Types";
+import { AccessToken, UserID } from "../types/Types";
 
 export type LoginData = {
-	homeserver: Homeserver;
+	homeserver: string;
     token: AccessToken;
     uid: UserID;
 }
@@ -18,7 +18,7 @@ export function getLoginInfo(): LoginData{
 		throw new MissingTokenError();
 	}
 	return {
-		homeserver: homeserver as Homeserver,
+		homeserver: homeserver,
 		uid: uid as UserID,
 		token: token as AccessToken
 	}

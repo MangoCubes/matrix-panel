@@ -9,7 +9,7 @@ const resources = {
 				timeout: 'Server timed out.',
 				404: 'Server not found.',
 				429: 'You are sending too many requests. Please wait a bit before sending next one.',
-				400: 'You do not have permission to do that.',
+				400: 'Request was invalid.',
 				unknown: 'Received unknown response from the server.',
 				missingToken: 'You have been logged out. Please log in again.'
 			},
