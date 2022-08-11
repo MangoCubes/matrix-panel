@@ -33,7 +33,7 @@ export abstract class Query<T extends QueryType>{
 		this.con = new AbortController();
 		this.token = token;
 		this.data = data;
-		this.homeserver = homeserver;
+		this.homeserver = /https?:\/\/.+/.test(homeserver) ? homeserver : `https://${homeserver}` as Homeserver;
 	}
 
 	async send(){
