@@ -7,7 +7,7 @@ export default function handleCommonErrors(e: Error, t: TFunction){
 
 	if(e instanceof HTTPError){
 		if(e.errCode === 404 || e.errCode === 400 || e.errCode === 429) toast.error(t(`error.${e.errCode}`));
-		else toast.error(t('error.unknown'));
+		else toast.error(t('error.unknownRes'));
 		return;
 	} else if(e instanceof MissingTokenError){
 		toast.error(t('error.missingToken'));

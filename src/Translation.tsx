@@ -11,7 +11,8 @@ const resources = {
 				429: 'You are sending too many requests. Please wait a bit before sending next one.',
 				400: 'Request was invalid.',
 				401: 'You are not authorised to do this. You may not be admin.',
-				unknown: 'Received unknown response from the server.',
+				unknownRes: 'Received unknown response from the server.',
+				unknown: 'Unknown error.',
 				missingToken: 'You have been logged out. Please log in again.'
 			},
 			login: {
@@ -22,7 +23,8 @@ const resources = {
 				cannotChange: 'This instance does not allow changing homeserver URL.',
 				login: 'Login',
 				wrong: 'Wrong username or password.',
-				notAdmin: 'You are not admin on this server.'
+				notAdmin: 'You are not admin on this server.',
+				success: 'You have successfully logged in as {{name}}.'
 			},
 			sidebar: {
 				reload: 'Reload',
