@@ -1,4 +1,5 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,7 +11,7 @@ type MemberCount = {
 	local: number;
 }
 
-export function Rooms(props: {rooms: Room[] | null}){
+export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 
 	const {t} = useTranslation();
 
@@ -57,6 +58,14 @@ export function Rooms(props: {rooms: Room[] | null}){
 			<AppBar position='static'>
 				<Toolbar>
 					<Typography variant='h6'>{t('rooms.title')}</Typography>
+					<Box sx={{flex: 1}}/>
+					<Tooltip title={t('common.reload')}>
+						<span>
+							<IconButton edge='end' onClick={props.reload} disabled={props.rooms === null}>
+								<Refresh/>
+							</IconButton>
+						</span>
+					</Tooltip>
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>

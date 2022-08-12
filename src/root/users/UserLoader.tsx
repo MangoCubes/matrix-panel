@@ -32,7 +32,7 @@ export function UserLoader(){
 	}
 
 	useEffect(() => {
-		if(reload && !users) getUsers();
+		if(reload) getUsers();
 	}, [reload]);
 
 	useEffect(() => {
@@ -43,7 +43,7 @@ export function UserLoader(){
 
 	return (
 		<Routes>
-			<Route path='*' element={<Users users={users}/>}/>
+			<Route path='*' element={<Users users={users} reload={() => setReload(true)}/>}/>
 		</Routes>
 	);
 }

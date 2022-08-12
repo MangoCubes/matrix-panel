@@ -33,7 +33,7 @@ export function RoomLoader(){
 	}
 
 	useEffect(() => {
-		if(reload && !rooms) getRooms();
+		if(reload) getRooms();
 	}, [reload]);
 
 	useEffect(() => {
@@ -45,7 +45,7 @@ export function RoomLoader(){
 	return (
 		<Routes>
 			<Route path=':rid/*' element={<RoomDetails rooms={rooms}/>}/>
-			<Route path='*' element={<Rooms rooms={rooms}/>}/>
+			<Route path='*' element={<Rooms rooms={rooms} reload={() => setReload(true)}/>}/>
 		</Routes>
 	);
 }

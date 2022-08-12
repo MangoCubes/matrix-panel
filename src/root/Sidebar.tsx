@@ -1,5 +1,5 @@
-import { Person, Refresh, Chat, Storage } from "@mui/icons-material";
-import { Drawer, ListItem, Tooltip, IconButton, ListItemText, Divider, Box, List, ListItemButton, ListItemIcon, Toolbar } from "@mui/material";
+import { Person, Chat, Storage } from "@mui/icons-material";
+import { Drawer, ListItem, ListItemText, Divider, Box, List, ListItemButton, ListItemIcon, Toolbar } from "@mui/material";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -17,15 +17,7 @@ export function Sidebar(){
 	return (
 		<Drawer variant='permanent' sx={{ width: drawer }} open={true} anchor='left'>
 			<Toolbar sx={{ maxWidth: drawer }}>
-				<ListItem secondaryAction={
-					<Tooltip title={t('sidebar.reload')}>
-						<span>
-							<IconButton edge='end' onClick={() => {}}>
-								<Refresh/>
-							</IconButton>
-						</span>
-					</Tooltip>
-				}>
+				<ListItem>
 					<ListItemText primary={uid} secondary={t('sidebar.loggedInto', {homeserver: homeserver})}/>
 				</ListItem>
 			</Toolbar>

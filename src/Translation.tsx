@@ -4,6 +4,9 @@ import { initReactI18next } from "react-i18next";
 const resources = {
 	en: {
 		translation: {
+			common: {
+				reload: 'Reload'
+			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
 				timeout: 'Server timed out.',
