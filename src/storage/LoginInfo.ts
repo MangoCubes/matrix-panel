@@ -1,4 +1,4 @@
-import { MissingTokenError } from "../class/error/MissingTokenError";
+import { createContext } from "react";
 import { AccessToken, FullUserID } from "../types/Types";
 
 export type LoginData = {
@@ -7,11 +7,11 @@ export type LoginData = {
     uid: FullUserID;
 }
 
-export function getLoginInfo(): LoginData{
+export function getLoginInfo(){
 	const token = sessionStorage.getItem('token');
 	const homeserver = sessionStorage.getItem('homeserver');
 	const uid = sessionStorage.getItem('uid');
-	if(!token || !homeserver || !uid) throw new MissingTokenError();
+	if(!token || !homeserver || !uid) return null;
 	return {
 		homeserver: homeserver,
 		uid: uid as FullUserID,
@@ -24,3 +24,5 @@ export function setLoginInfo(data: LoginData){
 	sessionStorage.setItem('homeserver', data.homeserver);
 	sessionStorage.setItem('uid', data.uid);
 }
+
+export const LoginContext = createContext<LoginData>({} as LoginData);
