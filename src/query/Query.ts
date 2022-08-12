@@ -1,5 +1,6 @@
 import { HTTPError } from "../class/error/HTTPError";
-import { AccessToken, DeviceID, FullUserID, RoomID, UserID } from "../types/Types";
+import { Room } from "../types/Room";
+import { AccessToken, DeviceID, FullUserID, UserID } from "../types/Types";
 
 export enum QueryType{
 	IsAdmin,
@@ -17,23 +18,7 @@ export type QueryResponse = {
 		admin: boolean
 	};
 	[QueryType.GetRooms]: {
-		rooms: {
-				room_id: RoomID;
-				name: string;
-				canonical_alias: string | null;
-				joined_members: number;
-				joined_local_members: number;
-				version: string;
-				creator: FullUserID;
-				encryption: string | null;
-				federatable: boolean;
-				public: boolean;
-				join_rules: 'public' | 'knock' | 'invite' | 'private';
-				guest_access: 'can_join' | 'forbidden';
-				history_visibility: 'invited' | 'joined' | 'shared' | 'world_readable';
-				state_events: number;
-				room_type: 'm.space' | null;
-		}[];
+		rooms: Room[];
 		offset: number;
 		total_rooms: number;
 	}
