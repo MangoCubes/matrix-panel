@@ -30,7 +30,11 @@ const resources = {
 				reload: 'Reload',
 				loggedInto: 'Logged into {{homeserver}}',
 				rooms: 'Rooms',
-				users: 'Users'
+				users: 'Users',
+				overview: 'Overview'
+			},
+			rooms: {
+				title: 'Manage Rooms'
 			}
 		}
 	}
