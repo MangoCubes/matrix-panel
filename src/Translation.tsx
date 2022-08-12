@@ -34,7 +34,14 @@ const resources = {
 				overview: 'Overview'
 			},
 			rooms: {
-				title: 'Manage Rooms'
+				title: 'Manage Rooms',
+				roomId: 'Room ID',
+				alias: 'Alias',
+				encryption: 'Encryption',
+				creator: 'Creator',
+				roomType: 'Room Type',
+				members: 'Member Count',
+				isSpace: 'Is It Space?'
 			}
 		}
 	}

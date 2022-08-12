@@ -1,11 +1,12 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import handleCommonErrors from "../../functions/handleCommonErrors";
 import { GetRoomsQuery } from "../../query/GetRoomsQuery";
 import { LoginContext } from "../../storage/LoginInfo";
 import { Room } from "../../types/Room";
+import { Rooms } from "./Rooms";
 
 export function RoomLoader(){
 
@@ -42,7 +43,7 @@ export function RoomLoader(){
 
 	return (
 		<Routes>
-			
+			<Route path='*' element={<Rooms rooms={rooms} loading={querying}/>}/>
 		</Routes>
 	);
 }
