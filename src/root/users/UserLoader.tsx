@@ -1,31 +1,31 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Routes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import handleCommonErrors from "../../functions/handleCommonErrors";
-import { GetRoomsQuery } from "../../query/GetRoomsQuery";
+import { GetUsersQuery } from "../../query/GetUsersQuery";
 import { LoginContext } from "../../storage/LoginInfo";
-import { Room } from "../../types/Room";
-import { Rooms } from "./Rooms";
+import { User } from "../../types/User";
+import { Users } from "./Users";
 
-export function RoomLoader(){
+export function UserLoader(){
 
 	const {t} = useTranslation();
 
 	const [reload, setReload] = useState(true);
 	const [querying, setQuerying] = useState(false);
-	const [rooms, setRooms] = useState<Room[]>([]);
+	const [users, setUsers] = useState<User[]>([]);
 
 	const con = useRef<AbortController | null>(null);
 
 	const {homeserver, token} = useContext(LoginContext);
 
-	const getRooms = async () => {
+	const getUsers = async () => {
 		setQuerying(true);
 		setReload(false);
 		try{
-			const req = new GetRoomsQuery(homeserver, {}, token);
+			const req = new GetUsersQuery(homeserver, {}, token);
 			const res = await req.send();
-			setRooms(res.rooms);
+			setUsers(res.users);
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 		} finally {
@@ -34,7 +34,7 @@ export function RoomLoader(){
 	}
 
 	useEffect(() => {
-		if(reload && !querying) getRooms(); 
+		if(reload && !querying) getUsers(); 
 		return () => {
 			if(con.current) con.current.abort();
 		}
@@ -42,7 +42,7 @@ export function RoomLoader(){
 
 	return (
 		<Routes>
-			<Route path='*' element={<Rooms rooms={rooms} loading={querying}/>}/>
+			<Route path='*' element={<Users users={users} loading={querying}/>}/>
 		</Routes>
 	);
 }

@@ -42,6 +42,17 @@ const resources = {
 				roomType: 'Room Type',
 				members: 'Members (Local)',
 				isSpace: 'Is It Space?'
+			},
+			users: {
+				title: 'Manage Users',
+				userId: 'User ID',
+				isAdmin: 'Admin',
+				isGuest: 'Guest',
+				avatar: 'Avatar',
+				regDate: 'Registered At',
+				displayName: 'Display Name',
+				deactivated: 'Deactivated?',
+				shadowBanned: 'Shadow Banned?'
 			}
 		}
 	}
