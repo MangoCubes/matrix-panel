@@ -1,11 +1,13 @@
 import { HTTPError } from "../class/error/HTTPError";
 import { Room } from "../types/Room";
 import { AccessToken, DeviceID, FullUserID, UserID } from "../types/Types";
+import { User } from "../types/User";
 
 export enum QueryType{
 	IsAdmin,
 	Login,
-	GetRooms
+	GetRooms,
+	GetUsers
 }
 
 export type QueryResponse = {
@@ -21,8 +23,12 @@ export type QueryResponse = {
 		rooms: Room[];
 		offset: number;
 		total_rooms: number;
-	}
-	  
+	};
+	[QueryType.GetUsers]: {
+		users: User[];
+		next_token: number;
+		total: number;
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -38,7 +44,12 @@ export type QueryParams = {
 	[QueryType.GetRooms]: {
 		offset?: number;
 		filter?: string;
-	}
+	};
+	[QueryType.GetUsers]: {
+		offset?: number;
+		getGuests?: boolean;
+		count?: number;
+	};
 }
 
 export abstract class Query<T extends QueryType>{
