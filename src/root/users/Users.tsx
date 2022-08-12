@@ -3,11 +3,14 @@ import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/mate
 import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { User } from "../../types/User";
 
 export function Users(props: {users: User[] | null, reload: () => void}){
 
 	const {t} = useTranslation();
+
+	const nav = useNavigate();
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -58,7 +61,7 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>
-				<DataGrid columns={columns} rows={getRows()} loading={props.users === null}/>
+				<DataGrid columns={columns} rows={getRows()} loading={props.users === null} onRowClick={(p) => nav(`${p.id}`)}/>
 			</Box>
 		</Box>
 	);

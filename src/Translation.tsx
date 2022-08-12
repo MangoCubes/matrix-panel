@@ -48,7 +48,7 @@ const resources = {
 			},
 			room: {
 				title: 'Manage Room "{{name}}"',
-				invalidRoom: 'That room no longer exists.'
+				invalidRoom: 'That room does not exist.'
 			},
 			users: {
 				title: 'Manage Users',
@@ -60,6 +60,10 @@ const resources = {
 				displayName: 'Display Name',
 				deactivated: 'Deactivated?',
 				shadowBanned: 'Shadow Banned?'
+			},
+			user: {
+				title: 'Manage User "{{name}}"',
+				invalidUser: 'That user does not exist.'
 			}
 		}
 	}
