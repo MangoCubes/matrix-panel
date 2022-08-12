@@ -1,9 +1,10 @@
 import { HTTPError } from "../class/error/HTTPError";
-import { AccessToken, DeviceID, FullUserID, UserID } from "../types/Types";
+import { AccessToken, DeviceID, FullUserID, RoomID, UserID } from "../types/Types";
 
 export enum QueryType{
 	IsAdmin,
-	Login
+	Login,
+	GetRooms
 }
 
 export type QueryResponse = {
@@ -15,6 +16,28 @@ export type QueryResponse = {
 	[QueryType.IsAdmin]: {
 		admin: boolean
 	};
+	[QueryType.GetRooms]: {
+		rooms: {
+				room_id: RoomID;
+				name: string;
+				canonical_alias: string | null;
+				joined_members: number;
+				joined_local_members: number;
+				version: string;
+				creator: FullUserID;
+				encryption: string | null;
+				federatable: boolean;
+				public: boolean;
+				join_rules: 'public' | 'knock' | 'invite' | 'private';
+				guest_access: 'can_join' | 'forbidden';
+				history_visibility: 'invited' | 'joined' | 'shared' | 'world_readable';
+				state_events: number;
+				room_type: 'm.space' | null;
+		}[];
+		offset: number;
+		total_rooms: number;
+	}
+	  
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -26,6 +49,10 @@ export type QueryParams = {
 	};
 	[QueryType.IsAdmin]: {
 		uid: FullUserID;
+	};
+	[QueryType.GetRooms]: {
+		offset?: number;
+		filter?: string;
 	}
 }
 
