@@ -28,7 +28,9 @@ const resources = {
 			},
 			sidebar: {
 				reload: 'Reload',
-				loggedInAs: 'Logged in as {{uid}}'
+				loggedInto: 'Logged into {{homeserver}}',
+				rooms: 'Rooms',
+				users: 'Users'
 			}
 		}
 	}
