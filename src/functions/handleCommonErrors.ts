@@ -13,10 +13,8 @@ export default function handleCommonErrors(e: Error, t: TFunction){
 		toast.error(t('error.missingToken'));
 		return;
 	} else if(e instanceof DOMException){
-		if(e.name === 'AbortError') {
-			toast.error(t('error.timeout'));
-			return;
-		}
+		if(e.name === 'AbortError') return;
+		else toast.error(t('error.timeout'));
 	}
 	else toast.error(t(`error.unknown`));
 }

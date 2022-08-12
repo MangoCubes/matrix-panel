@@ -24,6 +24,7 @@ export function UserLoader(){
 		setReload(false);
 		try{
 			const req = new GetUsersQuery(homeserver, {}, token);
+			con.current = req.con;
 			const res = await req.send();
 			setUsers(res.users);
 		} catch (e) {
@@ -34,11 +35,14 @@ export function UserLoader(){
 	}
 
 	useEffect(() => {
-		if(reload && !querying) getUsers(); 
+		if(reload && !querying) getUsers();
+	}, [reload]);
+
+	useEffect(() => {
 		return () => {
 			if(con.current) con.current.abort();
 		}
-	}, [reload]);
+	}, []);
 
 	return (
 		<Routes>

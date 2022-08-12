@@ -24,6 +24,7 @@ export function RoomLoader(){
 		setReload(false);
 		try{
 			const req = new GetRoomsQuery(homeserver, {}, token);
+			con.current = req.con;
 			const res = await req.send();
 			setRooms(res.rooms);
 		} catch (e) {
@@ -34,11 +35,14 @@ export function RoomLoader(){
 	}
 
 	useEffect(() => {
-		if(reload && !querying) getRooms(); 
+		if(reload && !querying) getRooms();
+	}, [reload]);
+
+	useEffect(() => {
 		return () => {
 			if(con.current) con.current.abort();
 		}
-	}, [reload]);
+	}, []);
 
 	return (
 		<Routes>
