@@ -1,8 +1,13 @@
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
-import { DataGrid, GridColumns } from "@mui/x-data-grid";
+import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Room } from "../../types/Room";
+
+type MemberCount = {
+	all: number;
+	local: number;
+}
 
 export function Rooms(props: {rooms: Room[], loading: boolean}){
 
@@ -10,12 +15,15 @@ export function Rooms(props: {rooms: Room[], loading: boolean}){
 
 	const columns = useMemo<GridColumns>(
 		() => [
-			{field: 'id', headerName: t('rooms.roomId')},
-			{field: 'alias', headerName: t('rooms.alias')},
+			{field: 'id', headerName: t('rooms.roomId'), flex: 4},
+			{field: 'alias', headerName: t('rooms.alias'), flex: 2},
 			{field: 'encryption', type: 'boolean', headerName: t('rooms.encryption')},
-			{field: 'creator', headerName: t('rooms.creator')},
-			{field: 'roomType', headerName: t('rooms.roomType')},
-			{field: 'members', headerName: t('rooms.members')},
+			{field: 'creator', headerName: t('rooms.creator'), flex: 4},
+			{field: 'roomType', headerName: t('rooms.roomType'), flex: 2},
+			{field: 'members', headerName: t('rooms.members'), valueFormatter: (params: GridValueFormatterParams<MemberCount>) => {
+				if (params.value == null) return '';
+				else return `${params.value.all} (${params.value.local})`
+			}, flex: 2},
 			{field: 'isSpace', type: 'boolean', headerName: t('rooms.isSpace')},
 		],
 		[]
@@ -30,7 +38,10 @@ export function Rooms(props: {rooms: Room[], loading: boolean}){
 				encryption: r.encryption !== null,
 				creator: r.creator,
 				roomType: r.join_rules,
-				members: r.joined_members,
+				members: {
+					all: r.joined_members,
+					local: r.joined_local_members
+				},
 				isSpace: r.room_type === 'm.space'
 			});
 		}

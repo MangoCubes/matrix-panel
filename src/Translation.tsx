@@ -40,7 +40,7 @@ const resources = {
 				encryption: 'Encryption',
 				creator: 'Creator',
 				roomType: 'Room Type',
-				members: 'Member Count',
+				members: 'Members (Local)',
 				isSpace: 'Is It Space?'
 			}
 		}
