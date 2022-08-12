@@ -1,10 +1,10 @@
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
-import { DataGrid, GridColumns } from "@mui/x-data-grid";
+import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "../../types/User";
 
-export function Users(props: {users: User[], loading: boolean}){
+export function Users(props: {users: User[] | null}){
 
 	const {t} = useTranslation();
 
@@ -16,12 +16,16 @@ export function Users(props: {users: User[], loading: boolean}){
 			{type: 'boolean', field: 'isGuest', headerName: t('users.isGuest')},
 			{type: 'boolean', field: 'deactivated', headerName: t('users.deactivated')},
 			{type: 'boolean', field: 'shadowBanned', headerName: t('users.shadowBanned')},
-			{field: 'regDate', headerName: t('users.regDate'), flex: 2}
+			{field: 'regDate', headerName: t('users.regDate'), valueFormatter: (params: GridValueFormatterParams<number>) => {
+				if (params.value == null) return '';
+				else return new Date(params.value).toLocaleString()
+			}, flex: 2}
 		],
 		[]
 	);
 
 	const getRows = () => {
+		if(!props.users) return [];
 		const rows = [];
 		for(const r of props.users){
 			rows.push({
@@ -45,7 +49,7 @@ export function Users(props: {users: User[], loading: boolean}){
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>
-				<DataGrid columns={columns} rows={getRows()} loading={props.loading}/>
+				<DataGrid columns={columns} rows={getRows()} loading={props.users === null}/>
 			</Box>
 		</Box>
 	);

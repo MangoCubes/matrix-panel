@@ -5,6 +5,7 @@ import handleCommonErrors from "../../functions/handleCommonErrors";
 import { GetRoomsQuery } from "../../query/GetRoomsQuery";
 import { LoginContext } from "../../storage/LoginInfo";
 import { Room } from "../../types/Room";
+import { RoomDetails } from "./roomId/RoomDetails";
 import { Rooms } from "./Rooms";
 
 export function RoomLoader(){
@@ -12,15 +13,14 @@ export function RoomLoader(){
 	const {t} = useTranslation();
 
 	const [reload, setReload] = useState(true);
-	const [querying, setQuerying] = useState(false);
-	const [rooms, setRooms] = useState<Room[]>([]);
+	const [rooms, setRooms] = useState<Room[] | null>(null);
 
 	const con = useRef<AbortController | null>(null);
 
 	const {homeserver, token} = useContext(LoginContext);
 
 	const getRooms = async () => {
-		setQuerying(true);
+		setRooms(null);
 		setReload(false);
 		try{
 			const req = new GetRoomsQuery(homeserver, {}, token);
@@ -29,13 +29,11 @@ export function RoomLoader(){
 			setRooms(res.rooms);
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
-		} finally {
-			setQuerying(false);
 		}
 	}
 
 	useEffect(() => {
-		if(reload && !querying) getRooms();
+		if(reload && !rooms) getRooms();
 	}, [reload]);
 
 	useEffect(() => {
@@ -46,7 +44,8 @@ export function RoomLoader(){
 
 	return (
 		<Routes>
-			<Route path='*' element={<Rooms rooms={rooms} loading={querying}/>}/>
+			<Route path=':rid/*' element={<RoomDetails rooms={rooms}/>}/>
+			<Route path='*' element={<Rooms rooms={rooms}/>}/>
 		</Routes>
 	);
 }

@@ -2,6 +2,7 @@ import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Room } from "../../types/Room";
 
 type MemberCount = {
@@ -9,9 +10,11 @@ type MemberCount = {
 	local: number;
 }
 
-export function Rooms(props: {rooms: Room[], loading: boolean}){
+export function Rooms(props: {rooms: Room[] | null}){
 
 	const {t} = useTranslation();
+
+	const nav = useNavigate();
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -30,6 +33,7 @@ export function Rooms(props: {rooms: Room[], loading: boolean}){
 	);
 
 	const getRows = () => {
+		if(props.rooms === null) return [];
 		const rows = [];
 		for(const r of props.rooms){
 			rows.push({
@@ -56,7 +60,7 @@ export function Rooms(props: {rooms: Room[], loading: boolean}){
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>
-				<DataGrid columns={columns} rows={getRows()} loading={props.loading}/>
+				<DataGrid columns={columns} rows={getRows()} loading={props.rooms === null} onRowClick={(p) => nav(`${p.id}`)}/>
 			</Box>
 		</Box>
 	);

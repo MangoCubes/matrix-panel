@@ -12,15 +12,14 @@ export function UserLoader(){
 	const {t} = useTranslation();
 
 	const [reload, setReload] = useState(true);
-	const [querying, setQuerying] = useState(false);
-	const [users, setUsers] = useState<User[]>([]);
+	const [users, setUsers] = useState<User[] | null>(null);
 
 	const con = useRef<AbortController | null>(null);
 
 	const {homeserver, token} = useContext(LoginContext);
 
 	const getUsers = async () => {
-		setQuerying(true);
+		setUsers(null);
 		setReload(false);
 		try{
 			const req = new GetUsersQuery(homeserver, {}, token);
@@ -29,13 +28,11 @@ export function UserLoader(){
 			setUsers(res.users);
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
-		} finally {
-			setQuerying(false);
 		}
 	}
 
 	useEffect(() => {
-		if(reload && !querying) getUsers();
+		if(reload && !users) getUsers();
 	}, [reload]);
 
 	useEffect(() => {
@@ -46,7 +43,7 @@ export function UserLoader(){
 
 	return (
 		<Routes>
-			<Route path='*' element={<Users users={users} loading={querying}/>}/>
+			<Route path='*' element={<Users users={users}/>}/>
 		</Routes>
 	);
 }
