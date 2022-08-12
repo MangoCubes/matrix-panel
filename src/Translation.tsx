@@ -43,6 +43,10 @@ const resources = {
 				members: 'Members (Local)',
 				isSpace: 'Is It Space?'
 			},
+			room: {
+				title: 'Manage Room "{{name}}"',
+				invalidRoom: 'That room no longer exists.'
+			},
 			users: {
 				title: 'Manage Users',
 				userId: 'User ID',
