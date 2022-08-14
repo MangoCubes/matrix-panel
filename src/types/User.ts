@@ -9,5 +9,5 @@ export type User = {
 	shadow_banned: 0 | 1;
 	displayname: string;
 	avatar_url: string;
-	creation_ts: number
+	creation_ts: number;
 }
