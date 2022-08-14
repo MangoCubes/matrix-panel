@@ -5,7 +5,9 @@ const resources = {
 	en: {
 		translation: {
 			common: {
-				reload: 'Reload'
+				reload: 'Reload',
+				save: 'Save',
+				cancel: 'Cancel'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
