@@ -14,6 +14,7 @@ enum TabName {
 export function UserDetails(props: {users: User[] | null}){
 
 	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
+	const [disableTabs, setDisableTabs] = useState<boolean>(false);
 
 	const {t} = useTranslation();
 
@@ -65,7 +66,7 @@ export function UserDetails(props: {users: User[] | null}){
 		);
 		const user = props.users.find(u => u.name === uid);
 		if(!user) return false;
-		if(currentTab === TabName.Details) return <UserDetailsEdit user={user}/>;
+		if(currentTab === TabName.Details) return <UserDetailsEdit user={user} disableTabs={setDisableTabs}/>;
 		else return false;
 	}
 
@@ -85,8 +86,8 @@ export function UserDetails(props: {users: User[] | null}){
 			<Card sx={{mt: 2}}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
-						<Tab value={TabName.Details} label={t('user.details.title')}/>
-						<Tab value={TabName.Sessions} label={t('user.sessions.title')}/>
+						<Tab disabled={disableTabs} value={TabName.Details} label={t('user.details.title')}/>
+						<Tab disabled={disableTabs} value={TabName.Sessions} label={t('user.sessions.title')}/>
 					</Tabs>
 				</Box>
 				<CardContent>

@@ -13,7 +13,7 @@ type PromiseBoolean = {
 	value: boolean;
 }
 
-export function UserDetailsEdit(props: {user: User}) {
+export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void}) {
 
 	const {t} = useTranslation();
 
@@ -23,15 +23,18 @@ export function UserDetailsEdit(props: {user: User}) {
 	const [admin, setAdmin] = useState<PromiseBoolean>({value: props.user.admin === 1, loading: false});
 
 	const toggleAdmin = async () => {
-		const original = admin.value
-		setAdmin({value: !original, loading: true});
+		const original = admin.value;
 		try{
+			props.disableTabs(true);
+			setAdmin({value: !original, loading: true});
 			const req = new ToggleAdminQuery(homeserver, {to: !original, user: props.user.name}, token);
 			const res = await req.send();
 			setAdmin({value: !original, loading: false});
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setAdmin({value: original, loading: false});
+		} finally {
+			props.disableTabs(false);
 		}
 	}
 

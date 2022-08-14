@@ -1,7 +1,7 @@
 import { Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Room } from "../../types/Room";
@@ -52,6 +52,10 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 		}
 		return rows;
 	}
+
+	useEffect(() => {
+		props.reload();
+	}, []);
 
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
