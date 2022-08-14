@@ -62,7 +62,7 @@ const resources = {
 				avatar: 'Avatar',
 				regDate: 'Registered At',
 				displayName: 'Display Name',
-				deactivated: 'Deactivated?',
+				deactivated: 'Deactivated',
 				shadowBanned: 'Shadow Banned?',
 				you: '(You)',
 				countSelected: 'Selected {{count}} users',
@@ -72,8 +72,14 @@ const resources = {
 			user: {
 				title: 'Manage User "{{name}}"',
 				invalidUser: 'That user does not exist.',
-				details: 'User Details',
-				sessions: 'Sessions'
+				details: {
+					title: 'User Details',
+					deactivate: 'Deactivate user',
+					admin: 'Administrator'
+				},
+				sessions: {
+					title: 'Sessions'
+				}
 			}
 		}
 	}

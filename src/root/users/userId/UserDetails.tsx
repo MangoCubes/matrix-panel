@@ -1,9 +1,10 @@
-import { Card, Skeleton, Typography, Box, AppBar, Toolbar, CardContent, Stack, Tabs, Avatar, Tab } from "@mui/material";
+import { Card, Skeleton, Typography, Box, AppBar, Toolbar, CardContent, Stack, Tabs, Avatar, Tab, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { User } from "../../../types/User";
+import { UserDetailsEdit } from "./UserDetailsEdit";
 
 enum TabName {
 	Details = 'details',
@@ -12,7 +13,6 @@ enum TabName {
 
 export function UserDetails(props: {users: User[] | null}){
 
-	const [querying, setQuerying] = useState<boolean>(false);
 	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
 
 	const {t} = useTranslation();
@@ -57,6 +57,18 @@ export function UserDetails(props: {users: User[] | null}){
 		else return false;
 	}
 
+	const getCurrentContent = () => {
+		if(props.users === null) return (
+			<Box width='100%' textAlign='center'>
+				<CircularProgress/>
+			</Box>
+		);
+		const user = props.users.find(u => u.name === uid);
+		if(!user) return false;
+		if(currentTab === TabName.Details) return <UserDetailsEdit user={user}/>;
+		else return false;
+	}
+
 	return (
 	<Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 		<AppBar position='static'>
@@ -73,12 +85,12 @@ export function UserDetails(props: {users: User[] | null}){
 			<Card sx={{mt: 2}}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
-						<Tab value={TabName.Details} label={t('user.details')}/>
-						<Tab value={TabName.Sessions} label={t('user.sessions')}/>
+						<Tab value={TabName.Details} label={t('user.details.title')}/>
+						<Tab value={TabName.Sessions} label={t('user.sessions.title')}/>
 					</Tabs>
 				</Box>
 				<CardContent>
-					123
+					{getCurrentContent()}
 				</CardContent>
 			</Card>
 		</Box>
