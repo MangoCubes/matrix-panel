@@ -8,7 +8,8 @@ export enum QueryType{
 	Login,
 	GetRooms,
 	GetUsers,
-	Deactivate
+	Deactivate,
+	ToggleAdmin
 }
 
 export type QueryResponse = {
@@ -31,6 +32,7 @@ export type QueryResponse = {
 		total: number;
 	};
 	[QueryType.Deactivate]: {};
+	[QueryType.ToggleAdmin]: {};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -54,7 +56,11 @@ export type QueryParams = {
 	};
 	[QueryType.Deactivate]: {
 		user: FullUserID;
-	}
+	};
+	[QueryType.ToggleAdmin]: {
+		user: FullUserID;
+		to: boolean;
+	};
 }
 
 export abstract class Query<T extends QueryType>{
