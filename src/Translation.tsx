@@ -59,7 +59,8 @@ const resources = {
 				regDate: 'Registered At',
 				displayName: 'Display Name',
 				deactivated: 'Deactivated?',
-				shadowBanned: 'Shadow Banned?'
+				shadowBanned: 'Shadow Banned?',
+				you: '(You)'
 			},
 			user: {
 				title: 'Manage User "{{name}}"',

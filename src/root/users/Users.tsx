@@ -1,9 +1,10 @@
 import { Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../storage/LoginInfo";
 import { User } from "../../types/User";
 
 export function Users(props: {users: User[] | null, reload: () => void}){
@@ -12,9 +13,11 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 
 	const nav = useNavigate();
 
+	const {uid} = useContext(LoginContext);
+
 	const columns = useMemo<GridColumns>(
 		() => [
-			{field: 'id', headerName: t('users.userId'), flex: 2},
+			{field: 'uid', headerName: t('users.userId'), flex: 2},
 			{field: 'displayName', headerName: t('users.displayName'), flex: 2},
 			{type: 'boolean', field: 'isAdmin', headerName: t('users.isAdmin')},
 			{type: 'boolean', field: 'isGuest', headerName: t('users.isGuest')},
@@ -34,6 +37,7 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		for(const r of props.users){
 			rows.push({
 				id: r.name,
+				uid: r.name === uid ? `${r.name} ${t('users.you')}` : r.name,
 				displayName: r.displayname,
 				isAdmin: r.admin === 1,
 				isGuest: r.is_guest === 1,

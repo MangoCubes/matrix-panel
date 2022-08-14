@@ -17,7 +17,7 @@ export function UserLoader(){
 
 	const con = useRef<AbortController | null>(null);
 
-	const {homeserver, token} = useContext(LoginContext);
+	const {homeserver, uid, token} = useContext(LoginContext);
 
 	const getUsers = async () => {
 		setUsers(null);
@@ -26,6 +26,9 @@ export function UserLoader(){
 			const req = new GetUsersQuery(homeserver, {}, token);
 			con.current = req.con;
 			const res = await req.send();
+			const userList = [...res.users];
+			const idx = userList.findIndex(u => u.displayname === uid);
+			if(idx !== -1) userList.unshift(userList.splice(idx, 1)[0]);
 			setUsers(res.users);
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
