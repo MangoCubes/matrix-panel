@@ -43,8 +43,7 @@ export function Login () {
 				nav('/');
 			} else toast.error(t('login.notAdmin')); // Should not be reachable, though
 		} catch (e) {
-			console.log(e)
-			const locallyHandled = [403]
+			const locallyHandled = [403];
 			if (e instanceof Error) {
 				if(e instanceof HTTPError && locallyHandled.includes(e.errCode)){
 					if(e.errCode === 403) {

@@ -75,7 +75,8 @@ const resources = {
 				details: {
 					title: 'User Details',
 					deactivate: 'Deactivate user',
-					admin: 'Administrator'
+					admin: 'Administrator',
+					cannotDemoteSelf: 'You cannot demote yourself.'
 				},
 				sessions: {
 					title: 'Sessions'

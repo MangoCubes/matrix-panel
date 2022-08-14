@@ -1,6 +1,8 @@
-import { FormControl, FormGroup, FormControlLabel, Switch } from "@mui/material";
+import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText } from "@mui/material";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { HTTPError } from "../../../class/error/HTTPError";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { ToggleAdminQuery } from "../../../query/ToggleAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -15,7 +17,7 @@ export function UserDetailsEdit(props: {user: User}) {
 
 	const {t} = useTranslation();
 
-	const {homeserver, token} = useContext(LoginContext);
+	const {homeserver, uid, token} = useContext(LoginContext);
 
 	const [deactivated, setDeactivated] = useState<PromiseBoolean>({value: props.user.deactivated === 1, loading: false});
 	const [admin, setAdmin] = useState<PromiseBoolean>({value: props.user.admin === 1, loading: false});
@@ -37,7 +39,8 @@ export function UserDetailsEdit(props: {user: User}) {
 		<FormControl variant='standard'>
 			<FormGroup>
 				<FormControlLabel control={<Switch checked={deactivated.value} onChange={() => {}}/>} disabled={deactivated.loading} label={t('user.details.deactivate')}/>
-				<FormControlLabel control={<Switch checked={admin.value} disabled={admin.loading} onChange={toggleAdmin}/>} label={t('user.details.admin')}/>
+				<FormControlLabel control={<Switch checked={admin.value} disabled={props.user.name === uid || admin.loading} onChange={toggleAdmin}/>} label={t('user.details.admin')}/>
+				{props.user.name === uid && <FormHelperText>{t('user.details.cannotDemoteSelf')}</FormHelperText>}
 			</FormGroup>
 		</FormControl>
 	);
