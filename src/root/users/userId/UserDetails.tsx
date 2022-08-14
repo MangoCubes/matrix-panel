@@ -1,13 +1,19 @@
-import { Card, Skeleton, Typography, Box, AppBar, Toolbar, CardContent, Stack, Divider, CardActions, Button, Avatar } from "@mui/material";
+import { Card, Skeleton, Typography, Box, AppBar, Toolbar, CardContent, Stack, Tabs, Avatar, Tab } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { User } from "../../../types/User";
 
+enum TabName {
+	Details = 'details',
+	Sessions = 'sessions'
+}
+
 export function UserDetails(props: {users: User[] | null}){
 
 	const [querying, setQuerying] = useState<boolean>(false);
+	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
 
 	const {t} = useTranslation();
 
@@ -27,11 +33,11 @@ export function UserDetails(props: {users: User[] | null}){
 
 	const getUserDetails = () => {
 		if(props.users === null) return (
-			<Stack spacing={1}>
+			<Stack direction='row' spacing={1}>
 				<Skeleton variant='circular' width={64} height={64}/>
 				<Box>
-					<Typography variant='h6' sx={{width: '128'}}><Skeleton/></Typography>
-					<Typography variant='caption' sx={{width: '128'}}><Skeleton/></Typography>
+					<Typography variant='h6' sx={{width: '128px'}}><Skeleton/></Typography>
+					<Typography variant='caption' sx={{width: '128px'}}><Skeleton/></Typography>
 				</Box>
 			</Stack>
 		)
@@ -46,7 +52,7 @@ export function UserDetails(props: {users: User[] | null}){
 					<Typography variant='caption'>{u.name}</Typography>
 				</Box>
 			);
-			return <Stack spacing={1}>{items}</Stack>;
+			return <Stack direction='row' spacing={1}>{items}</Stack>;
 		}
 		else return false;
 	}
@@ -61,19 +67,19 @@ export function UserDetails(props: {users: User[] | null}){
 		<Box m={2} sx={{flex: 1}}>
 			<Card>
 				<CardContent>
-					<Stack direction='row' justifyContent='flex-start' alignItems='center' spacing={1} divider={<Divider variant='middle' orientation='vertical' flexItem />}>
-						<Box width={256}>
-							{getUserDetails()}
-						</Box>
-						<Box>
-							123
-						</Box>
-					</Stack>
+					{getUserDetails()}
 				</CardContent>
-				<CardActions>
-					<Button onClick={() => nav('../')}>{t('common.cancel')}</Button>
-					<Button disabled={querying || props.users === null}>{t('common.save')}</Button>
-				</CardActions>
+			</Card>
+			<Card sx={{mt: 2}}>
+				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
+						<Tab value={TabName.Details} label={t('user.details')}/>
+						<Tab value={TabName.Sessions} label={t('user.sessions')}/>
+					</Tabs>
+				</Box>
+				<CardContent>
+					123
+				</CardContent>
 			</Card>
 		</Box>
 	</Box>

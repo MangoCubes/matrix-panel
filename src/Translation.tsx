@@ -8,7 +8,8 @@ const resources = {
 				reload: 'Reload',
 				save: 'Save',
 				cancel: 'Cancel',
-				edit: 'Edit'
+				edit: 'Edit',
+				exit: 'Exit'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -70,7 +71,9 @@ const resources = {
 			},
 			user: {
 				title: 'Manage User "{{name}}"',
-				invalidUser: 'That user does not exist.'
+				invalidUser: 'That user does not exist.',
+				details: 'User Details',
+				sessions: 'Sessions'
 			}
 		}
 	}

@@ -1,19 +1,11 @@
-import { Edit, Person, PersonOff, Refresh } from "@mui/icons-material";
+import { Edit, Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
-import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectionModel, GridValueFormatterParams } from "@mui/x-data-grid";
-import { useContext, useMemo, useState } from "react";
+import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridValueFormatterParams } from "@mui/x-data-grid";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../storage/LoginInfo";
 import { User } from "../../types/User";
-import { PseudoBooleanPropNames } from "../../types/Utils";
-
-enum Tristate {
-	True,
-	False,
-	Mixed
-}
-
 export function Users(props: {users: User[] | null, reload: () => void}){
 
 	const {t} = useTranslation();
@@ -21,8 +13,6 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 	const nav = useNavigate();
 
 	const {uid} = useContext(LoginContext);
-	
-	const [sel, setSel] = useState<GridSelectionModel>([]);
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -43,18 +33,6 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		[]
 	);
 
-	const checkMix = (key: PseudoBooleanPropNames<User>) => {
-		if(!props.users) return Tristate.Mixed;
-		let current: 0 | 1 | null = null;
-		for(const u of props.users){
-			if(sel.includes(u.name)){
-				if(current === null) current = u[key];
-				else if(current !== u[key]) return Tristate.Mixed;
-			}
-		}
-		return current === 0 ? Tristate.False : Tristate.True;
-	}
-
 	const getRows = () => {
 		if(!props.users) return [];
 		const rows = [];
@@ -73,42 +51,19 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		return rows;
 	}
 
-	const getActions = () => {
-		if (sel.length === 0) return [
-			<Tooltip title={t('common.reload')} key='reload'>
-				<span>
-					<IconButton onClick={props.reload} disabled={props.users === null}>
-						<Refresh/>
-					</IconButton>
-				</span>
-			</Tooltip>
-		];
-		const actions = [];
-		const allDeactivated = checkMix('deactivated');
-		if(allDeactivated === Tristate.True || allDeactivated === Tristate.Mixed) actions.push (
-			<Tooltip title={t('users.dctivate')} key='activate'>
-				<IconButton onClick={() => {}}>
-					<Person/>
-				</IconButton>
-			</Tooltip>
-		);
-		if(allDeactivated === Tristate.False || allDeactivated === Tristate.Mixed) actions.push (
-			<Tooltip title={t('users.deactivate')} key='deactivate'>
-				<IconButton onClick={() => {}}>
-					<PersonOff/>
-				</IconButton>
-			</Tooltip>
-		);
-		return actions;
-	}
-
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 			<AppBar position='static'>
 				<Toolbar>
-					<Typography variant='h6'>{sel.length === 0 ? t('users.title') : t('users.countSelected', {count: sel.length})}</Typography>
+					<Typography variant='h6'>{t('users.title')}</Typography>
 					<Box sx={{flex: 1}}/>
-					{getActions()}
+					<Tooltip title={t('common.reload')} key='reload'>
+						<span>
+							<IconButton onClick={props.reload} disabled={props.users === null}>
+								<Refresh/>
+							</IconButton>
+						</span>
+					</Tooltip>
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>
@@ -116,9 +71,6 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 					columns={columns}
 					rows={getRows()}
 					loading={props.users === null}
-					checkboxSelection
-					onSelectionModelChange={(newSel) => setSel(newSel)}
-					selectionModel={sel}
 				/>
 			</Box>
 		</Box>
