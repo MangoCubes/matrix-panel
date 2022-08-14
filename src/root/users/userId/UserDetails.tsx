@@ -8,7 +8,9 @@ import { UserDetailsEdit } from "./UserDetailsEdit";
 
 enum TabName {
 	Details = 'details',
-	Sessions = 'sessions'
+	Sessions = 'sessions',
+	Devices = 'devices',
+	Rooms = 'rooms'
 }
 
 export function UserDetails(props: {users: User[] | null}){
@@ -86,8 +88,10 @@ export function UserDetails(props: {users: User[] | null}){
 			<Card sx={{mt: 2}}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
-						<Tab disabled={disableTabs} value={TabName.Details} label={t('user.details.title')}/>
-						<Tab disabled={disableTabs} value={TabName.Sessions} label={t('user.sessions.title')}/>
+						<Tab disabled={disableTabs || props.users === null} value={TabName.Details} label={t('user.details.title')}/>
+						<Tab disabled={disableTabs || props.users === null} value={TabName.Sessions} label={t('user.sessions.title')}/>
+						<Tab disabled={disableTabs || props.users === null} value={TabName.Devices} label={t('user.devices.title')}/>
+						<Tab disabled={disableTabs || props.users === null} value={TabName.Rooms} label={t('user.rooms.title')}/>
 					</Tabs>
 				</Box>
 				<CardContent>

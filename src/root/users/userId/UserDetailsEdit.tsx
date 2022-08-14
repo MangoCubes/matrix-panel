@@ -1,8 +1,6 @@
 import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
-import { HTTPError } from "../../../class/error/HTTPError";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { ToggleAdminQuery } from "../../../query/ToggleAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -25,7 +23,6 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 	const toggleAdmin = async () => {
 		const original = admin.value;
 		try{
-			props.disableTabs(true);
 			setAdmin({value: !original, loading: true});
 			const req = new ToggleAdminQuery(homeserver, {to: !original, user: props.user.name}, token);
 			const res = await req.send();
@@ -33,10 +30,12 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setAdmin({value: original, loading: false});
-		} finally {
-			props.disableTabs(false);
 		}
 	}
+
+	useEffect(() => {
+		props.disableTabs(admin.loading || deactivated.loading);
+	}, [deactivated, admin]);
 
 	return (
 		<FormControl variant='standard'>

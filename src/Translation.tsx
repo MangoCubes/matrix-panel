@@ -80,6 +80,12 @@ const resources = {
 				},
 				sessions: {
 					title: 'Sessions'
+				},
+				devices: {
+					title: 'Devices'
+				},
+				rooms: {
+					title: 'Joined Rooms'
 				}
 			}
 		}
