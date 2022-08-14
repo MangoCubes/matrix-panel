@@ -64,7 +64,9 @@ const resources = {
 				deactivated: 'Deactivated?',
 				shadowBanned: 'Shadow Banned?',
 				you: '(You)',
-				countSelected: 'Selected {{count}} users'
+				countSelected: 'Selected {{count}} users',
+				deactivate: 'Deactivate selected users',
+				activate: 'Activate selected users'
 			},
 			user: {
 				title: 'Manage User "{{name}}"',

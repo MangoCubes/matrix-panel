@@ -1,4 +1,4 @@
-import { Edit, Refresh } from "@mui/icons-material";
+import { Edit, Person, PersonOff, Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectionModel, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useContext, useMemo, useState } from "react";
@@ -43,9 +43,10 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		[]
 	);
 
-	const checkMix = (list: User[], key: PseudoBooleanPropNames<User>) => {
+	const checkMix = (key: PseudoBooleanPropNames<User>) => {
+		if(!props.users) return Tristate.Mixed;
 		let current: 0 | 1 | null = null;
-		for(const u of list){
+		for(const u of props.users){
 			if(sel.includes(u.name)){
 				if(current === null) current = u[key];
 				else if(current !== u[key]) return Tristate.Mixed;
@@ -76,13 +77,29 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		if (sel.length === 0) return [
 			<Tooltip title={t('common.reload')} key='reload'>
 				<span>
-					<IconButton edge='end' onClick={props.reload} disabled={props.users === null}>
+					<IconButton onClick={props.reload} disabled={props.users === null}>
 						<Refresh/>
 					</IconButton>
 				</span>
 			</Tooltip>
 		];
-		
+		const actions = [];
+		const allDeactivated = checkMix('deactivated');
+		if(allDeactivated === Tristate.True || allDeactivated === Tristate.Mixed) actions.push (
+			<Tooltip title={t('users.dctivate')} key='activate'>
+				<IconButton onClick={() => {}}>
+					<Person/>
+				</IconButton>
+			</Tooltip>
+		);
+		if(allDeactivated === Tristate.False || allDeactivated === Tristate.Mixed) actions.push (
+			<Tooltip title={t('users.deactivate')} key='deactivate'>
+				<IconButton onClick={() => {}}>
+					<PersonOff/>
+				</IconButton>
+			</Tooltip>
+		);
+		return actions;
 	}
 
 	return (
