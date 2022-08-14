@@ -7,7 +7,8 @@ const resources = {
 			common: {
 				reload: 'Reload',
 				save: 'Save',
-				cancel: 'Cancel'
+				cancel: 'Cancel',
+				edit: 'Edit'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -62,7 +63,8 @@ const resources = {
 				displayName: 'Display Name',
 				deactivated: 'Deactivated?',
 				shadowBanned: 'Shadow Banned?',
-				you: '(You)'
+				you: '(You)',
+				countSelected: 'Selected {{count}} users'
 			},
 			user: {
 				title: 'Manage User "{{name}}"',
