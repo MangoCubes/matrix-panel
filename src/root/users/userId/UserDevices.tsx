@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
-import { Box } from "@mui/material";
-import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridValueFormatterParams } from "@mui/x-data-grid";
+import { Button, CardActions, CardContent } from "@mui/material";
+import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectionModel, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useState, useRef, useContext, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -15,10 +15,11 @@ export function UserDevices(props: {user: User}) {
 
 	const [reload, setReload] = useState(true);
 	const [devices, setDevices] = useState<Device[] | null>(null);
+	const [sel, setSel] = useState<GridSelectionModel>([]);
 
 	const con = useRef<AbortController | null>(null);
 
-	const {homeserver, uid, token} = useContext(LoginContext);
+	const {homeserver, token} = useContext(LoginContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -75,12 +76,21 @@ export function UserDevices(props: {user: User}) {
 	}
 
 	return (
-		<Box sx={{flex: 1}}>
+		<>
+		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<DataGrid
+				sx={{flex: 1}}
 				columns={columns}
 				rows={getRows()}
 				loading={devices === null}
+				checkboxSelection
+				selectionModel={sel}
+				onSelectionModelChange={items => setSel(items)}
 			/>
-		</Box>
+		</CardContent>
+		<CardActions>
+			<Button>{t('common.delete')}</Button>
+		</CardActions>
+		</>
 	);
 }

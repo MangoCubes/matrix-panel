@@ -63,9 +63,11 @@ export function UserDetails(props: {users: User[] | null}){
 
 	const getCurrentContent = () => {
 		if(props.users === null) return (
-			<Box width='100%' textAlign='center'>
-				<CircularProgress/>
-			</Box>
+			<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+				<Box width='100%' textAlign='center'>
+					<CircularProgress/>
+				</Box>
+			</CardContent>
 		);
 		const user = props.users.find(u => u.name === uid);
 		if(!user) return false;
@@ -96,9 +98,7 @@ export function UserDetails(props: {users: User[] | null}){
 						<Tab disabled={disableTabs || props.users === null} value={TabName.Rooms} label={t('user.rooms.title')}/>
 					</Tabs>
 				</Box>
-				<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-					{getCurrentContent()}
-				</CardContent>
+				{getCurrentContent()}
 			</Card>
 		</Box>
 	</Box>

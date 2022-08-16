@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText } from "@mui/material";
+import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardContent } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -38,12 +38,14 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 	}, [deactivated, admin]);
 
 	return (
-		<FormControl variant='standard'>
-			<FormGroup>
-				<FormControlLabel control={<Switch checked={deactivated.value} onChange={() => {}}/>} disabled={deactivated.loading} label={t('user.details.deactivate')}/>
-				<FormControlLabel control={<Switch checked={admin.value} disabled={props.user.name === uid || admin.loading} onChange={toggleAdmin}/>} label={t('user.details.admin')}/>
-				{props.user.name === uid && <FormHelperText>{t('user.details.cannotDemoteSelf')}</FormHelperText>}
-			</FormGroup>
-		</FormControl>
+		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+			<FormControl variant='standard'>
+				<FormGroup>
+					<FormControlLabel control={<Switch checked={deactivated.value} onChange={() => {}}/>} disabled={deactivated.loading} label={t('user.details.deactivate')}/>
+					<FormControlLabel control={<Switch checked={admin.value} disabled={props.user.name === uid || admin.loading} onChange={toggleAdmin}/>} label={t('user.details.admin')}/>
+					{props.user.name === uid && <FormHelperText>{t('user.details.cannotDemoteSelf')}</FormHelperText>}
+				</FormGroup>
+			</FormControl>
+		</CardContent>
 	);
 }
