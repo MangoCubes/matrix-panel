@@ -4,18 +4,21 @@ import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectio
 import { useState, useRef, useContext, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { DeleteDevicesQuery } from "../../../query/DeleteDevicesQuery";
 import { GetUserDevicesQuery } from "../../../query/GetUserDevicesQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { Device } from "../../../types/Device";
+import { DeviceID } from "../../../types/Types";
 import { User } from "../../../types/User";
 
-export function UserDevices(props: {user: User}) {
+export function UserDevices(props: {user: User, disableTabs: (to: boolean) => void}) {
 
 	const {t} = useTranslation();
 
 	const [reload, setReload] = useState(true);
 	const [devices, setDevices] = useState<Device[] | null>(null);
 	const [sel, setSel] = useState<GridSelectionModel>([]);
+	const [querying, setQuerying] = useState(false);
 
 	const con = useRef<AbortController | null>(null);
 
@@ -31,11 +34,23 @@ export function UserDevices(props: {user: User}) {
 				else return new Date(params.value).toLocaleString()
 			}, flex: 2},
 			{field: 'actions', type: 'actions', getActions: (p: GridRowParams) => [
-				<GridActionsCellItem icon={<Delete/>} onClick={() => {}} label={t('common.delete')}/>,
+				<GridActionsCellItem icon={<Delete/>} onClick={() => deleteDevices(p.id as DeviceID)} label={t('common.delete')}/>,
 			]}
 		],
 		[]
 	);
+
+	const deleteDevices = async (did?: DeviceID) => {
+		let devices: DeviceID[];
+		if(did) devices = [did];
+		else devices = sel as DeviceID[];
+		try{
+			const req = new DeleteDevicesQuery(homeserver, {devices: devices, uid: props.user.name}, token);
+			await req.send();
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		}
+	}
 
 	const getDevices = async () => {
 		setDevices(null);
@@ -53,6 +68,10 @@ export function UserDevices(props: {user: User}) {
 	useEffect(() => {
 		if(reload) getDevices();
 	}, [reload]);
+
+	useEffect(() => {
+		props.disableTabs(querying);
+	}, [querying]);
 
 	useEffect(() => {
 		return () => {
@@ -85,11 +104,13 @@ export function UserDevices(props: {user: User}) {
 				loading={devices === null}
 				checkboxSelection
 				selectionModel={sel}
-				onSelectionModelChange={items => setSel(items)}
+				onSelectionModelChange={items => {
+					if(!querying) setSel(items);
+				}}
 			/>
 		</CardContent>
 		<CardActions>
-			<Button>{t('common.delete')}</Button>
+			<Button sx={{ml: 'auto'}} color='error' disabled={querying || sel.length === 0}>{t('common.delete')}</Button>
 		</CardActions>
 		</>
 	);

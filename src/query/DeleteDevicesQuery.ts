@@ -7,6 +7,9 @@ export class DeleteDevicesQuery extends Query<QueryType.DeleteDevices>{
 			body: JSON.stringify({
 				devices: this.data.devices
 			}),
+			headers: {
+				'Authorization': 'Bearer ' + this.token
+			},
 			signal: this.con.signal
 		});
 	}

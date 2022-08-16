@@ -25,7 +25,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 		try{
 			setAdmin({value: !original, loading: true});
 			const req = new ToggleAdminQuery(homeserver, {to: !original, user: props.user.name}, token);
-			const res = await req.send();
+			await req.send();
 			setAdmin({value: !original, loading: false});
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);

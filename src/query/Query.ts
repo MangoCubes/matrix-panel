@@ -74,7 +74,7 @@ export type QueryParams = {
 	};
 	[QueryType.DeleteDevices]: {
 		uid: FullUserID;
-		devices: DeviceID;
+		devices: DeviceID[];
 	};
 }
 
@@ -103,8 +103,8 @@ export abstract class Query<T extends QueryType>{
 	abstract fetch(): Promise<Response>;
 
 	private async process(res: Response) {
-		if(res.status < 200 || res.status > 299) throw new HTTPError(res.status);
 		const ret = (await res.json()) as QueryResponse[T];
+		if(res.status < 200 || res.status > 299) throw new HTTPError(res.status);
 		console.log(ret);
 		return ret;
 	}
