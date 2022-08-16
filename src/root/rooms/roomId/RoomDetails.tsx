@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Room } from "../../../types/Room";
+import { RoomDetailsEdit } from "./RoomDetailsEdit";
 
 enum TabName {
 	Details = 'details',
@@ -64,6 +65,10 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 				</Box>
 			</CardContent>
 		);
+		const r = props.rooms.find(r => r.room_id === rid);
+		if(!r) return false;
+		if(currentTab === TabName.Details) return <RoomDetailsEdit room={r} disableTabs={setDisableTabs}/>;
+		else return <Box sx={{flex: 1}}></Box>;
 	}
 
 	return (

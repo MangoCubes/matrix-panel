@@ -59,6 +59,8 @@ const resources = {
 				noName: '<Unnamed>',
 				details: {
 					title: 'Room Details',
+					delete: 'Delete Room',
+					deleteSuccess: 'Room "{{rid}}" has been deleted successfully.'
 				}
 			},
 			users: {
