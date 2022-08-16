@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { User } from "../../../types/User";
 import { UserDetailsEdit } from "./UserDetailsEdit";
+import { UserDevices } from "./UserDevices";
 
 enum TabName {
 	Details = 'details',
@@ -36,7 +37,7 @@ export function UserDetails(props: {users: User[] | null}){
 
 	const getUserDetails = () => {
 		if(props.users === null) return (
-			<Stack direction='row' spacing={1}>
+			<Stack direction='row' spacing={2}>
 				<Skeleton variant='circular' width={64} height={64}/>
 				<Box>
 					<Typography variant='h6' sx={{width: '128px'}}><Skeleton/></Typography>
@@ -55,7 +56,7 @@ export function UserDetails(props: {users: User[] | null}){
 					<Typography variant='caption'>{u.name}</Typography>
 				</Box>
 			);
-			return <Stack direction='row' spacing={1}>{items}</Stack>;
+			return <Stack direction='row' spacing={2}>{items}</Stack>;
 		}
 		else return false;
 	}
@@ -69,7 +70,8 @@ export function UserDetails(props: {users: User[] | null}){
 		const user = props.users.find(u => u.name === uid);
 		if(!user) return false;
 		if(currentTab === TabName.Details) return <UserDetailsEdit user={user} disableTabs={setDisableTabs}/>;
-		else return false;
+		else if(currentTab === TabName.Devices) return <UserDevices user={user}/>;
+		else return <Box sx={{flex: 1}}></Box>;
 	}
 
 	return (
@@ -79,13 +81,13 @@ export function UserDetails(props: {users: User[] | null}){
 				{getTitle()}
 			</Toolbar>
 		</AppBar>
-		<Box m={2} sx={{flex: 1}}>
+		<Box m={2} sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<Card>
 				<CardContent>
 					{getUserDetails()}
 				</CardContent>
 			</Card>
-			<Card sx={{mt: 2}}>
+			<Card sx={{mt: 2, flex: 1, display: 'flex', flexDirection: 'column'}}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
 						<Tab disabled={disableTabs || props.users === null} value={TabName.Details} label={t('user.details.title')}/>
@@ -94,7 +96,7 @@ export function UserDetails(props: {users: User[] | null}){
 						<Tab disabled={disableTabs || props.users === null} value={TabName.Rooms} label={t('user.rooms.title')}/>
 					</Tabs>
 				</Box>
-				<CardContent>
+				<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 					{getCurrentContent()}
 				</CardContent>
 			</Card>

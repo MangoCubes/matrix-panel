@@ -9,7 +9,8 @@ const resources = {
 				save: 'Save',
 				cancel: 'Cancel',
 				edit: 'Edit',
-				exit: 'Exit'
+				exit: 'Exit',
+				delete: 'Delete'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -82,7 +83,11 @@ const resources = {
 					title: 'Sessions'
 				},
 				devices: {
-					title: 'Devices'
+					title: 'Devices',
+					id: 'Device ID',
+					displayName: 'Name',
+					lastIp: 'Last Seen IP',
+					lastSeenAt: 'Last Seen At'
 				},
 				rooms: {
 					title: 'Joined Rooms'
