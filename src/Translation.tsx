@@ -49,11 +49,17 @@ const resources = {
 				creator: 'Creator',
 				roomType: 'Room Type',
 				members: 'Members (Local)',
-				isSpace: 'Is It Space?'
+				isSpace: 'Is Space?',
+				name: 'Name'
 			},
 			room: {
 				title: 'Manage Room "{{name}}"',
-				invalidRoom: 'That room does not exist.'
+				invalidRoom: 'That room does not exist.',
+				noAlias: '<No Alias>',
+				noName: '<Unnamed>',
+				details: {
+					title: 'Room Details',
+				}
 			},
 			users: {
 				title: 'Manage Users',

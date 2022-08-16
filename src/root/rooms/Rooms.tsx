@@ -1,6 +1,6 @@
-import { Refresh } from "@mui/icons-material";
+import { Edit, Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
-import { DataGrid, GridColumns, GridValueFormatterParams } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -19,16 +19,20 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 
 	const columns = useMemo<GridColumns>(
 		() => [
-			{field: 'id', headerName: t('rooms.roomId'), flex: 4},
-			{field: 'alias', headerName: t('rooms.alias'), flex: 2},
+			{field: 'id', headerName: t('rooms.roomId'), flex: 2},
+			{field: 'alias', headerName: t('rooms.alias'), flex: 1},
+			{field: 'name', headerName: t('rooms.name'), flex: 1},
 			{field: 'encryption', type: 'boolean', headerName: t('rooms.encryption')},
-			{field: 'creator', headerName: t('rooms.creator'), flex: 4},
-			{field: 'roomType', headerName: t('rooms.roomType'), flex: 2},
+			{field: 'creator', headerName: t('rooms.creator'), flex: 2},
+			{field: 'roomType', headerName: t('rooms.roomType'), flex: 1},
 			{field: 'members', headerName: t('rooms.members'), valueFormatter: (params: GridValueFormatterParams<MemberCount>) => {
 				if (params.value == null) return '';
 				else return `${params.value.all} (${params.value.local})`
-			}, flex: 2},
+			}, flex: 1},
 			{field: 'isSpace', type: 'boolean', headerName: t('rooms.isSpace')},
+			{field: 'actions', type: 'actions', getActions: (p: GridRowParams) => [
+				<GridActionsCellItem icon={<Edit/>} onClick={() => nav(`${p.id}`)} label={t('common.edit')}/>,
+			]}
 		],
 		[]
 	);
@@ -39,6 +43,7 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 		for(const r of props.rooms){
 			rows.push({
 				id: r.room_id,
+				name: r.name,
 				alias: r.canonical_alias,
 				encryption: r.encryption !== null,
 				creator: r.creator,
@@ -73,7 +78,7 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>
-				<DataGrid columns={columns} rows={getRows()} loading={props.rooms === null} onRowClick={(p) => nav(`${p.id}`)}/>
+				<DataGrid columns={columns} rows={getRows()} loading={props.rooms === null}/>
 			</Box>
 		</Box>
 	);
