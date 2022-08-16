@@ -1,4 +1,5 @@
 import { HTTPError } from "../class/error/HTTPError";
+import { Device } from "../types/Device";
 import { Room } from "../types/Room";
 import { AccessToken, DeviceID, FullUserID, UserID } from "../types/Types";
 import { User } from "../types/User";
@@ -9,7 +10,8 @@ export enum QueryType{
 	GetRooms,
 	GetUsers,
 	Deactivate,
-	ToggleAdmin
+	ToggleAdmin,
+	GetUserDevices
 }
 
 export type QueryResponse = {
@@ -33,6 +35,10 @@ export type QueryResponse = {
 	};
 	[QueryType.Deactivate]: {};
 	[QueryType.ToggleAdmin]: {};
+	[QueryType.GetUserDevices]: {
+		devices: Device[];
+		total: number;
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -60,6 +66,9 @@ export type QueryParams = {
 	[QueryType.ToggleAdmin]: {
 		user: FullUserID;
 		to: boolean;
+	};
+	[QueryType.GetUserDevices]: {
+		uid: FullUserID;
 	};
 }
 
