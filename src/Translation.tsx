@@ -87,7 +87,8 @@ const resources = {
 					id: 'Device ID',
 					displayName: 'Name',
 					lastIp: 'Last Seen IP',
-					lastSeenAt: 'Last Seen At'
+					lastSeenAt: 'Last Seen At',
+					success: 'Successfully deleted {{count}} devices.'
 				},
 				rooms: {
 					title: 'Joined Rooms'

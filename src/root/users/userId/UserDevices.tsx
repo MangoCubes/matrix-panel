@@ -3,6 +3,7 @@ import { Button, CardActions, CardContent } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectionModel, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useState, useRef, useContext, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { DeleteDevicesQuery } from "../../../query/DeleteDevicesQuery";
 import { GetUserDevicesQuery } from "../../../query/GetUserDevicesQuery";
@@ -34,7 +35,7 @@ export function UserDevices(props: {user: User, disableTabs: (to: boolean) => vo
 				else return new Date(params.value).toLocaleString()
 			}, flex: 2},
 			{field: 'actions', type: 'actions', getActions: (p: GridRowParams) => [
-				<GridActionsCellItem icon={<Delete/>} onClick={() => deleteDevices(p.id as DeviceID)} label={t('common.delete')}/>,
+				<GridActionsCellItem icon={<Delete/>} disabled={querying} onClick={() => deleteDevices(p.id as DeviceID)} label={t('common.delete')}/>,
 			]}
 		],
 		[]
@@ -44,11 +45,16 @@ export function UserDevices(props: {user: User, disableTabs: (to: boolean) => vo
 		let devices: DeviceID[];
 		if(did) devices = [did];
 		else devices = sel as DeviceID[];
+		setQuerying(true);
 		try{
 			const req = new DeleteDevicesQuery(homeserver, {devices: devices, uid: props.user.name}, token);
 			await req.send();
+			toast.success(t('user.devices.success', {count: devices.length}));
+			setReload(true);
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
 		}
 	}
 
@@ -110,7 +116,7 @@ export function UserDevices(props: {user: User, disableTabs: (to: boolean) => vo
 			/>
 		</CardContent>
 		<CardActions>
-			<Button sx={{ml: 'auto'}} color='error' disabled={querying || sel.length === 0}>{t('common.delete')}</Button>
+			<Button sx={{ml: 'auto'}} color='error' disabled={querying || sel.length === 0} onClick={() => deleteDevices()}>{t('common.delete')}</Button>
 		</CardActions>
 		</>
 	);
