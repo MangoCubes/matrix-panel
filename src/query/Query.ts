@@ -11,7 +11,8 @@ export enum QueryType{
 	GetUsers,
 	Deactivate,
 	ToggleAdmin,
-	GetUserDevices
+	GetUserDevices,
+	DeleteDevices
 }
 
 export type QueryResponse = {
@@ -39,6 +40,7 @@ export type QueryResponse = {
 		devices: Device[];
 		total: number;
 	};
+	[QueryType.DeleteDevices]: {};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -69,6 +71,10 @@ export type QueryParams = {
 	};
 	[QueryType.GetUserDevices]: {
 		uid: FullUserID;
+	};
+	[QueryType.DeleteDevices]: {
+		uid: FullUserID;
+		devices: DeviceID;
 	};
 }
 
