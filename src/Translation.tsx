@@ -61,6 +61,11 @@ const resources = {
 					title: 'Room Details',
 					delete: 'Delete Room',
 					deleteSuccess: 'Room "{{rid}}" has been deleted successfully.'
+				},
+				state: {
+					title: 'Room State',
+					type: 'State Type',
+					key: 'State Key'
 				}
 			},
 			users: {
