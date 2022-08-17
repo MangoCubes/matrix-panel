@@ -17,3 +17,9 @@ export type Room = {
 	state_events: number;
 	room_type: 'm.space' | null;
 }
+
+export type RoomState = {
+	type: string;
+	state_key: string;
+	etc: boolean;
+}

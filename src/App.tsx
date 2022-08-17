@@ -22,7 +22,7 @@ export function App() {
 				</Routes>
 			</BrowserRouter>
 			<ToastContainer
-				position='bottom-right'
+				position='bottom-left'
 				autoClose={5000}
 				closeOnClick
 				draggable
