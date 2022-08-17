@@ -5,11 +5,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Room } from "../../../types/Room";
 import { RoomDetailsEdit } from "./RoomDetailsEdit";
-import { RoomStateGrid } from "./RoomStateGrid";
 
 enum TabName {
 	Details = 'details',
-	States = 'states',
 	Members = 'members'
 }
 
@@ -70,7 +68,6 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 		const r = props.rooms.find(r => r.room_id === rid);
 		if(!r) return false;
 		if(currentTab === TabName.Details) return <RoomDetailsEdit room={r} disableTabs={setDisableTabs}/>;
-		else if(currentTab === TabName.States) return <RoomStateGrid room={r}/>;
 		else return <Box sx={{flex: 1}}></Box>;
 	}
 
@@ -91,7 +88,6 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
 						<Tab disabled={disableTabs || props.rooms === null} value={TabName.Details} label={t('room.details.title')}/>
-						<Tab disabled={disableTabs || props.rooms === null} value={TabName.States} label={t('room.state.title')}/>
 					</Tabs>
 				</Box>
 				{getCurrentContent()}
