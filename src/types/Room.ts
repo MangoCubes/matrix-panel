@@ -27,13 +27,28 @@ type EventBase = {
 
 export type Membership = 'invite' | 'knock' | 'join' | 'leave' | 'ban';
 
-export type RoomMemberState = EventBase & {
+type MembershipEventContent = {
+	membership: Membership;
+	displayname: UserID;
+};
+
+export type MembershipEvent = EventBase & {
 	type: 'm.room.member';
 	state_key: FullUserID;
+	content: MembershipEventContent;
+} & (
+	{
+		prev_content: MembershipEventContent;
+		replaces_state: EventID;
+	} | {}
+);
+
+export type RoomNameEvent = EventBase & {
+	type: 'm.room.name';
+	state_key: '';
 	content: {
-		membership: Membership;
-		displayname: UserID;
+		name: string;
 	};
 }
 
-export type RoomState = RoomMemberState;
+export type RoomState = MembershipEvent;

@@ -1,9 +1,10 @@
+import { CardContent } from "@mui/material";
 import { GridColumns, GridValueFormatterParams, DataGrid } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Membership, RoomMemberState } from "../../../types/Room";
+import { Membership, MembershipEvent } from "../../../types/Room";
 
-export function RoomMembers(props: {states: RoomMemberState[]}){
+export function RoomMembers(props: {states: MembershipEvent[]}){
 	
 	const {t} = useTranslation();
 
@@ -45,5 +46,15 @@ export function RoomMembers(props: {states: RoomMemberState[]}){
 		return rows;
 	}
 
-	return <DataGrid columns={columns} rows={getRows()}/>;
+	return (
+		<>
+		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+			<DataGrid
+				columns={columns}
+				rows={getRows()}
+			/>
+		</CardContent>
+		</>
+	
+	)
 }
