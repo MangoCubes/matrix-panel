@@ -48,7 +48,7 @@ export type QueryResponse = {
 	};
 	[QueryType.GetRoomState]: {
 		state: RoomState[];
-	}
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;

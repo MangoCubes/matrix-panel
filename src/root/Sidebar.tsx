@@ -1,4 +1,4 @@
-import { Person, Chat, Storage } from "@mui/icons-material";
+import { Person, Chat, Storage, Public } from "@mui/icons-material";
 import { Drawer, ListItem, ListItemText, Divider, Box, List, ListItemButton, ListItemIcon, Toolbar } from "@mui/material";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,6 +35,12 @@ export function Sidebar(){
 							<Chat/>
 						</ListItemIcon>
 						<ListItemText primary={t('sidebar.rooms')}/>
+					</ListItemButton>
+					<ListItemButton onClick={() => nav(`rooms/spaces`)}>
+						<ListItemIcon>
+							<Public/>
+						</ListItemIcon>
+						<ListItemText primary={t('sidebar.spaces')} />
 					</ListItemButton>
 					<ListItemButton onClick={() => nav(`users`)}>
 						<ListItemIcon>

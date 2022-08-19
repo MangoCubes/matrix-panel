@@ -39,6 +39,7 @@ const resources = {
 				reload: 'Reload',
 				loggedInto: 'Logged into {{homeserver}}',
 				rooms: 'Rooms',
+				spaces: 'Spaces',
 				users: 'Users',
 				overview: 'Overview'
 			},

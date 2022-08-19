@@ -7,6 +7,7 @@ import { LoginContext } from "../../storage/LoginInfo";
 import { Room } from "../../types/Room";
 import { RoomDetails } from "./roomId/RoomDetails";
 import { Rooms } from "./Rooms";
+import { Spaces } from "./Spaces";
 
 export function RoomLoader(){
 
@@ -44,6 +45,7 @@ export function RoomLoader(){
 
 	return (
 		<Routes>
+			<Route path='spaces' element={<Spaces rooms={rooms}/>}/>
 			<Route path=':rid/*' element={<RoomDetails rooms={rooms}/>}/>
 			<Route path='*' element={<Rooms rooms={rooms} reload={() => setReload(true)}/>}/>
 		</Routes>
