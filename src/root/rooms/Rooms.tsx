@@ -1,10 +1,15 @@
-import { Edit, Refresh } from "@mui/icons-material";
+import { Delete, Edit, Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
-import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridValueFormatterParams } from "@mui/x-data-grid";
-import { useEffect, useMemo } from "react";
+import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectionModel, GridValueFormatterParams } from "@mui/x-data-grid";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import handleCommonErrors from "../../functions/handleCommonErrors";
+import { BulkDeleteRooms } from "../../query/bulk/BulkDeleteRooms";
+import { LoginContext } from "../../storage/LoginInfo";
 import { Room } from "../../types/Room";
+import { RoomID } from "../../types/Types";
 
 type MemberCount = {
 	all: number;
@@ -16,6 +21,11 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 	const {t} = useTranslation();
 
 	const nav = useNavigate();
+
+	const [sel, setSel] = useState<GridSelectionModel>([]);
+	const [querying, setQuerying] = useState(false);
+
+	const {homeserver, token} = useContext(LoginContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -62,23 +72,64 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 		props.reload();
 	}, []);
 
+	const bulkDelete = async () => {
+		setQuerying(true);
+		try{
+			const req = new BulkDeleteRooms(homeserver, {rooms: sel as RoomID[]}, token);
+			const res = await req.send();
+			let len = res.length;
+			for(const r of res) if(r === null) len--;
+			if(len === res.length) toast.success(t('rooms.bulkDelete', {count: len}));
+			else toast.warn(t('rooms.bulkPartialDelete', {success: len, failed: res.length - len}));
+			props.reload();
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+		}
+	}
+
+	const getActions = () => {
+		if(sel.length === 0) return (
+			<Tooltip title={t('common.reload')}>
+				<span>
+					<IconButton edge='end' onClick={props.reload} disabled={props.rooms === null || querying}>
+						<Refresh/>
+					</IconButton>
+				</span>
+			</Tooltip>
+		);
+		else return (
+			<Tooltip title={t('common.delete')}>
+				<span>
+					<IconButton edge='end' onClick={bulkDelete} disabled={props.rooms === null || querying}>
+						<Delete/>
+					</IconButton>
+				</span>
+			</Tooltip>
+		);
+	}
+
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 			<AppBar position='static'>
 				<Toolbar>
-					<Typography variant='h6'>{t('rooms.title')}</Typography>
+					<Typography variant='h6'>{sel.length === 0 ? t('rooms.title') : t('rooms.selected', {count: sel.length})}</Typography>
 					<Box sx={{flex: 1}}/>
-					<Tooltip title={t('common.reload')}>
-						<span>
-							<IconButton edge='end' onClick={props.reload} disabled={props.rooms === null}>
-								<Refresh/>
-							</IconButton>
-						</span>
-					</Tooltip>
+					{getActions()}
 				</Toolbar>
 			</AppBar>
 			<Box m={2} sx={{flex: 1}}>
-				<DataGrid columns={columns} rows={getRows()} loading={props.rooms === null}/>
+				<DataGrid
+					columns={columns}
+					rows={getRows()}
+					loading={props.rooms === null}
+					checkboxSelection
+					selectionModel={sel}
+					onSelectionModelChange={items => {
+						if(!querying) setSel(items);
+					}}
+				/>
 			</Box>
 		</Box>
 	);

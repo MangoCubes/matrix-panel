@@ -51,7 +51,10 @@ const resources = {
 				roomType: 'Room Type',
 				members: 'Members (Local)',
 				isSpace: 'Is Space?',
-				name: 'Name'
+				name: 'Name',
+				selected: 'Selected {{count}} rooms',
+				bulkDelete: 'Successfully deleted {{count}} rooms.',
+				bulkPartialDelete: 'Deleted {{success}} rooms, failed to delete {{failed}} rooms.'
 			},
 			room: {
 				title: 'Manage Room "{{name}}"',
