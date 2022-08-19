@@ -99,8 +99,8 @@ export abstract class Query<T extends QueryType>{
 	data: QueryParams[T];
 	homeserver: string;
 
-	constructor(homeserver: string, data: QueryParams[T], token: NeedToken<T>){
-		this.con = new AbortController();
+	constructor(homeserver: string, data: QueryParams[T], token: NeedToken<T>, con?: AbortController){
+		this.con = con ? con : new AbortController();
 		this.token = token;
 		this.data = data;
 		this.homeserver = /https?:\/\/.+/.test(homeserver) ? homeserver : `https://${homeserver}`;

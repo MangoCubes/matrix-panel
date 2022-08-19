@@ -1,13 +1,16 @@
 import { HTTPError } from "../class/error/HTTPError";
-import { AccessToken, FullUserID } from "../types/Types";
+import { AccessToken, FullUserID, RoomID } from "../types/Types";
 import { Query, QueryResponse, QueryType } from "./Query";
 
-type BulkQueryType = QueryType.Deactivate;
+type BulkQueryType = QueryType.Deactivate | QueryType.DeleteRoom;
 
 export type BulkQueryParams = {
 	[QueryType.Deactivate]: {
 		users: FullUserID[];
-	}
+	};
+	[QueryType.DeleteRoom]: {
+		rooms: RoomID[];
+	};
 }
 
 export abstract class BulkQuery<T extends BulkQueryType>{
@@ -16,7 +19,6 @@ export abstract class BulkQuery<T extends BulkQueryType>{
 	token: AccessToken;
 	data: BulkQueryParams[T];
 	homeserver: string;
-	abstract queries: Query<T>[];
 
 	constructor(homeserver: string, data: BulkQueryParams[T], token: AccessToken){
 		this.con = new AbortController();
@@ -25,26 +27,22 @@ export abstract class BulkQuery<T extends BulkQueryType>{
 		this.homeserver = /https?:\/\/.+/.test(homeserver) ? homeserver : `https://${homeserver}`;
 	}
 
-	async send(){
+	async send(): Promise<(QueryResponse[T] | null)[]>{
 		setTimeout(() => {
 			if(!this.con.signal.aborted) this.con.abort();
 		}, 10000);
-		const results = [];
-		for(const q of this.queries) results.push(q.fetch());
+		const results = this.fetch();
 		const res = await Promise.allSettled(results);
 		return await this.process(res);
 	}
 
-	abstract fetch(): Promise<Response[]>;
+	abstract fetch(): Promise<QueryResponse[T]>[];
 
-	private async process(res: PromiseSettledResult<Response>[]) {
+	private async process(res: PromiseSettledResult<QueryResponse[T]>[]) {
 		const results = [];
 		for(const r of res){
-			if(r.status === 'fulfilled'){
-				const ret = (await r.value.json()) as QueryResponse[T];
-				if(r.value.status < 200 || r.value.status > 299) results.push(new HTTPError(r.value.status));
-				results.push(ret);
-			} else results.push(null);
+			if(r.status === 'fulfilled') results.push(r.value as QueryResponse[T]);
+			else results.push(null);
 		}
 		console.log(results);
 		return results;
