@@ -1,5 +1,6 @@
 import { UserID } from "matrix-bot-sdk";
 import { EventID, FullUserID, RoomID } from "./Types";
+import { RequireAllOrNone } from "type-fest";
 
 export type Room = {
 	room_id: RoomID;
@@ -32,23 +33,31 @@ type MembershipEventContent = {
 	displayname: UserID;
 };
 
-export type MembershipEvent = EventBase & {
-	type: 'm.room.member';
-	state_key: FullUserID;
-	content: MembershipEventContent;
-} & (
-	{
-		prev_content: MembershipEventContent;
-		replaces_state: EventID;
-	} | {}
-);
+type EventContent<T> = {
+	content: T;
+} & RequireAllOrNone<{
+	prev_content: T;
+	replaces_state: EventID;
+}, 'prev_content' | 'replaces_state'>;
 
-export type RoomNameEvent = EventBase & {
-	type: 'm.room.name';
-	state_key: '';
-	content: {
-		name: string;
-	};
+export type SpaceChildEvent = EventBase & EventContent<{
+	suggested: boolean;
+	via: string[];
+}> & {
+	type: 'm.space.child'
+	state_key: RoomID; // Child room ID
 }
 
-export type RoomState = MembershipEvent;
+export type MembershipEvent = EventBase & EventContent<MembershipEventContent> & {
+	type: 'm.room.member';
+	state_key: FullUserID;
+}
+
+export type RoomNameEvent = EventBase & EventContent<{
+	name: string;
+}> & {
+	type: 'm.room.name';
+	state_key: '';
+}
+
+export type RoomState = MembershipEvent | RoomNameEvent | SpaceChildEvent;
