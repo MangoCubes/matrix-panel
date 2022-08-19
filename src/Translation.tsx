@@ -69,7 +69,12 @@ const resources = {
 					displayName: 'Display Name',
 					invitedBy: 'Invited By',
 					currentStatus: 'Current Status',
-					joinedAt: 'Joined At'
+					joinedAt: 'Joined At',
+					ban: 'Banned',
+					invite: 'Invited',
+					leave: 'Left / Kicked',
+					join: 'Joined',
+					knock: 'Knocked'
 				}
 			},
 			users: {

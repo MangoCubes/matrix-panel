@@ -1,7 +1,7 @@
 import { GridColumns, GridValueFormatterParams, DataGrid } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { RoomMemberState } from "../../../types/Room";
+import { Membership, RoomMemberState } from "../../../types/Room";
 
 export function RoomMembers(props: {states: RoomMemberState[]}){
 	
@@ -12,7 +12,16 @@ export function RoomMembers(props: {states: RoomMemberState[]}){
 			{field: 'username', headerName: t('room.members.username'), flex: 2},
 			{field: 'displayName', headerName: t('room.members.displayName'), flex: 1},
 			{field: 'invitedBy', headerName: t('room.members.invitedBy'), flex: 2},
-			{field: 'currentStatus', headerName: t('room.members.currentStatus'), flex: 1},
+			{
+				field: 'currentStatus',
+				headerName: t('room.members.currentStatus'),
+				type: 'singleSelect',
+				valueOptions: ['invite', 'knock', 'join', 'leave', 'ban'], 
+				flex: 1,
+				valueFormatter: (params: GridValueFormatterParams<Membership>) => {
+					return t(`room.members.${params.value}`);
+				}
+			},
 			{field: 'joinedAt', headerName: t('room.members.joinedAt'), valueFormatter: (params: GridValueFormatterParams<number>) => {
 				if (params.value == null) return '';
 				else return new Date(params.value).toLocaleString();

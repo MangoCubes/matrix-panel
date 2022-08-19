@@ -25,11 +25,13 @@ type EventBase = {
 	origin_server_ts: number;
 }
 
+export type Membership = 'invite' | 'knock' | 'join' | 'leave' | 'ban';
+
 export type RoomMemberState = EventBase & {
 	type: 'm.room.member';
 	state_key: FullUserID;
 	content: {
-		membership: 'invite' | 'knock' | 'join' | 'leave' | 'ban';
+		membership: Membership;
 		displayname: UserID;
 	};
 }
