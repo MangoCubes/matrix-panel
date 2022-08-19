@@ -39,6 +39,7 @@ export function RoomDetailsEdit(props: {room: Room, states: RoomState[], disable
 	return (
 		<>
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+			
 		</CardContent>
 		<CardActions>
 			<Button sx={{ml: 'auto'}} color='error' disabled={querying} onClick={() => deleteRoom()}>{t('room.details.delete')}</Button>

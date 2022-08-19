@@ -1,4 +1,5 @@
-import { FullUserID, RoomID } from "./Types";
+import { UserID } from "matrix-bot-sdk";
+import { EventID, FullUserID, RoomID } from "./Types";
 
 export type Room = {
 	room_id: RoomID;
@@ -18,8 +19,19 @@ export type Room = {
 	room_type: 'm.space' | null;
 }
 
-export type RoomState = {
-	type: string;
-	state_key: string;
-	etc: boolean;
+type EventBase = {
+	event_id: EventID;
+	sender: FullUserID;
+	origin_server_ts: number;
 }
+
+export type RoomMemberState = EventBase & {
+	type: 'm.room.member';
+	state_key: FullUserID;
+	content: {
+		membership: 'invite' | 'knock' | 'join' | 'leave' | 'ban';
+		displayname: UserID;
+	};
+}
+
+export type RoomState = RoomMemberState;

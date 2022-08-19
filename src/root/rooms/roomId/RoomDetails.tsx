@@ -8,6 +8,7 @@ import { GetRoomStateQuery } from "../../../query/GetRoomStateQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { Room, RoomState } from "../../../types/Room";
 import { RoomDetailsEdit } from "./RoomDetailsEdit";
+import { RoomMembers } from "./RoomMembers";
 
 enum TabName {
 	Details = 'details',
@@ -106,7 +107,11 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 			</CardContent>
 		);
 		if(currentTab === TabName.Details) return <RoomDetailsEdit room={l.room} states={l.states} disableTabs={setDisableTabs}/>;
-		
+		else if(currentTab === TabName.Members) {
+			const states = [];
+			for(const s of l.states) if(s.type === 'm.room.member') states.push(s);
+			return <RoomMembers states={states}/>;
+		}
 		else return <Box sx={{flex: 1}}></Box>;
 	}
 
@@ -133,6 +138,7 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs value={currentTab} onChange={(e, s) => setCurrentTab(s)}>
 						<Tab disabled={disableTabs || props.rooms === null} value={TabName.Details} label={t('room.details.title')}/>
+						<Tab disabled={disableTabs || props.rooms === null} value={TabName.Members} label={t('room.members.title')}/>
 					</Tabs>
 				</Box>
 				{getCurrentContent(currentState)}

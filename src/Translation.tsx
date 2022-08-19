@@ -10,7 +10,8 @@ const resources = {
 				cancel: 'Cancel',
 				edit: 'Edit',
 				exit: 'Exit',
-				delete: 'Delete'
+				delete: 'Delete',
+				username: 'Username'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -62,10 +63,13 @@ const resources = {
 					delete: 'Delete Room',
 					deleteSuccess: 'Room "{{rid}}" has been deleted successfully.'
 				},
-				state: {
-					title: 'Room State',
-					type: 'State Type',
-					key: 'State Key'
+				members: {
+					title: 'Room Members',
+					username: 'Username',
+					displayName: 'Display Name',
+					invitedBy: 'Invited By',
+					currentStatus: 'Current Status',
+					joinedAt: 'Joined At'
 				}
 			},
 			users: {
