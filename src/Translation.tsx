@@ -57,6 +57,9 @@ const resources = {
 				bulkDelete: 'Successfully deleted {{count}} rooms.',
 				bulkPartialDelete: 'Deleted {{success}} rooms, failed to delete {{failed}} rooms.'
 			},
+			spaces: {
+				title: 'View Space Tree'
+			},
 			room: {
 				title: 'Manage Room "{{name}}"',
 				invalidRoom: 'That room does not exist.',
