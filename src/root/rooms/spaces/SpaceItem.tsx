@@ -15,15 +15,13 @@ export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 	const getChildren = () => {
 		const rooms = [];
 		const spaces = [];
-		for(const k in props.map){
-			const r = props.map[k as RoomID];
-			for(const s of r.states) {
-				if(s.type === 'm.space.child') {
-					const child = props.map[s.state_key];
-					if(!child) continue;
-					if(child.room_type === 'm.space') spaces.push(s.state_key);
-					else rooms.push(s.state_key);
-				}
+		const r = props.map[props.rid];
+		for(const s of r.states) {
+			if(s.type === 'm.space.child') {
+				const child = props.map[s.state_key];
+				if(!child) continue;
+				if(child.room_type === 'm.space') spaces.push(s.state_key);
+				else rooms.push(s.state_key);
 			}
 		}
 		return {rooms: rooms, spaces: spaces};
