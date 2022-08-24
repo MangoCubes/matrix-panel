@@ -20,6 +20,12 @@ export type Room = {
 	room_type: 'm.space' | null;
 }
 
+export type RoomWithState = Room & {states: RoomState[]};
+
+export type Space = Room & {room_type: 'm.space'};
+
+export type ChatRoom = Room & {room_type: null};
+
 type EventBase = {
 	event_id: EventID;
 	sender: FullUserID;
