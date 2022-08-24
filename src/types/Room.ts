@@ -46,6 +46,14 @@ type EventContent<T> = {
 	replaces_state: EventID;
 }, 'prev_content' | 'replaces_state'>;
 
+export type SpaceParentEvent = EventBase & EventContent<{
+	suggested: boolean;
+	via: string[];
+}> & {
+	type: 'm.space.parent'
+	state_key: RoomID; // Parent room ID
+}
+
 export type SpaceChildEvent = EventBase & EventContent<{
 	suggested: boolean;
 	via: string[];
@@ -66,4 +74,4 @@ export type RoomNameEvent = EventBase & EventContent<{
 	state_key: '';
 }
 
-export type RoomState = MembershipEvent | RoomNameEvent | SpaceChildEvent;
+export type RoomState = MembershipEvent | RoomNameEvent | SpaceChildEvent | SpaceParentEvent;

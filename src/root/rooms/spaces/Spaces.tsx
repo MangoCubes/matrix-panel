@@ -6,10 +6,13 @@ import { BulkGetRoomState } from "../../../query/bulk/BulkGetRoomState";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { Room, RoomWithState } from "../../../types/Room";
 import { RoomID } from "../../../types/Types";
+import { SpaceItem } from "./SpaceItem";
+
+export type RoomMap = {[rid: RoomID]: RoomWithState};
 
 export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 
-	const [roomStates, setRoomStates] = useState<{[rid: RoomID]: RoomWithState} | null>(null);
+	const [roomStates, setRoomStates] = useState<RoomMap | null>(null);
 
 	const con = useRef<AbortController | null>(null);
 
@@ -25,7 +28,7 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 			const req = new BulkGetRoomState(homeserver, {rooms: spacesId}, token);
 			con.current = req.con;
 			const res = await req.send();
-			const roomStates: {[rid: RoomID]: RoomWithState} = {};
+			const roomStates: RoomMap = {};
 			for(let i = 0; i < spaces.length; i++) {
 				if(res[i] === null) continue;
 				roomStates[spaces[i].room_id] = {
@@ -50,6 +53,16 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 		}
 	}, []);
 
+	const getRootSpaces = () => {
+		const rooms = [];
+		for(const k in roomStates){
+			const r = roomStates[k as RoomID];
+			if(r.states.find(s => s.type === 'm.space.parent')) continue;
+			rooms.push(k as RoomID);
+		}
+		return rooms;
+	}
+
 	const getContent = () => {
 		if(props.rooms === null) return (
 			<Box sx={{flex: 1, flexFlow: 'column'}} display='flex' alignItems='center' justifyContent='center'>
@@ -64,9 +77,9 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 			</Box>
 		);
 		else return(
-			<Box sx={{flex: 1}} display='flex' alignItems='center' justifyContent='center'>
+			<Box sx={{flex: 1}}>
 				<List>
-					
+					{getRootSpaces().map(r => <SpaceItem rid={r} key={r} map={roomStates}/>)}
 				</List>
 			</Box>
 		);
