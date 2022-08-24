@@ -8,5 +8,4 @@ export class BulkDeleteRooms extends BulkQuery<QueryType.DeleteRoom>{
 		for(const r of this.data.rooms) queries.push(new DeleteRoomQuery(this.homeserver, {rid: r}, this.token, this.con).send());
 		return queries;
 	}
-
 }

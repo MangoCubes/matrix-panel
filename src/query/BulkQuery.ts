@@ -1,8 +1,7 @@
-import { HTTPError } from "../class/error/HTTPError";
 import { AccessToken, FullUserID, RoomID } from "../types/Types";
-import { Query, QueryResponse, QueryType } from "./Query";
+import { QueryResponse, QueryType } from "./Query";
 
-type BulkQueryType = QueryType.Deactivate | QueryType.DeleteRoom;
+type BulkQueryType = QueryType.Deactivate | QueryType.DeleteRoom | QueryType.GetRoomState;
 
 export type BulkQueryParams = {
 	[QueryType.Deactivate]: {
@@ -11,6 +10,9 @@ export type BulkQueryParams = {
 	[QueryType.DeleteRoom]: {
 		rooms: RoomID[];
 	};
+	[QueryType.GetRoomState]: {
+		rooms: RoomID[];
+	}
 }
 
 export abstract class BulkQuery<T extends BulkQueryType>{
