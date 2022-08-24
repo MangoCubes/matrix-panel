@@ -79,7 +79,7 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 		else return(
 			<Box sx={{flex: 1}}>
 				<List>
-					{getRootSpaces().map(r => <SpaceItem rid={r} key={r} map={roomStates}/>)}
+					{getRootSpaces().map(r => <SpaceItem rid={r} key={r} map={roomStates} level={0}/>)}
 				</List>
 			</Box>
 		);
