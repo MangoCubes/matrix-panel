@@ -1,4 +1,4 @@
-import { AppBar, Box, List, Toolbar } from "@mui/material";
+import { AppBar, Box, CircularProgress, List, Toolbar, Typography } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -50,17 +50,36 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 		}
 	}, []);
 
+	const getContent = () => {
+		if(props.rooms === null) return (
+			<Box sx={{flex: 1, flexFlow: 'column'}} display='flex' alignItems='center' justifyContent='center'>
+				<CircularProgress/>
+				<Typography>{t('spaces.loadingRooms')}</Typography>
+			</Box>
+		);
+		else if(roomStates === null) return (
+			<Box sx={{flex: 1, flexFlow: 'column'}} display='flex' alignItems='center' justifyContent='center'>
+				<CircularProgress/>
+				<Typography>{t('spaces.loadingSpaces')}</Typography>
+			</Box>
+		);
+		else return(
+			<Box sx={{flex: 1}} display='flex' alignItems='center' justifyContent='center'>
+				<List>
+					
+				</List>
+			</Box>
+		);
+	}
+
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 			<AppBar position='static'>
 				<Toolbar>
-					{t('spaces.title')}
+					<Typography variant='h6'>{t('spaces.title')}</Typography>
 				</Toolbar>
 			</AppBar>
-			<List>
-			
-			</List>
+			{getContent()}
 		</Box>
-
 	);
 }

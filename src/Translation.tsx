@@ -58,6 +58,8 @@ const resources = {
 				bulkPartialDelete: 'Deleted {{success}} rooms, failed to delete {{failed}} rooms.'
 			},
 			spaces: {
+				loadingRooms: 'Loading rooms...',
+				loadingSpaces: 'Loading space tree...',
 				title: 'View Space Tree'
 			},
 			room: {
