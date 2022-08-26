@@ -1,4 +1,5 @@
-import { Skeleton, Typography, Stack, Box, CardContent, CircularProgress, AppBar, Toolbar, Card, Tabs, Tab } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
+import { Skeleton, Typography, Stack, Box, CardContent, CircularProgress, AppBar, Toolbar, Card, Tabs, Tab, IconButton, Tooltip } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
@@ -67,6 +68,16 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 		}
 	}, [currentState, props.rooms]);
 
+	const reload = () => {
+		if(props.rooms === null) {
+			setCurrentState({step: LoadState.Invalid});
+			return;
+		}
+		const r = props.rooms.find(r => r.room_id === rid);
+		if(!r) setCurrentState({step: LoadState.Invalid});
+		else getStates(r);
+	}
+
 	const {t} = useTranslation();
 
 	const nav = useNavigate();
@@ -126,6 +137,14 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 		<AppBar position='static'>
 			<Toolbar>
 				{getTitle(currentState)}
+				<Box sx={{flex: 1}}/>
+				<Tooltip title={t('common.reload')}>
+					<span>
+						<IconButton edge='end' onClick={reload} disabled={props.rooms === null || currentState.step !== LoadState.Done}>
+							<Refresh/>
+						</IconButton>
+					</span>
+				</Tooltip>
 			</Toolbar>
 		</AppBar>
 		<Box m={2} sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
