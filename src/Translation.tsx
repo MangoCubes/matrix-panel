@@ -57,6 +57,8 @@ const resources = {
 				isSpace: 'Is Space?',
 				name: 'Name',
 				selected: 'Selected {{count}} rooms',
+				bulkDeleteTitle: 'Delete {{count}} rooms?',
+				bulkDeleteBody: 'You are about to delete {{count}} rooms. This action is not reversible. Are you sure you want to delete them?',
 				bulkDelete: 'Successfully deleted {{count}} rooms.',
 				bulkPartialDelete: 'Deleted {{success}} rooms, failed to delete {{failed}} rooms.'
 			},

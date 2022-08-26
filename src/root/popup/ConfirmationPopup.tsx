@@ -5,6 +5,11 @@ export function ConfirmationPopup(props: {open: boolean, cancel: () => void, con
 
 	const {t} = useTranslation();
 
+	const onClick = () => {
+		props.cancel();
+		props.confirm();
+	}
+
 	return (
 		<Dialog open={props.open}>
 			<DialogTitle>{props.title}</DialogTitle>
@@ -13,7 +18,7 @@ export function ConfirmationPopup(props: {open: boolean, cancel: () => void, con
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={props.cancel}>{t('common.cancel')}</Button>
-				<Button onClick={props.confirm}>{t('common.confirm')}</Button>
+				<Button onClick={onClick} disabled={!props.open}>{t('common.confirm')}</Button>
 			</DialogActions>
 		</Dialog>
 	)

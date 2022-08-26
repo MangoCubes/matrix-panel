@@ -10,6 +10,7 @@ import { BulkDeleteRooms } from "../../query/bulk/BulkDeleteRooms";
 import { LoginContext } from "../../storage/LoginInfo";
 import { Room } from "../../types/Room";
 import { RoomID } from "../../types/Types";
+import { ConfirmationPopup } from "../popup/ConfirmationPopup";
 
 type MemberCount = {
 	all: number;
@@ -24,6 +25,7 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 
 	const [sel, setSel] = useState<GridSelectionModel>([]);
 	const [querying, setQuerying] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	const {homeserver, token} = useContext(LoginContext);
 
@@ -96,13 +98,16 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 			</Tooltip>
 		);
 		else return (
+			<>
 			<Tooltip title={t('common.delete')}>
 				<span>
-					<IconButton edge='end' onClick={bulkDelete} disabled={props.rooms === null || querying}>
+					<IconButton edge='end' onClick={() => setOpen(true)} disabled={props.rooms === null || querying}>
 						<Delete/>
 					</IconButton>
 				</span>
 			</Tooltip>
+			<ConfirmationPopup open={open} cancel={() => setOpen(false)} confirm={bulkDelete} title={t('rooms.bulkDeleteTitle', {count: sel.length})} body={t('rooms.bulkDeleteBody', {count: sel.length})}/>
+			</>
 		);
 	}
 

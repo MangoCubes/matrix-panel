@@ -1,5 +1,5 @@
 import { ExpandLess, ExpandMore, Info, Public } from "@mui/icons-material";
-import { Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Collapse, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RoomID } from "../../../types/Types";
@@ -56,9 +56,7 @@ export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 			</ListItemButton>
 		</ListItem>
 		<Collapse in={open} unmountOnExit>
-			<List disablePadding>
-				{renderChildren()}
-			</List>
+			{renderChildren()}
 		</Collapse>
 		</>
 	);
