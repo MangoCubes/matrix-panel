@@ -13,7 +13,8 @@ const resources = {
 				delete: 'Delete',
 				username: 'Username',
 				enabled: 'Enabled',
-				disabled: 'Disabled'
+				disabled: 'Disabled',
+				confirm: 'Confirm'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
