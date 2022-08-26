@@ -5,7 +5,7 @@ import handleCommonErrors from "../../functions/handleCommonErrors";
 import { GetRoomsQuery } from "../../query/GetRoomsQuery";
 import { LoginContext } from "../../storage/LoginInfo";
 import { Room } from "../../types/Room";
-import { RoomDetails } from "./roomId/RoomDetails";
+import { RoomDetailsPage } from "./roomId/RoomDetailsPage";
 import { Rooms } from "./Rooms";
 import { Spaces } from "./spaces/Spaces";
 
@@ -46,7 +46,7 @@ export function RoomLoader(){
 	return (
 		<Routes>
 			<Route path='spaces' element={<Spaces rooms={rooms} reload={() => setReload(true)}/>}/>
-			<Route path=':rid/*' element={<RoomDetails rooms={rooms}/>}/>
+			<Route path=':rid/*' element={<RoomDetailsPage rooms={rooms}/>}/>
 			<Route path='*' element={<Rooms rooms={rooms} reload={() => setReload(true)}/>}/>
 		</Routes>
 	);
