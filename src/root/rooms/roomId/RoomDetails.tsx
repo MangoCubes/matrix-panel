@@ -1,4 +1,4 @@
-import { Add, Lock } from "@mui/icons-material";
+import { Add, History, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
 import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -33,6 +33,18 @@ export function RoomDetails(props: {room: Room, states: RoomState[], disableTabs
 		}
 	}
 
+	const additionalItems = () => {
+		const items = [];
+		const parent = props.states.find(s => s.type === 'm.space.parent');
+		if(parent) items.push (
+			<ListItem key='parent'>
+				<ListItemIcon><SupervisorAccount/></ListItemIcon>
+				<ListItemText primary={parent.state_key} secondary={t('room.details.parent')}/>
+			</ListItem>
+		);
+		return items;
+	}
+
 	useEffect(() => {
 		props.disableTabs(querying);
 	}, [querying]);
@@ -47,8 +59,17 @@ export function RoomDetails(props: {room: Room, states: RoomState[], disableTabs
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><Lock color={props.room.encryption === null ? 'error' : 'success'}/></ListItemIcon>
-					<ListItemText primary={`${t(props.room.encryption === null ? 'common.disabled' : 'common.enabled')}`} secondary={t('room.details.encryption')}/>
+					<ListItemText primary={props.room.encryption === null ? t('common.disabled') : `${t('common.enabled')} (${props.room.encryption})`} secondary={t('room.details.encryption')}/>
 				</ListItem>
+				<ListItem>
+					<ListItemIcon><History/></ListItemIcon>
+					<ListItemText primary={t('room.details.history.' + props.room.history_visibility)} secondary={t('room.details.history.name')}/>
+				</ListItem>
+				<ListItem>
+					<ListItemIcon><PersonAdd/></ListItemIcon>
+					<ListItemText primary={t('room.details.joinRule.' + props.room.join_rules)} secondary={t('room.details.joinRule.name')}/>
+				</ListItem>
+				{additionalItems()}
 			</List>
 		</CardContent>
 		<CardActions>

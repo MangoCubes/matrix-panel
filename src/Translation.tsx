@@ -75,6 +75,21 @@ const resources = {
 					deleteSuccess: 'Room "{{rid}}" has been deleted successfully.',
 					creator: 'Room Creator',
 					encryption: 'Encryption',
+					history: {
+						name: 'History Visibility',
+						invited: 'Since they were invited',
+						joined: 'Since they joined',
+						shared: 'All previous events in this room to members',
+						world_readable: 'All previous events in this room to anyone'
+					},
+					joinRule: {
+						name: 'Joining Rule',
+						public: 'Anyone can join',
+						knock: 'User must request access',
+						invite: 'Invite only',
+						restricted: 'Restricted'
+					},
+					parent: 'Parent Space'
 				},
 				members: {
 					title: 'Room Members',
