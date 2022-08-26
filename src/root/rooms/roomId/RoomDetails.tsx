@@ -1,5 +1,5 @@
 import { Add, History, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
-import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ export function RoomDetails(props: {room: Room, states: RoomState[], disableTabs
 		if(parent) items.push (
 			<ListItem key='parent'>
 				<ListItemIcon><SupervisorAccount/></ListItemIcon>
-				<ListItemText primary={parent.state_key} secondary={t('room.details.parent')}/>
+				<ListItemText primary={<Link href='#' onClick={() => nav(`/rooms/${parent.state_key}`)}>{parent.state_key}</Link>} secondary={t('room.details.parent')}/>
 			</ListItem>
 		);
 		return items;
@@ -55,7 +55,7 @@ export function RoomDetails(props: {room: Room, states: RoomState[], disableTabs
 			<List>
 				<ListItem>
 					<ListItemIcon><Add/></ListItemIcon>
-					<ListItemText primary={props.room.creator} secondary={t('room.details.creator')}/>
+					<ListItemText primary={<Link href='#' onClick={() => nav(`/users/${props.room.creator}`)}>{props.room.creator}</Link>} secondary={t('room.details.creator')}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><Lock color={props.room.encryption === null ? 'error' : 'success'}/></ListItemIcon>
