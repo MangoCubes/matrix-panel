@@ -61,6 +61,10 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 	}
 
 	useEffect(() => {
+		setCurrentState({step: LoadState.LoadingRoom});
+	}, [rid]);
+
+	useEffect(() => {
 		if(props.rooms){
 			const r = props.rooms.find(r => r.room_id === rid);
 			if(!r) setCurrentState({step: LoadState.Invalid});
