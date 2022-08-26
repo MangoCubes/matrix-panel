@@ -69,13 +69,11 @@ export function RoomDetails(props: {rooms: Room[] | null}){
 	}, [currentState, props.rooms]);
 
 	const reload = () => {
-		if(props.rooms === null) {
-			setCurrentState({step: LoadState.Invalid});
-			return;
+		if(props.rooms){
+			const r = props.rooms.find(r => r.room_id === rid);
+			if(!r) setCurrentState({step: LoadState.Invalid});
+			else getStates(r);
 		}
-		const r = props.rooms.find(r => r.room_id === rid);
-		if(!r) setCurrentState({step: LoadState.Invalid});
-		else getStates(r);
 	}
 
 	const {t} = useTranslation();
