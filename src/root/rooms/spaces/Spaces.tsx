@@ -23,16 +23,15 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 	const getStates = async (rooms: Room[]) => {
 		setRoomStates(null);
 		try{
-			const spaces = rooms.filter(r => r.room_type === 'm.space');
-			const spacesId = spaces.map(r => r.room_id);
-			const req = new BulkGetRoomState(homeserver, {rooms: spacesId}, token);
+			const roomsId = rooms.map(r => r.room_id);
+			const req = new BulkGetRoomState(homeserver, {rooms: roomsId}, token);
 			con.current = req.con;
 			const res = await req.send();
 			const roomStates: RoomMap = {};
-			for(let i = 0; i < spaces.length; i++) {
+			for(let i = 0; i < rooms.length; i++) {
 				if(res[i] === null) continue;
-				roomStates[spaces[i].room_id] = {
-					...spaces[i],
+				roomStates[rooms[i].room_id] = {
+					...rooms[i],
 					states: res[i]!.state
 				};
 			}

@@ -3,6 +3,7 @@ import { Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, Lis
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RoomID } from "../../../types/Types";
+import { RoomItem } from "./RoomItem";
 import { RoomMap } from "./Spaces";
 
 export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
@@ -22,8 +23,8 @@ export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 		for(const s of r.states) {
 			if(s.type === 'm.space.child') {
 				const child = props.map[s.state_key];
-				if(!child) continue;
-				if(child.room_type === 'm.space') spaces.push(s.state_key);
+				if (!child) continue;
+				if (child.room_type === 'm.space') spaces.push(s.state_key);
 				else rooms.push(s.state_key);
 			}
 		}
@@ -34,6 +35,7 @@ export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 		const {rooms, spaces} = getChildren();
 		const items = [];
 		for(const s of spaces) items.push(<SpaceItem rid={s} map={props.map} level={props.level + 1} key={s}/>);
+		for(const r of rooms) items.push(<RoomItem rid={r} map={props.map} level={props.level + 1} key={r}/>);
 		return items;
 	}
 
@@ -44,8 +46,8 @@ export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 			<IconButton onClick={() => nav(`/rooms/${room.room_id}`)}>
 				<Info/>
 			</IconButton>
-		}>
-			<ListItemButton onClick={onClick} sx={{ pl: 4 * props.level }}>
+		} sx={{ pl: 4 * props.level }}>
+			<ListItemButton onClick={onClick}>
 				<ListItemIcon>
 					<Public/>
 				</ListItemIcon>
