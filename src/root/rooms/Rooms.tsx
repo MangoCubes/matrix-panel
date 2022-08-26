@@ -1,7 +1,7 @@
 import { Delete, Edit, Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridSelectionModel, GridValueFormatterParams } from "@mui/x-data-grid";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -67,10 +67,6 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 		}
 		return rows;
 	}
-
-	useEffect(() => {
-		props.reload();
-	}, []);
 
 	const bulkDelete = async () => {
 		setQuerying(true);

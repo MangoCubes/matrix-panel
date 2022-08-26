@@ -112,14 +112,16 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 	}
 
 	const getCurrentContent = (l: Loading) => {
-		if(l.step === LoadState.LoadingRoom || l.step === LoadState.LoadingStates) return (
+		const loading = (
 			<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 				<Box width='100%' textAlign='center'>
 					<CircularProgress/>
 				</Box>
 			</CardContent>
-		);
-		if(currentTab === TabName.Details) return <RoomDetails room={l.room} states={l.states} disableTabs={setDisableTabs}/>;
+		)
+		if(l.step === LoadState.LoadingRoom) return loading;
+		if(currentTab === TabName.Details) return <RoomDetails room={l.room} states={l.step === LoadState.Done ? l.states : null} disableTabs={setDisableTabs}/>;
+		if(l.step === LoadState.LoadingStates) return loading;
 		else if(currentTab === TabName.Members) {
 			const states = [];
 			for(const s of l.states) if(s.type === 'm.room.member') states.push(s);

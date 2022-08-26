@@ -1,7 +1,7 @@
 import { Edit, Refresh } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams, GridValueFormatterParams } from "@mui/x-data-grid";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../storage/LoginInfo";
@@ -50,10 +50,6 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		}
 		return rows;
 	}
-
-	useEffect(() => {
-		props.reload();
-	}, []);
 
 	return (
 		<Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>

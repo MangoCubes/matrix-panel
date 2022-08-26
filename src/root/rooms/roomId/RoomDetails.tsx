@@ -1,5 +1,5 @@
 import { Add, History, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
-import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link } from "@mui/material";
+import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { DeleteRoomQuery } from "../../../query/DeleteRoomQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { Room, RoomState } from "../../../types/Room";
 
-export function RoomDetails(props: {room: Room, states: RoomState[], disableTabs: (to: boolean) => void}) {
+export function RoomDetails(props: {room: Room, states: RoomState[] | null, disableTabs: (to: boolean) => void}) {
 
 	const {t} = useTranslation();
 
@@ -34,6 +34,11 @@ export function RoomDetails(props: {room: Room, states: RoomState[], disableTabs
 	}
 
 	const additionalItems = () => {
+		if(props.states === null) return (
+			<ListItem key='loading'>
+				<CircularProgress/>
+			</ListItem>
+		);
 		const items = [];
 		const parent = props.states.find(s => s.type === 'm.space.parent');
 		if(parent) items.push (
