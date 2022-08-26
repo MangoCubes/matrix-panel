@@ -1,12 +1,15 @@
-import { ExpandLess, ExpandMore, Public } from "@mui/icons-material";
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { ExpandLess, ExpandMore, Info, Public } from "@mui/icons-material";
+import { Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RoomID } from "../../../types/Types";
 import { RoomMap } from "./Spaces";
 
 export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 
 	const [open, setOpen] = useState<boolean>(false);
+
+	const nav = useNavigate();
 
 	const onClick = () => {
 		setOpen(!open);
@@ -37,13 +40,19 @@ export function SpaceItem(props: {rid: RoomID, map: RoomMap, level: number}){
 	const room = props.map[props.rid];
 	if (room) return (
 		<>
-		<ListItemButton onClick={onClick} sx={{ pl: 4 * props.level }}>
-			<ListItemIcon>
-				<Public/>
-			</ListItemIcon>
-			<ListItemText primary={`${room.name}${room.canonical_alias === null || room.canonical_alias === '' ? '' : ` (${room.canonical_alias})`}`} secondary={room.room_id}/>
-			{open ? <ExpandLess /> : <ExpandMore />}
-		</ListItemButton>
+		<ListItem secondaryAction={
+			<IconButton onClick={() => nav(`/rooms/${room.room_id}`)}>
+				<Info/>
+			</IconButton>
+		}>
+			<ListItemButton onClick={onClick} sx={{ pl: 4 * props.level }}>
+				<ListItemIcon>
+					<Public/>
+				</ListItemIcon>
+				<ListItemText primary={`${room.name}${room.canonical_alias === null || room.canonical_alias === '' ? '' : ` (${room.canonical_alias})`}`} secondary={room.room_id}/>
+				{open ? <ExpandLess /> : <ExpandMore />}
+			</ListItemButton>
+		</ListItem>
 		<Collapse in={open} unmountOnExit>
 			<List disablePadding>
 				{renderChildren()}

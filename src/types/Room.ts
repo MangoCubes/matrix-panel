@@ -1,5 +1,4 @@
-import { UserID } from "matrix-bot-sdk";
-import { EventID, FullUserID, RoomID } from "./Types";
+import { EventID, FullUserID, RoomID, UserID } from "./Types";
 import { RequireAllOrNone } from "type-fest";
 
 export type Room = {
