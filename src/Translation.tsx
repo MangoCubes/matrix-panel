@@ -92,7 +92,11 @@ const resources = {
 						invite: 'Invite only',
 						restricted: 'Restricted'
 					},
-					parent: 'Parent Space'
+					parent: 'Parent Space',
+					children: {
+						name: 'Children Rooms & Spaces',
+						value: '{{count}} Rooms & Spaces'
+					}
 				},
 				members: {
 					title: 'Room Members',

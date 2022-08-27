@@ -1,4 +1,4 @@
-import { Add, History, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
+import { AccountTree, Add, History, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
 import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import { DeleteRoomQuery } from "../../../query/DeleteRoomQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { Room, RoomState } from "../../../types/Room";
 
-export function RoomDetails(props: {room: Room, states: RoomState[] | null, disableTabs: (to: boolean) => void}) {
+export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomState[] | null, disableTabs: (to: boolean) => void}) {
 
 	const {t} = useTranslation();
 
@@ -41,12 +41,19 @@ export function RoomDetails(props: {room: Room, states: RoomState[] | null, disa
 		);
 		const items = [];
 		const parent = props.states.find(s => s.type === 'm.space.parent');
-		if(parent) items.push (
+		const children = props.states.filter(s => s.type === 'm.space.child' && props.allRooms.find(r => r.room_id === s.state_key));
+		if (parent) items.push (
 			<ListItem key='parent'>
 				<ListItemIcon><SupervisorAccount/></ListItemIcon>
 				<ListItemText primary={<Link href='#' onClick={() => nav(`/rooms/${parent.state_key}`)}>{parent.state_key}</Link>} secondary={t('room.details.parent')}/>
 			</ListItem>
 		);
+		if(children.length !== 0) items.push(
+			<ListItem key='children'>
+				<ListItemIcon><AccountTree/></ListItemIcon>
+				<ListItemText primary={t('room.details.children.value', {count: children.length})} secondary={t('room.details.children.name')}/>
+			</ListItem>
+		)
 		return items;
 	}
 

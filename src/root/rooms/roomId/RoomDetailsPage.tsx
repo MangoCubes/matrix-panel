@@ -28,9 +28,11 @@ type Loading = {
 } | {
 	step: LoadState.LoadingStates;
 	room: Room;
+	rooms: Room[];
 } | {
 	step: LoadState.Done;
 	room: Room;
+	rooms: Room[];
 	states: RoomState[];
 }
 
@@ -48,13 +50,13 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 
 	const {rid} = useParams();
 
-	const getStates = async (room: Room) => {
-		setCurrentState({step: LoadState.LoadingStates, room: room});
+	const getStates = async (roomList: Room[], room: Room) => {
+		setCurrentState({step: LoadState.LoadingStates, rooms: roomList, room: room});
 		try{
 			const req = new GetRoomStateQuery(homeserver, {rid: room.room_id}, token);
 			con.current = req.con;
 			const res = await req.send();
-			setCurrentState({states: res.state, room: room, step: LoadState.Done});
+			setCurrentState({states: res.state, room: room, rooms: roomList, step: LoadState.Done});
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 		}
@@ -68,7 +70,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 		if(props.rooms){
 			const r = props.rooms.find(r => r.room_id === rid);
 			if(!r) setCurrentState({step: LoadState.Invalid});
-			else if (currentState.step === LoadState.LoadingRoom) getStates(r);
+			else if (currentState.step === LoadState.LoadingRoom) getStates(props.rooms, r);
 		}
 	}, [currentState, props.rooms]);
 
@@ -76,7 +78,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 		if(props.rooms){
 			const r = props.rooms.find(r => r.room_id === rid);
 			if(!r) setCurrentState({step: LoadState.Invalid});
-			else getStates(r);
+			else getStates(props.rooms, r);
 		}
 	}
 
@@ -120,7 +122,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 			</CardContent>
 		)
 		if(l.step === LoadState.LoadingRoom) return loading;
-		if(currentTab === TabName.Details) return <RoomDetails room={l.room} states={l.step === LoadState.Done ? l.states : null} disableTabs={setDisableTabs}/>;
+		if(currentTab === TabName.Details) return <RoomDetails allRooms={l.rooms} room={l.room} states={l.step === LoadState.Done ? l.states : null} disableTabs={setDisableTabs}/>;
 		if(l.step === LoadState.LoadingStates) return loading;
 		else if(currentTab === TabName.Members) {
 			const states = [];
