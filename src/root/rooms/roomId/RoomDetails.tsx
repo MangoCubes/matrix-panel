@@ -1,5 +1,5 @@
-import { AccountTree, Add, History, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
-import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress } from "@mui/material";
+import { AccountTree, Add, History, Info, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
+import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress, IconButton } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,28 @@ import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { DeleteRoomQuery } from "../../../query/DeleteRoomQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { Room, RoomState } from "../../../types/Room";
+import { ChildrenDialog } from "./ChildrenDialog";
+
+function RoomChildren(props: {parent: Room, children: Room[]}){
+
+	const [open, setOpen] = useState(false);
+
+	const {t} = useTranslation();
+
+	return (
+		<>
+		<ChildrenDialog open={open} parent={props.parent} children={props.children} close={() => setOpen(false)}/>
+		<ListItem secondaryAction={
+			<IconButton onClick={() => setOpen(true)}>
+				<Info/>
+			</IconButton>
+		}>
+			<ListItemIcon><AccountTree/></ListItemIcon>
+			<ListItemText primary={t('room.details.children.value', {count: props.children.length})} secondary={t('room.details.children.name')}/>
+		</ListItem>
+		</>
+	)
+}
 
 export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomState[] | null, disableTabs: (to: boolean) => void}) {
 
@@ -41,19 +63,22 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 		);
 		const items = [];
 		const parent = props.states.find(s => s.type === 'm.space.parent');
-		const children = props.states.filter(s => s.type === 'm.space.child' && props.allRooms.find(r => r.room_id === s.state_key));
+		const childrenStates = props.states.filter(s => s.type === 'm.space.child');
+		const childrenRooms = [];
+		for(const c of childrenStates){
+			const room = props.allRooms.find(r => r.room_id === c.state_key);
+			if(room){
+				childrenRooms.push(room);
+				continue;
+			}
+		}
 		if (parent) items.push (
 			<ListItem key='parent'>
 				<ListItemIcon><SupervisorAccount/></ListItemIcon>
 				<ListItemText primary={<Link href='#' onClick={() => nav(`/rooms/${parent.state_key}`)}>{parent.state_key}</Link>} secondary={t('room.details.parent')}/>
 			</ListItem>
 		);
-		if(children.length !== 0) items.push(
-			<ListItem key='children'>
-				<ListItemIcon><AccountTree/></ListItemIcon>
-				<ListItemText primary={t('room.details.children.value', {count: children.length})} secondary={t('room.details.children.name')}/>
-			</ListItem>
-		)
+		if(childrenRooms.length !== 0) items.push(<RoomChildren key='children' parent={props.room} children={childrenRooms}/>);
 		return items;
 	}
 

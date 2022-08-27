@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Room } from "../../../types/Room";
 
-export function ChildrenDialog(props: {open: boolean, parent: Room, children: Room[]}){
+export function ChildrenDialog(props: {open: boolean, parent: Room, children: Room[], close: () => void}){
 
 	const {t} = useTranslation();
 
@@ -22,10 +22,10 @@ export function ChildrenDialog(props: {open: boolean, parent: Room, children: Ro
 	}
 
 	return (
-		<Dialog open={props.open}>
-			<DialogTitle>{t('room.details.childre.dialog.title')}</DialogTitle>
+		<Dialog open={props.open} onClose={props.close}>
+			<DialogTitle>{t('room.details.children.dialog.title', {rid: props.parent.room_id})}</DialogTitle>
 			<DialogContent>
-				<DialogContentText>{t('room.details.childre.dialog.body')}</DialogContentText>
+				<DialogContentText>{t('room.details.children.dialog.body')}</DialogContentText>
 				<List>
 					{genList()}
 				</List>

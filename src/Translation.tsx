@@ -95,7 +95,11 @@ const resources = {
 					parent: 'Parent Space',
 					children: {
 						name: 'Children Rooms & Spaces',
-						value: '{{count}} Rooms & Spaces'
+						value: '{{count}} Rooms & Spaces',
+						dialog: {
+							title: 'Children Of Room {{rid}}',
+							body: 'The following is a list of rooms and spaces that are part of this space.'
+						}
 					}
 				},
 				members: {
