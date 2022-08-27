@@ -67,11 +67,15 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 	}, [rid]);
 
 	useEffect(() => {
+		if(!props.rooms) setCurrentState({step: LoadState.LoadingRoom});
+	}, [props.rooms]);
+
+	useEffect(() => {
 		if(props.rooms){
 			const r = props.rooms.find(r => r.room_id === rid);
 			if(!r) setCurrentState({step: LoadState.Invalid});
 			else if (currentState.step === LoadState.LoadingRoom) getStates(props.rooms, r);
-		} else setCurrentState({step: LoadState.LoadingRoom});
+		}
 	}, [currentState, props.rooms]);
 
 	const {t} = useTranslation();
