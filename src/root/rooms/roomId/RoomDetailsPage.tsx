@@ -38,7 +38,7 @@ type Loading = {
 
 type AllLoadingStates = Loading | {step: LoadState.Invalid};
 
-export function RoomDetailsPage(props: {rooms: Room[] | null}){
+export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void}){
 
 	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
 	const [disableTabs, setDisableTabs] = useState<boolean>(false);
@@ -71,16 +71,8 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 			const r = props.rooms.find(r => r.room_id === rid);
 			if(!r) setCurrentState({step: LoadState.Invalid});
 			else if (currentState.step === LoadState.LoadingRoom) getStates(props.rooms, r);
-		}
+		} else setCurrentState({step: LoadState.LoadingRoom});
 	}, [currentState, props.rooms]);
-
-	const reload = () => {
-		if(props.rooms){
-			const r = props.rooms.find(r => r.room_id === rid);
-			if(!r) setCurrentState({step: LoadState.Invalid});
-			else getStates(props.rooms, r);
-		}
-	}
 
 	const {t} = useTranslation();
 
@@ -146,7 +138,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null}){
 				<Box sx={{flex: 1}}/>
 				<Tooltip title={t('common.reload')}>
 					<span>
-						<IconButton edge='end' onClick={reload} disabled={props.rooms === null || currentState.step !== LoadState.Done}>
+						<IconButton edge='end' onClick={props.reload} disabled={props.rooms === null || currentState.step !== LoadState.Done}>
 							<Refresh/>
 						</IconButton>
 					</span>

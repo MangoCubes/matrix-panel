@@ -46,7 +46,7 @@ export function RoomLoader(){
 	return (
 		<Routes>
 			<Route path='spaces' element={<Spaces rooms={rooms} reload={() => setReload(true)}/>}/>
-			<Route path=':rid/*' element={<RoomDetailsPage rooms={rooms}/>}/>
+			<Route path=':rid/*' element={<RoomDetailsPage rooms={rooms} reload={() => setReload(true)}/>}/>
 			<Route path='*' element={<Rooms rooms={rooms} reload={() => setReload(true)}/>}/>
 		</Routes>
 	);
