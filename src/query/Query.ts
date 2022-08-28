@@ -1,6 +1,7 @@
 import { HTTPError } from "../class/error/HTTPError";
 import { Device } from "../types/Device";
 import { Room, RoomState } from "../types/Room";
+import { Session } from "../types/Session";
 import { AccessToken, DeviceID, FullUserID, RoomID, UserID } from "../types/Types";
 import { User } from "../types/User";
 
@@ -54,15 +55,7 @@ export type QueryResponse = {
 		user_id: FullUserID;
 		devices: {
 			'': {
-				sessions: [
-					{
-						connections: {
-							ip: string;
-							last_seen: number;
-							user_agent: string;
-						}[];
-					}
-				]
+				sessions: [Session];
 			}
 		}
 	};
