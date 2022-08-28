@@ -1,6 +1,8 @@
 import { EventID, FullUserID, RoomID, UserID } from "./Types";
 import { RequireAllOrNone } from "type-fest";
 
+type JoinRule = 'public' | 'knock' | 'invite' | 'private' | 'restricted';
+
 export type Room = {
 	room_id: RoomID;
 	name: string;
@@ -12,7 +14,7 @@ export type Room = {
 	encryption: string | null;
 	federatable: boolean;
 	public: boolean;
-	join_rules: 'public' | 'knock' | 'invite' | 'private';
+	join_rules: JoinRule;
 	guest_access: 'can_join' | 'forbidden';
 	history_visibility: 'invited' | 'joined' | 'shared' | 'world_readable';
 	state_events: number;
@@ -73,4 +75,17 @@ export type RoomNameEvent = EventBase & EventContent<{
 	state_key: '';
 }
 
-export type RoomState = MembershipEvent | RoomNameEvent | SpaceChildEvent | SpaceParentEvent;
+export type RoomJoinRuleEvent = EventBase & EventContent<{
+	join_rule: Exclude<JoinRule, 'restricted'>;
+} | {
+	join_rule: 'restricted';
+	allow: {
+		type: 'm.room.membership';
+		room_id: RoomID;
+	}[];
+}> & {
+	type: 'm.room.join_rules';
+	state_key: '';
+}
+
+export type RoomState = MembershipEvent | RoomNameEvent | SpaceChildEvent | SpaceParentEvent | RoomJoinRuleEvent;
