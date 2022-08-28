@@ -141,7 +141,10 @@ const resources = {
 					cannotDemoteSelf: 'You cannot demote yourself.'
 				},
 				sessions: {
-					title: 'Sessions'
+					title: 'Sessions',
+					ip: 'IP',
+					lastSeen: 'Last Seen At',
+					userAgent: 'User Agent'
 				},
 				devices: {
 					title: 'Devices',

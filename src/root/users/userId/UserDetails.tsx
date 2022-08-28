@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { User } from "../../../types/User";
 import { UserDetailsEdit } from "./UserDetailsEdit";
 import { UserDevices } from "./UserDevices";
+import { UserSessions } from "./UserSessions";
 
 enum TabName {
 	Details = 'details',
@@ -73,6 +74,7 @@ export function UserDetails(props: {users: User[] | null}){
 		if(!user) return false;
 		if(currentTab === TabName.Details) return <UserDetailsEdit user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Devices) return <UserDevices user={user} disableTabs={setDisableTabs}/>;
+		else if(currentTab === TabName.Sessions) return <UserSessions user={user} disableTabs={setDisableTabs}/>
 		else return <Box sx={{flex: 1}}></Box>;
 	}
 
