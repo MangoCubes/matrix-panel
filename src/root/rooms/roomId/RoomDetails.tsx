@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { DeleteRoomQuery } from "../../../query/DeleteRoomQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
-import { Room, RoomState } from "../../../types/Room";
+import { Room, RoomJoinRuleEvent, RoomState } from "../../../types/Room";
 import { ChildrenDialog } from "./ChildrenDialog";
 
 function RoomChildren(props: {parent: Room, children: Room[]}){
@@ -86,6 +86,23 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 		props.disableTabs(querying);
 	}, [querying]);
 
+	const getJoinRuleText = () => {
+		const rule = t('room.details.joinRule.' + props.room.join_rules);
+		if(props.states === null) return rule;
+		if(props.room.join_rules === 'restricted'){
+			const e = props.states.find(s => s.type === 'm.room.join_rules');
+			if(!e) return rule;
+			else {
+				const joinEvent = e as RoomJoinRuleEvent;
+				if(joinEvent.content.join_rule !== 'restricted') return rule;
+				else {
+					const allowedRooms = joinEvent.content.allow.map(e => e.room_id);
+					return `${rule} (${t('room.details.joinRule.mustBeMemberOf', {roomId: allowedRooms.join(', ')})})`;
+				}
+			}
+		} else return rule;
+	}
+
 	return (
 		<>
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
@@ -104,7 +121,7 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><PersonAdd/></ListItemIcon>
-					<ListItemText primary={t('room.details.joinRule.' + props.room.join_rules)} secondary={t('room.details.joinRule.name')}/>
+					<ListItemText primary={getJoinRuleText()} secondary={t('room.details.joinRule.name')}/>
 				</ListItem>
 				{additionalItems()}
 			</List>

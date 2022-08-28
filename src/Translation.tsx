@@ -90,7 +90,8 @@ const resources = {
 						public: 'Anyone can join',
 						knock: 'User must request access',
 						invite: 'Invite only',
-						restricted: 'Restricted'
+						restricted: 'Restricted',
+						mustBeMemberOf: 'Members of {{roomId}} may join'
 					},
 					parent: 'Parent Space',
 					children: {
