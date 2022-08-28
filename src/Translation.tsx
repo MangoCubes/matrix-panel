@@ -103,6 +103,14 @@ const resources = {
 						}
 					}
 				},
+				options: {
+					title: 'Room Options',
+					alias: {
+						name: 'Edit Room Alias',
+						desc: 'Set a unique room alias to make it easier to discover.',
+						newAlias: 'New Alias',
+					}
+				},
 				members: {
 					title: 'Room Members',
 					username: 'Username',
