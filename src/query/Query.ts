@@ -14,7 +14,8 @@ export enum QueryType{
 	GetUserDevices,
 	DeleteDevices,
 	DeleteRoom,
-	GetRoomState
+	GetRoomState,
+	GetSessions
 }
 
 export type QueryResponse = {
@@ -48,6 +49,22 @@ export type QueryResponse = {
 	};
 	[QueryType.GetRoomState]: {
 		state: RoomState[];
+	};
+	[QueryType.GetSessions]: {
+		user_id: FullUserID;
+		devices: {
+			'': {
+				sessions: [
+					{
+						connections: {
+							ip: string;
+							last_seen: number;
+							user_agent: string;
+						}[];
+					}
+				]
+			}
+		}
 	};
 }
 
@@ -89,6 +106,9 @@ export type QueryParams = {
 	};
 	[QueryType.GetRoomState]: {
 		rid: RoomID;
+	};
+	[QueryType.GetSessions]: {
+		uid: FullUserID;
 	};
 }
 
