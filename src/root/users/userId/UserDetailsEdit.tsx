@@ -1,4 +1,5 @@
-import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardContent } from "@mui/material";
+import { AdminPanelSettings, PersonOff } from "@mui/icons-material";
+import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardContent, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -39,13 +40,22 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 
 	return (
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-			<FormControl variant='standard'>
-				<FormGroup>
-					<FormControlLabel control={<Switch checked={deactivated.value} onChange={() => {}}/>} disabled={deactivated.loading} label={t('user.details.deactivate')}/>
-					<FormControlLabel control={<Switch checked={admin.value} disabled={props.user.name === uid || admin.loading} onChange={toggleAdmin}/>} label={t('user.details.admin')}/>
-					{props.user.name === uid && <FormHelperText>{t('user.details.cannotDemoteSelf')}</FormHelperText>}
-				</FormGroup>
-			</FormControl>
+			<List>
+				<ListItem>
+					<ListItemIcon>
+						<PersonOff/>	
+					</ListItemIcon>
+					<ListItemText primary={t('user.details.deactivate.title')} secondary={t('user.details.deactivate.desc')}/>
+					<Switch edge='end' checked={deactivated.value} onChange={() => {}}/>
+				</ListItem>
+				<ListItem>
+					<ListItemIcon>
+						<AdminPanelSettings/>	
+					</ListItemIcon>
+					<ListItemText primary={t('user.details.admin.title')} secondary={t(`user.details.admin.desc${props.user.name === uid ? 'Self' : ''}`)}/>
+					<Switch edge='end' checked={admin.value} disabled={props.user.name === uid || admin.loading} onChange={toggleAdmin} />
+				</ListItem>
+			</List>
 		</CardContent>
 	);
 }

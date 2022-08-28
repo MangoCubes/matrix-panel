@@ -136,9 +136,16 @@ const resources = {
 				invalidUser: 'That user does not exist.',
 				details: {
 					title: 'User Details',
-					deactivate: 'Deactivate user',
-					admin: 'Administrator',
-					cannotDemoteSelf: 'You cannot demote yourself.'
+					deactivate: {
+						title: 'Deactivate user',
+						desc: 'Mark a user as deactivated to prevent this account from being used.'
+					},
+					admin: {
+						title: 'Promote To Administrator',
+						desc: 'Grant a user administrative privilege, which allows many powerful APIs. Make sure you trust this user.',
+						descSelf: 'You cannot demote yourself.',
+					},
+					
 				},
 				sessions: {
 					title: 'Sessions',

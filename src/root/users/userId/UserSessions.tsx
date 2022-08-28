@@ -1,5 +1,5 @@
 import { CardContent } from "@mui/material";
-import { GridColumns, DataGrid } from "@mui/x-data-grid";
+import { GridColumns, DataGrid, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useRef, useContext, useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -21,7 +21,10 @@ export function UserSessions(props: {user: User, disableTabs: (disable: boolean)
 	const columns = useMemo<GridColumns>(
 		() => [
 			{field: 'ip', headerName: t('user.sessions.ip'), flex: 1},
-			{field: 'lastSeen', headerName: t('user.sessions.lastSeen'), flex: 1},
+			{field: 'lastSeen', headerName: t('user.sessions.lastSeen'), flex: 1, valueFormatter: (params: GridValueFormatterParams<number>) => {
+				if (params.value == null) return '';
+				else return new Date(params.value).toLocaleString()
+			}},
 			{field: 'userAgent', headerName: t('user.sessions.userAgent'), flex: 6},
 		],
 		[]
@@ -71,6 +74,7 @@ export function UserSessions(props: {user: User, disableTabs: (disable: boolean)
 				columns={columns}
 				rows={getRows()}
 				loading={sessions === null}
+				getRowHeight={() => 'auto'}
 			/>
 		</CardContent>
 	);
