@@ -107,8 +107,10 @@ const resources = {
 					title: 'Room Options',
 					alias: {
 						name: 'Edit Room Alias',
+						nameUnset: 'Set Room Alias',
 						desc: 'Set a unique room alias to make it easier to discover.',
 						newAlias: 'New Alias',
+						setNewAlias: 'Set New Alias'
 					}
 				},
 				members: {
