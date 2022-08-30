@@ -17,7 +17,8 @@ export enum QueryType{
 	DeleteRoom,
 	GetRoomState,
 	GetSessions,
-	SetUserRoomAdmin
+	SetUserRoomAdmin,
+	SetUserMembership
 }
 
 export type QueryResponse = {
@@ -61,6 +62,9 @@ export type QueryResponse = {
 		}
 	};
 	[QueryType.SetUserRoomAdmin]: {};
+	[QueryType.SetUserMembership]: {
+		room_id: RoomID;
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -106,6 +110,10 @@ export type QueryParams = {
 		uid: FullUserID;
 	};
 	[QueryType.SetUserRoomAdmin]: {
+		uid: FullUserID;
+		rid: RoomID;
+	};
+	[QueryType.SetUserMembership]: {
 		uid: FullUserID;
 		rid: RoomID;
 	};
