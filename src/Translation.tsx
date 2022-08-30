@@ -105,14 +105,19 @@ const resources = {
 				},
 				options: {
 					title: 'Room Options',
-					join: {
-						name: 'Join Room',
+					request: {
+						name: 'Request Room Invitation',
 						desc: 'Make room owner send invitation to this account.',
 						success: 'Invitation has been sent to your account. You can join the room by accepting it.',
 					},
+					join: {
+						name: 'Join Room',
+						desc: 'Join room by accepting invitation sent to you.',
+						success: 'You are now member of this room.',
+					},
 					admin: {
 						name: 'Promote to Room Admin',
-						desc: 'Many room operations requires you to be room admin. Click on the button on the right to join room and gain highest permission.',
+						desc: 'Give yourself highest permission available in this room. Try this if you are getting invalid permission error.',
 						success: 'You are now admin of this room.'
 					},
 					alias: {

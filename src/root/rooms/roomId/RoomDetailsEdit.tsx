@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { JoinRoomQuery } from "../../../query/JoinRoomQuery";
+import { SetUserMembershipQuery } from "../../../query/SetUserMembershipQuery";
 import { SetUserRoomAdminQuery } from "../../../query/SetUserRoomAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { MembershipEvent, RoomWithState } from "../../../types/Room";
@@ -36,23 +38,41 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 		}
 	}
 
+	const joinRoom = async () => {
+		setQuerying(true);
+		try{
+			const req = new JoinRoomQuery(homeserver, {rid: props.room.room_id}, token);
+			await req.send();
+			toast.success(t('room.options.join.success'));
+			props.reload();
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+		}
+	}
+
 	const getJoinAction = () => {
-		let title = t(`room.options.join.name`);
-		let desc = t(`room.options.join.desc`);
-		let joinRoom = true;
+		let title = t(`room.options.request.name`);
+		let desc = t(`room.options.request.desc`);
+		let action = () => setRoomAdmin(true);
 		const membership = props.room.states.find(s => s.type === 'm.room.member' && s.state_key === uid);
 		if(membership){
 			const m = membership as MembershipEvent;
 			if(m.content.membership === 'join'){ //Already member
 				title = t(`room.options.admin.name`);
 				desc = t('room.options.admin.desc');
-				joinRoom = false;
+				action = () => setRoomAdmin(false);
+			} else if(m.content.membership === 'invite'){ //Invited
+				title = t(`room.options.join.name`);
+				desc = t('room.options.join.desc');
+				action = joinRoom;
 			}
-		} //Not a member
+		} //Not invited
 		
 		return (
 			<ListItem secondaryAction={
-				<Button onClick={() => setRoomAdmin(joinRoom)} disabled={querying}>{t('common.confirm')}</Button>
+				<Button onClick={action} disabled={querying}>{t('common.confirm')}</Button>
 			}>
 				<ListItemIcon>
 					<AdminPanelSettings/>	
