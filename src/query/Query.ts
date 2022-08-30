@@ -18,7 +18,8 @@ export enum QueryType{
 	GetRoomState,
 	GetSessions,
 	SetUserRoomAdmin,
-	SetUserMembership
+	SetUserMembership,
+	JoinRoom
 }
 
 export type QueryResponse = {
@@ -63,6 +64,9 @@ export type QueryResponse = {
 	};
 	[QueryType.SetUserRoomAdmin]: {};
 	[QueryType.SetUserMembership]: {
+		room_id: RoomID;
+	};
+	[QueryType.JoinRoom]: {
 		room_id: RoomID;
 	};
 }
@@ -115,6 +119,9 @@ export type QueryParams = {
 	};
 	[QueryType.SetUserMembership]: {
 		uid: FullUserID;
+		rid: RoomID;
+	};
+	[QueryType.JoinRoom]: {
 		rid: RoomID;
 	};
 }
