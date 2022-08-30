@@ -1,18 +1,71 @@
-import { Edit, Tag } from "@mui/icons-material";
+import { AdminPanelSettings, Edit, Tag } from "@mui/icons-material";
 import { Button, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, List, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Room } from "../../../types/Room";
+import { toast } from "react-toastify";
+import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { SetUserRoomAdminQuery } from "../../../query/SetUserRoomAdminQuery";
+import { LoginContext } from "../../../storage/LoginInfo";
+import { MembershipEvent, RoomWithState } from "../../../types/Room";
 
-export function RoomDetailsEdit(props: {room: Room, disableTabs: (to: boolean) => void}){
+export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, disableTabs: (to: boolean) => void}){
 
 	const {t} = useTranslation();
 
 	const [open, setOpen] = useState<boolean>(false);
 
+	const {homeserver, token, uid} = useContext(LoginContext);
+
+	const [querying, setQuerying] = useState<boolean>(false);
+
+	useEffect(() => {
+		props.disableTabs(querying);
+	}, [querying]);
+
+	const setRoomAdmin = async (isInvite: boolean) => {
+		setQuerying(true);
+		try{
+			const req = new SetUserRoomAdminQuery(homeserver, {rid: props.room.room_id, uid: uid}, token);
+			await req.send();
+			toast.success(isInvite ? t('room.options.join.success') : t('room.options.admin.success'));
+			props.reload();
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+		}
+	}
+
+	const getJoinAction = () => {
+		let title = t(`room.options.join.name`);
+		let desc = t(`room.options.join.desc`);
+		let joinRoom = true;
+		const membership = props.room.states.find(s => s.type === 'm.room.member' && s.state_key === uid);
+		if(membership){
+			const m = membership as MembershipEvent;
+			if(m.content.membership === 'join'){ //Already member
+				title = t(`room.options.admin.name`);
+				desc = t('room.options.admin.desc');
+				joinRoom = false;
+			}
+		} //Not a member
+		
+		return (
+			<ListItem secondaryAction={
+				<Button onClick={() => setRoomAdmin(joinRoom)} disabled={querying}>{t('common.confirm')}</Button>
+			}>
+				<ListItemIcon>
+					<AdminPanelSettings/>	
+				</ListItemIcon>
+				<ListItemText primary={title} secondary={desc}/>
+			</ListItem>
+		)
+	}
+
 	return (
 		<CardContent>
 			<List>
+				{getJoinAction()}
 				<ListItem secondaryAction={
 					<IconButton edge='end' onClick={() => setOpen(true)}>
 						<Edit/>
@@ -29,7 +82,7 @@ export function RoomDetailsEdit(props: {room: Room, disableTabs: (to: boolean) =
 	)
 }
 
-function AliasDialog(props: {room: Room, open: boolean, close: () => void}){
+function AliasDialog(props: {room: RoomWithState, open: boolean, close: () => void}){
 
 	const {t} = useTranslation();
 

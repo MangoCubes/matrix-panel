@@ -105,13 +105,23 @@ const resources = {
 				},
 				options: {
 					title: 'Room Options',
+					join: {
+						name: 'Join Room',
+						desc: 'Make room owner send invitation to this account.',
+						success: 'Invitation has been sent to your account. You can join the room by accepting it.',
+					},
+					admin: {
+						name: 'Promote to Room Admin',
+						desc: 'Many room operations requires you to be room admin. Click on the button on the right to join room and gain highest permission.',
+						success: 'You are now admin of this room.'
+					},
 					alias: {
 						name: 'Edit Room Alias',
 						nameUnset: 'Set Room Alias',
 						desc: 'Set a unique room alias to make it easier to discover.',
 						newAlias: 'New Alias',
 						setNewAlias: 'Set New Alias'
-					}
+					},
 				},
 				members: {
 					title: 'Room Members',

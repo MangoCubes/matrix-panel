@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GetRoomStateQuery } from "../../../query/GetRoomStateQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
-import { Room, RoomState } from "../../../types/Room";
+import { Room, RoomState, RoomWithState } from "../../../types/Room";
 import { RoomDetails } from "./RoomDetails";
 import { RoomDetailsEdit } from "./RoomDetailsEdit";
 import { RoomMembers } from "./RoomMembers";
@@ -120,9 +120,13 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 			</CardContent>
 		)
 		if(l.step === LoadState.LoadingRoom) return loading;
-		if(currentTab === TabName.Options) return <RoomDetailsEdit room={l.room} disableTabs={setDisableTabs}/>;
 		if(currentTab === TabName.Details) return <RoomDetails allRooms={l.rooms} room={l.room} states={l.step === LoadState.Done ? l.states : null} disableTabs={setDisableTabs}/>;
 		if(l.step === LoadState.LoadingStates) return loading;
+		const room: RoomWithState = {
+			...l.room,
+			states: l.states
+		};
+		if(currentTab === TabName.Options) return <RoomDetailsEdit reload={props.reload} room={room} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Members) {
 			const states = [];
 			for(const s of l.states) if(s.type === 'm.room.member') states.push(s);
