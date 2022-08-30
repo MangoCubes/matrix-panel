@@ -127,6 +127,10 @@ const resources = {
 						newAlias: 'New Alias',
 						setNewAlias: 'Set New Alias'
 					},
+					notMember: {
+						name: 'Currently Not A Member',
+						desc: 'You must be a member of this room to see all available actions.'
+					}
 				},
 				members: {
 					title: 'Room Members',

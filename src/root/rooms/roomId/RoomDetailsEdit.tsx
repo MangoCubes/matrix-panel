@@ -1,4 +1,4 @@
-import { AdminPanelSettings, Edit, Tag } from "@mui/icons-material";
+import { AdminPanelSettings, Edit, Mail, PersonAdd, PersonOff, Tag } from "@mui/icons-material";
 import { Button, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, List, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -56,6 +56,7 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 		let title = t(`room.options.request.name`);
 		let desc = t(`room.options.request.desc`);
 		let action = () => setRoomAdmin(true);
+		let icon = <Mail/>;
 		const membership = props.room.states.find(s => s.type === 'm.room.member' && s.state_key === uid);
 		if(membership){
 			const m = membership as MembershipEvent;
@@ -63,10 +64,12 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 				title = t(`room.options.admin.name`);
 				desc = t('room.options.admin.desc');
 				action = () => setRoomAdmin(false);
+				icon = <AdminPanelSettings/>;
 			} else if(m.content.membership === 'invite'){ //Invited
 				title = t(`room.options.join.name`);
 				desc = t('room.options.join.desc');
 				action = joinRoom;
+				icon = <PersonAdd/>;
 			}
 		} //Not invited
 		
@@ -75,28 +78,46 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 				<Button onClick={action} disabled={querying}>{t('common.confirm')}</Button>
 			}>
 				<ListItemIcon>
-					<AdminPanelSettings/>	
+					{icon}
 				</ListItemIcon>
 				<ListItemText primary={title} secondary={desc}/>
 			</ListItem>
 		)
 	}
 
-	return (
-		<CardContent>
-			<List>
-				{getJoinAction()}
-				<ListItem secondaryAction={
+	const getActions = () => {
+		const membership = props.room.states.find(s => s.type === 'm.room.member' && s.state_key === uid && s.content.membership === 'join');
+		if(membership){
+			return [
+				<ListItem key='alias' secondaryAction={
 					<IconButton edge='end' onClick={() => setOpen(true)}>
 						<Edit/>
 					</IconButton>
-            	}>
+				}>
 					<ListItemIcon>
 						<Tag/>	
 					</ListItemIcon>
 					<ListItemText primary={t(`room.options.alias.name${props.room.canonical_alias === null ? 'Unset' : ''}`)} secondary={t('room.options.alias.desc')}/>
 					<AliasDialog room={props.room} open={open} close={() => setOpen(false)}/>
 				</ListItem>
+			];
+		} else {
+			return [
+				<ListItem key='notMember'>
+					<ListItemIcon>
+						<PersonOff/>	
+					</ListItemIcon>
+					<ListItemText primary={t(`room.options.notMember.name`)} secondary={t('room.options.notMember.desc')}/>
+				</ListItem>
+			];
+		}
+	}
+
+	return (
+		<CardContent>
+			<List>
+				{getJoinAction()}
+				{getActions()}
 			</List>
 		</CardContent>
 	)
