@@ -1,7 +1,7 @@
 import { AccessToken, FullUserID, RoomID } from "../types/Types";
 import { QueryResponse, QueryType } from "./Query";
 
-type BulkQueryType = QueryType.Deactivate | QueryType.DeleteRoom | QueryType.GetRoomState;
+type BulkQueryType = QueryType.Deactivate | QueryType.DeleteRoom | QueryType.GetRoomState | QueryType.RemoveUser;
 
 export type BulkQueryParams = {
 	[QueryType.Deactivate]: {
@@ -12,6 +12,12 @@ export type BulkQueryParams = {
 	};
 	[QueryType.GetRoomState]: {
 		rooms: RoomID[];
+	};
+	[QueryType.RemoveUser]: {
+		rid: RoomID;
+		uid: FullUserID[];
+		reason?: string;
+		ban: boolean;
 	}
 }
 

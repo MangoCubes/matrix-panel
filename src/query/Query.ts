@@ -128,7 +128,7 @@ export type QueryParams = {
 	};
 	[QueryType.RemoveUser]: {
 		rid: RoomID;
-		user_id: FullUserID;
+		uid: FullUserID;
 		reason?: string;
 		ban: boolean;
 	};

@@ -9,7 +9,7 @@ export class RemoveUserQuery extends Query<QueryType.RemoveUser>{
 				'Authorization': 'Bearer ' + this.token
 			},
 			body: JSON.stringify({
-				user_id: this.data.user_id,
+				user_id: this.data.uid,
 				reason: this.data.reason
 			})
 		});
