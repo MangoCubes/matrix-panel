@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/matrix-panel/static/css/main.3d10672c.css",
+    "main.js": "/matrix-panel/static/js/main.e3e87a5f.js",
+    "index.html": "/matrix-panel/index.html",
+    "main.3d10672c.css.map": "/matrix-panel/static/css/main.3d10672c.css.map",
+    "main.e3e87a5f.js.map": "/matrix-panel/static/js/main.e3e87a5f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3d10672c.css",
+    "static/js/main.e3e87a5f.js"
+  ]
+}
