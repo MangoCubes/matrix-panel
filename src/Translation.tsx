@@ -149,6 +149,7 @@ const resources = {
 					banUsers: 'Ban',
 					kickSuccess: 'Successfully kicked {{count}} users from this room.',
 					banSuccess: 'Successfully banned {{count}} users from this room.',
+					cannotRemoveAdmin: 'You cannot remove room admins.'
 				}
 			},
 			users: {

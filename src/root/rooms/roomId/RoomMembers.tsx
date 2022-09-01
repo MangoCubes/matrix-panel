@@ -3,6 +3,7 @@ import { GridColumns, GridValueFormatterParams, DataGrid, GridSelectionModel } f
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { HTTPError } from "../../../class/error/HTTPError";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { BulkRemoveUsers } from "../../../query/bulk/BulkRemoveUsers";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -65,7 +66,14 @@ export function RoomMembers(props: {room: Room, states: MembershipEvent[], reloa
 			toast.success(t(`room.members.${ban ? 'ban' : 'kick'}Success`, {count: sel.length}));
 			props.reload();
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			const locallyHandled = [403];
+			if (e instanceof Error) {
+				if(e instanceof HTTPError && locallyHandled.includes(e.errCode)){
+					if(e.errCode === 403) toast.error(t('room.members.cannotRemoveAdmin')); // TODO: Synapse admin API does not provide a way for server admin to manipulate room states regardless of other's membership. When that becomes possible, remove this.
+					return;
+				}
+				handleCommonErrors(e, t);
+			}
 		} finally {
 			setQuerying(false);
 		}
