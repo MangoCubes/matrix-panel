@@ -19,7 +19,8 @@ export enum QueryType{
 	GetSessions,
 	SetUserRoomAdmin,
 	SetUserMembership,
-	JoinRoom
+	JoinRoom,
+	RemoveUser
 }
 
 export type QueryResponse = {
@@ -69,6 +70,7 @@ export type QueryResponse = {
 	[QueryType.JoinRoom]: {
 		room_id: RoomID;
 	};
+	[QueryType.RemoveUser]: {};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -123,6 +125,12 @@ export type QueryParams = {
 	};
 	[QueryType.JoinRoom]: {
 		rid: RoomID;
+	};
+	[QueryType.RemoveUser]: {
+		rid: RoomID;
+		user_id: FullUserID;
+		reason?: string;
+		ban: boolean;
 	};
 }
 
