@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { JoinRoomQuery } from "../../../query/JoinRoomQuery";
-import { SetUserMembershipQuery } from "../../../query/SetUserMembershipQuery";
+import { Query, QueryType } from "../../../query/Query";
 import { SetUserRoomAdminQuery } from "../../../query/SetUserRoomAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { MembershipEvent, RoomWithState } from "../../../types/Room";
@@ -24,27 +24,20 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 		props.disableTabs(querying);
 	}, [querying]);
 
-	const setRoomAdmin = async (isInvite: boolean) => {
-		setQuerying(true);
-		try{
-			const req = new SetUserRoomAdminQuery(homeserver, {rid: props.room.room_id, uid: uid}, token);
-			await req.send();
-			toast.success(isInvite ? t('room.options.join.success') : t('room.options.admin.success'));
-			props.reload();
-		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
-		} finally {
-			setQuerying(false);
-		}
+	const joinRoom = async () => {
+		await sendQuery(true, new JoinRoomQuery(homeserver, {rid: props.room.room_id}, token), t('room.options.join.success'));
 	}
 
-	const joinRoom = async () => {
+	const setRoomAdmin = async (isInvite: boolean) => {
+		await sendQuery(true, new SetUserRoomAdminQuery(homeserver, {rid: props.room.room_id, uid: uid}, token), isInvite ? t('room.options.join.success') : t('room.options.admin.success'));
+	}
+
+	const sendQuery = async (reload: boolean, query: Query<QueryType>, success: string) => {
 		setQuerying(true);
 		try{
-			const req = new JoinRoomQuery(homeserver, {rid: props.room.room_id}, token);
-			await req.send();
-			toast.success(t('room.options.join.success'));
-			props.reload();
+			await query.send();
+			toast.success(success);
+			if(reload)props.reload();
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 		} finally {
