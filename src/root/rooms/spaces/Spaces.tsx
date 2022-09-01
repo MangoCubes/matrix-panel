@@ -29,11 +29,14 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 			const res = await req.send();
 			const roomStates: RoomMap = {};
 			for(let i = 0; i < rooms.length; i++) {
-				if(res[i] === null) continue;
-				roomStates[rooms[i].room_id] = {
-					...rooms[i],
-					states: res[i]!.state
-				};
+				const s = res[i];
+				if(s instanceof Error) continue;
+				else {
+					roomStates[rooms[i].room_id] = {
+						...rooms[i],
+						states: s.state
+					};
+				}
 			}
 			setRoomStates(roomStates);
 		} catch (e) {

@@ -35,7 +35,7 @@ export abstract class BulkQuery<T extends BulkQueryType>{
 		this.homeserver = /https?:\/\/.+/.test(homeserver) ? homeserver : `https://${homeserver}`;
 	}
 
-	async send(): Promise<(QueryResponse[T] | null)[]>{
+	async send(): Promise<(QueryResponse[T] | Error)[]>{
 		setTimeout(() => {
 			if(!this.con.signal.aborted) this.con.abort();
 		}, 10000);
@@ -50,7 +50,7 @@ export abstract class BulkQuery<T extends BulkQueryType>{
 		const results = [];
 		for(const r of res){
 			if(r.status === 'fulfilled') results.push(r.value as QueryResponse[T]);
-			else results.push(null);
+			else results.push(r.reason as Error);
 		}
 		console.log(results);
 		return results;

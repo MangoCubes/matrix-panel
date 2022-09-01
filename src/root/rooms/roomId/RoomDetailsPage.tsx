@@ -64,12 +64,14 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 		}
 	}
 
-	useEffect(() => {
+	const reloadStates = () => {
 		setCurrentState({step: LoadState.LoadingRoom});
-	}, [rid]);
+	}
+
+	useEffect(reloadStates, [rid]);
 
 	useEffect(() => {
-		if(!props.rooms) setCurrentState({step: LoadState.LoadingRoom});
+		if(!props.rooms) reloadStates();
 	}, [props.rooms]);
 
 	useEffect(() => {
@@ -130,7 +132,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 		else if(currentTab === TabName.Members) {
 			const states = [];
 			for(const s of l.states) if(s.type === 'm.room.member') states.push(s);
-			return <RoomMembers states={states}/>;
+			return <RoomMembers room={l.room} states={states} reload={reloadStates}/>;
 		}
 		else return <Box sx={{flex: 1}}></Box>;
 	}

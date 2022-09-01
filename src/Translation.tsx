@@ -22,7 +22,8 @@ const resources = {
 				404: 'Server not found.',
 				429: 'You are sending too many requests. Please wait a bit before sending next one.',
 				400: 'Request was invalid.',
-				401: 'You are not authorised to do this. You may not be admin.',
+				401: 'You are not authorised to do this. Make sure you are admin.',
+				403: 'You are not have permission to do this.',
 				unknownRes: 'Received unknown response from the server.',
 				unknown: 'Unknown error.',
 				missingToken: 'You have been logged out. Please log in again.'
@@ -143,7 +144,11 @@ const resources = {
 					invite: 'Invited',
 					leave: 'Left / Kicked',
 					join: 'Joined',
-					knock: 'Knocked'
+					knock: 'Knocked',
+					kickUsers: 'Kick',
+					banUsers: 'Ban',
+					kickSuccess: 'Successfully kicked {{count}} users from this room.',
+					banSuccess: 'Successfully banned {{count}} users from this room.',
 				}
 			},
 			users: {
