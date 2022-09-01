@@ -126,7 +126,10 @@ const resources = {
 						nameUnset: 'Set Room Alias',
 						desc: 'Set a unique room alias to make it easier to discover.',
 						newAlias: 'New Alias',
-						setNewAlias: 'Set New Alias'
+						setNewAlias: 'Set New Alias',
+						duplicate: 'A room with alias {{alias}} already exists.',
+						success: 'Alias {{alias}} set for room {{rid}}.',
+						missingServerName: 'The alias is missing the server name. (The part that comes after ":")'
 					},
 					notMember: {
 						name: 'Currently Not A Member',
