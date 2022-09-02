@@ -2,6 +2,7 @@ import { AdminPanelSettings, Password, PersonOff } from "@mui/icons-material";
 import { Switch, CardContent, List, ListItem, ListItemIcon, ListItemText, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { DeactivateQuery } from "../../../query/DeactivateQuery";
 import { EditUserQuery } from "../../../query/EditUserQuery";
@@ -32,6 +33,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			const req = new ToggleAdminQuery(homeserver, {to: !original, user: props.user.name}, token);
 			await req.send();
 			setAdmin({value: !original, loading: false});
+			toast.success(t(`user.details.admin.admin${original ? 'Dis' : 'En'}ableSuccess`));
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setAdmin({value: original, loading: false});
@@ -44,6 +46,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			const req = new EditUserQuery(homeserver, {uid: props.user.name, data: {deactivated: false, password: pw}}, token);
 			await req.send();
 			setDeactivated({value: false, loading: false});
+			toast.success(t('user.details.deactivate.activateSuccess'));
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setDeactivated({value: true, loading: false});
@@ -58,6 +61,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			const req = new DeactivateQuery(homeserver, {user: props.user.name}, token);
 			await req.send();
 			setDeactivated({value: true, loading: false});
+			toast.success(t('user.details.deactivate.deactivateSuccess'));
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setDeactivated({value: false, loading: false});

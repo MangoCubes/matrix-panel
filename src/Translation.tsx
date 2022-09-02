@@ -178,12 +178,16 @@ const resources = {
 					title: 'User Details',
 					deactivate: {
 						title: 'Deactivate user',
-						desc: 'Mark a user as deactivated to prevent this account from being used.'
+						desc: 'Mark a user as deactivated to prevent this account from being used.',
+						deactivateSuccess: 'Account successfully deactivated.',
+						activateSuccess: 'Account successfully activated.'
 					},
 					admin: {
-						title: 'Promote To Administrator',
+						title: 'Set As Administrator',
 						desc: 'Grant a user administrative privilege, which allows many powerful APIs. Make sure you trust this user.',
 						descSelf: 'You cannot demote yourself.',
+						adminEnableSuccess: 'This user is now admin.',
+						adminDisableSuccess: 'This user is no longer admin.'
 					},
 					password: {
 						title: 'Set Password For User {{uid}}',
