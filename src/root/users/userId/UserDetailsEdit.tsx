@@ -1,5 +1,5 @@
 import { AdminPanelSettings, PersonOff } from "@mui/icons-material";
-import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardContent, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardContent, List, ListItem, ListItemIcon, ListItemText, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -23,6 +23,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 
 	const [deactivated, setDeactivated] = useState<PromiseBoolean>({value: props.user.deactivated === 1, loading: false});
 	const [admin, setAdmin] = useState<PromiseBoolean>({value: props.user.admin === 1, loading: false});
+	const [open, setOpen] = useState(false);
 
 	const toggleAdmin = async () => {
 		const original = admin.value;
@@ -35,6 +36,11 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setAdmin({value: original, loading: false});
 		}
+	}
+
+	const onDeactivateToggle = () => {
+		if(deactivated.value) setOpen(true);
+		else toggleDeactivate();
 	}
 
 	const toggleDeactivate = async () => {
@@ -76,4 +82,29 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			</List>
 		</CardContent>
 	);
+}
+
+function PasswordDialog(props: {open: boolean, close: () => void, confirm: (pw: string) => void, querying: boolean}){
+
+	const [password, setPassword] = useState('');
+
+	const {t} = useTranslation();
+
+	return (
+		<Dialog open={props.open} onClose={close}>
+			<DialogTitle>{t('user.details.password.title')}</DialogTitle>
+			<DialogContent>
+				<TextField
+					variant='standard'
+					value={password}
+					disabled={props.querying}
+					onChange={(e) => setPassword(e.currentTarget.value)}
+					label={t('user.details.password.password')}
+				/>
+			</DialogContent>
+			<DialogActions>
+				<Button disabled={password.length === 0 || props.querying} onClick={() => props.confirm(password)}>{t('common.confirm')}</Button>
+			</DialogActions>
+		</Dialog>
+	)
 }

@@ -185,7 +185,10 @@ const resources = {
 						desc: 'Grant a user administrative privilege, which allows many powerful APIs. Make sure you trust this user.',
 						descSelf: 'You cannot demote yourself.',
 					},
-					
+					password: {
+						title: 'Set Password For User {{uid}}',
+						password: 'Password'
+					}
 				},
 				sessions: {
 					title: 'Sessions',
