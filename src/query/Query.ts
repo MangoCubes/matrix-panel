@@ -23,7 +23,8 @@ export enum QueryType{
 	RemoveUser,
 	SetAlias,
 	SetCanonicalAlias,
-	EditUser
+	EditUser,
+	GetUserMembership
 }
 
 export type QueryResponse = {
@@ -77,6 +78,10 @@ export type QueryResponse = {
 	[QueryType.SetAlias]: {};
 	[QueryType.SetCanonicalAlias]: {};
 	[QueryType.EditUser]: {};
+	[QueryType.GetUserMembership]: {
+		joined_rooms: RoomID[];
+		total: number;
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -156,7 +161,10 @@ export type QueryParams = {
 			deactivated?: false;
 			user_type?: null | 'bot' | 'support';
 		}
-	}
+	};
+	[QueryType.GetUserMembership]: {
+		uid: FullUserID;
+	};
 }
 
 export abstract class Query<T extends QueryType>{

@@ -209,7 +209,8 @@ const resources = {
 					success: 'Successfully deleted {{count}} devices.'
 				},
 				rooms: {
-					title: 'Joined Rooms'
+					title: 'Joined Rooms',
+					id: 'Room ID'
 				}
 			}
 		}
