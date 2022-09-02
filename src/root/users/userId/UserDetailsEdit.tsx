@@ -1,5 +1,5 @@
-import { AdminPanelSettings, PersonOff } from "@mui/icons-material";
-import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardContent, List, ListItem, ListItemIcon, ListItemText, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { AdminPanelSettings, Password, PersonOff } from "@mui/icons-material";
+import { Switch, CardContent, List, ListItem, ListItemIcon, ListItemText, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -37,25 +37,36 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			setAdmin({value: original, loading: false});
 		}
 	}
-
-	const onDeactivateToggle = () => {
-		if(deactivated.value) setOpen(true);
-		else toggleDeactivate();
-	}
-
-	const toggleDeactivate = async () => {
-		const original = deactivated.value;
+	
+	const activateAccount = async (pw: string) => {
 		try{
-			setDeactivated({value: !original, loading: true});
-			let req: Query<QueryType.EditUser | QueryType.Deactivate>;
-			if(!original) req = new DeactivateQuery(homeserver, {user: props.user.name}, token);
-			else req = new EditUserQuery(homeserver, {uid: props.user.name, data: {deactivated: false}}, token);
+			setDeactivated({value: false, loading: true});
+			const req = new EditUserQuery(homeserver, {uid: props.user.name, data: {deactivated: false, password: pw}}, token);
 			await req.send();
-			setDeactivated({value: !original, loading: false});
+			setDeactivated({value: false, loading: false});
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
-			setDeactivated({value: original, loading: false});
+			setDeactivated({value: true, loading: false});
+		} finally {
+			setOpen(false);
 		}
+	}
+
+	const deactivateAccount = async () => {
+		try{
+			setDeactivated({value: true, loading: true});
+			const req = new DeactivateQuery(homeserver, {user: props.user.name}, token);
+			await req.send();
+			setDeactivated({value: true, loading: false});
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+			setDeactivated({value: false, loading: false});
+		}
+	}
+
+	const clickToggle = () => {
+		if(deactivated.value) setOpen(true);
+		else deactivateAccount();
 	}
 
 	useEffect(() => {
@@ -70,7 +81,8 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 						<PersonOff/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.details.deactivate.title')} secondary={t('user.details.deactivate.desc')}/>
-					<Switch edge='end' checked={deactivated.value} onChange={toggleDeactivate}/>
+					<Switch edge='end' checked={deactivated.value} disabled={props.user.name === uid || deactivated.loading} onChange={clickToggle}/>
+					<PasswordDialog user={props.user} open={open} close={() => setOpen(false)} confirm={activateAccount} querying={deactivated.loading}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon>
@@ -84,15 +96,15 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 	);
 }
 
-function PasswordDialog(props: {open: boolean, close: () => void, confirm: (pw: string) => void, querying: boolean}){
+function PasswordDialog(props: {user: User, open: boolean, close: () => void, confirm: (pw: string) => void, querying: boolean}){
 
 	const [password, setPassword] = useState('');
 
 	const {t} = useTranslation();
 
 	return (
-		<Dialog open={props.open} onClose={close}>
-			<DialogTitle>{t('user.details.password.title')}</DialogTitle>
+		<Dialog open={props.open} onClose={props.close}>
+			<DialogTitle>{t('user.details.password.title', {uid: props.user.name})}</DialogTitle>
 			<DialogContent>
 				<TextField
 					variant='standard'
