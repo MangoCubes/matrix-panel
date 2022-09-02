@@ -49,11 +49,11 @@ export function UserDetails(props: {users: User[] | null}){
 		const u = props.users.find(u => u.name === uid);
 		if (u) {
 			const items = [];
-			if (u.avatar_url) items.push(<Avatar alt={u.displayname} src={u.avatar_url} sx={{ width: 64, height: 64 }} key='avatar'/>); //Fallback is not working for some reason
-			else items.push(<Avatar alt={u.displayname} sx={{ width: 64, height: 64 }} key='avatar'>{u.displayname[0].toUpperCase()}</Avatar>);
+			if (u.avatar_url) items.push(<Avatar alt={u.name} src={u.avatar_url} sx={{ width: 64, height: 64 }} key='avatar'/>); //Fallback is not working for some reason
+			else items.push(<Avatar alt={u.name} sx={{ width: 64, height: 64 }} key='avatar'>{u.name[1].toUpperCase()}</Avatar>);
 			items.push(
 				<Box key='name'>
-					<Typography variant='h6'>{u.displayname}</Typography>
+					<Typography variant='h6'>{u.name}</Typography>
 					<Typography variant='caption'>{u.name}</Typography>
 				</Box>
 			);
