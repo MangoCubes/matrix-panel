@@ -21,7 +21,8 @@ export enum QueryType{
 	SetUserMembership,
 	JoinRoom,
 	RemoveUser,
-	SetAlias
+	SetAlias,
+	SetCanonicalAlias
 }
 
 export type QueryResponse = {
@@ -73,6 +74,7 @@ export type QueryResponse = {
 	};
 	[QueryType.RemoveUser]: {};
 	[QueryType.SetAlias]: {};
+	[QueryType.SetCanonicalAlias]: {};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -135,6 +137,10 @@ export type QueryParams = {
 		ban: boolean;
 	};
 	[QueryType.SetAlias]: {
+		rid: RoomID;
+		alias: string;
+	};
+	[QueryType.SetCanonicalAlias]: {
 		rid: RoomID;
 		alias: string;
 	};
