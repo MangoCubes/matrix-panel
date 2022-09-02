@@ -147,15 +147,15 @@ export type QueryParams = {
 		alias: string;
 	};
 	[QueryType.EditUser]: {
-		uid: UserID;
+		uid: FullUserID;
 		data: {
 			password?: string;
 			displayname?: string;
 			avatar_url?: string;
 			admin?: boolean;
-			deactivated?: boolean;
+			deactivated?: false;
 			user_type?: null | 'bot' | 'support';
-		};
+		}
 	}
 }
 

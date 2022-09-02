@@ -3,6 +3,9 @@ import { FormControl, FormGroup, FormControlLabel, Switch, FormHelperText, CardC
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { DeactivateQuery } from "../../../query/DeactivateQuery";
+import { EditUserQuery } from "../../../query/EditUserQuery";
+import { Query, QueryType } from "../../../query/Query";
 import { ToggleAdminQuery } from "../../../query/ToggleAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { User } from "../../../types/User";
@@ -34,6 +37,21 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 		}
 	}
 
+	const toggleDeactivate = async () => {
+		const original = deactivated.value;
+		try{
+			setDeactivated({value: !original, loading: true});
+			let req: Query<QueryType.EditUser | QueryType.Deactivate>;
+			if(!original) req = new DeactivateQuery(homeserver, {user: props.user.name}, token);
+			else req = new EditUserQuery(homeserver, {uid: props.user.name, data: {deactivated: false}}, token);
+			await req.send();
+			setDeactivated({value: !original, loading: false});
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+			setDeactivated({value: original, loading: false});
+		}
+	}
+
 	useEffect(() => {
 		props.disableTabs(admin.loading || deactivated.loading);
 	}, [deactivated, admin]);
@@ -46,7 +64,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 						<PersonOff/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.details.deactivate.title')} secondary={t('user.details.deactivate.desc')}/>
-					<Switch edge='end' checked={deactivated.value} onChange={() => {}}/>
+					<Switch edge='end' checked={deactivated.value} onChange={toggleDeactivate}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon>
