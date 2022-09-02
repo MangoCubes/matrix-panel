@@ -4,7 +4,7 @@ type Param = {[key: string]: string};
 
 export class GetUsersQuery extends Query<QueryType.GetUsers>{
 	parseUrl(){
-		const query: Param = {};
+		const query: Param = {deactivated: 'true'};
 		query.guests = this.data.getGuests ? 'true' : 'false';
 		if(this.data.offset) query.from = this.data.offset.toString();
 		if(this.data.count) query.limit = this.data.count.toString();
