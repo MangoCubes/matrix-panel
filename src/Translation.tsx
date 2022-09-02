@@ -66,7 +66,8 @@ const resources = {
 			spaces: {
 				loadingRooms: 'Loading rooms...',
 				loadingSpaces: 'Loading space tree...',
-				title: 'View Space Tree'
+				title: 'View Space Tree',
+				noSpace: 'No spaces found in this server.'
 			},
 			room: {
 				title: 'Manage Room "{{name}}"',

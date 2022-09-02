@@ -1,4 +1,5 @@
-import { AppBar, Box, CircularProgress, List, Toolbar, Typography } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
+import { AppBar, Box, CircularProgress, IconButton, List, Toolbar, Typography } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
@@ -60,9 +61,28 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 		for(const k in roomStates){
 			const r = roomStates[k as RoomID];
 			if(r.states.find(s => s.type === 'm.space.parent')) continue;
-			rooms.push(k as RoomID);
+			if(r.room_type === 'm.space') rooms.push(k as RoomID);
 		}
 		return rooms;
+	}
+
+	const getList = (roomStates: RoomMap) => {
+		const list = getRootSpaces();
+		if(list.length === 0) return (
+			<Box sx={{flex: 1, flexFlow: 'column'}} display='flex' alignItems='center' justifyContent='center'>
+				<Typography>{t('spaces.noSpace')}</Typography>
+				<IconButton onClick={() => props.reload()}>
+					<Refresh/>
+				</IconButton>
+			</Box>
+		);
+		else return (
+			<Box sx={{flex: 1}}>
+				<List>
+					{list.map(r => <SpaceItem rid={r} key={r} map={roomStates} level={0}/>)}
+				</List>
+			</Box>
+		)
 	}
 
 	const getContent = () => {
@@ -78,13 +98,7 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 				<Typography>{t('spaces.loadingSpaces')}</Typography>
 			</Box>
 		);
-		else return(
-			<Box sx={{flex: 1}}>
-				<List>
-					{getRootSpaces().map(r => <SpaceItem rid={r} key={r} map={roomStates} level={0}/>)}
-				</List>
-			</Box>
-		);
+		else return getList(roomStates);
 	}
 
 	return (
