@@ -180,7 +180,8 @@ const resources = {
 						title: 'Deactivate user',
 						desc: 'Mark a user as deactivated to prevent this account from being used.',
 						deactivateSuccess: 'Account successfully deactivated.',
-						activateSuccess: 'Account successfully activated.'
+						activateSuccess: 'Account successfully activated.',
+						descSelf: 'Mark a user as deactivated to prevent this account from being used. Warning: This account is the one you are currently logged in. Unexpected behaviours are expected if you disable your own account.'
 					},
 					admin: {
 						title: 'Set As Administrator',
