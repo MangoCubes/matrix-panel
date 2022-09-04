@@ -47,7 +47,7 @@ export function UserLoader(){
 
 	return (
 		<Routes>
-			<Route path=':uid/*' element={<UserDetailsPage users={users}/>}/>
+			<Route path=':uid/*' element={<UserDetailsPage users={users} reload={() => setReload(true)}/>}/>
 			<Route path='*' element={<Users users={users} reload={() => setReload(true)}/>}/>
 		</Routes>
 	);

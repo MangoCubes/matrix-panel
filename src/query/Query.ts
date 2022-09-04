@@ -4,6 +4,7 @@ import { Room, RoomState } from "../types/Room";
 import { Session } from "../types/Session";
 import { AccessToken, DeviceID, FullUserID, RoomID, UserID } from "../types/Types";
 import { User } from "../types/User";
+import { EditUserQueryData } from "./EditUserQuery";
 
 export enum QueryType{
 	IsAdmin,
@@ -153,14 +154,7 @@ export type QueryParams = {
 	};
 	[QueryType.EditUser]: {
 		uid: FullUserID;
-		data: {
-			password?: string;
-			displayname?: string;
-			avatar_url?: string;
-			admin?: boolean;
-			deactivated?: false;
-			user_type?: null | 'bot' | 'support';
-		}
+		data: EditUserQueryData;
 	};
 	[QueryType.GetUserMembership]: {
 		uid: FullUserID;

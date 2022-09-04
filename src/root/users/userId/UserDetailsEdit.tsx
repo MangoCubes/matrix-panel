@@ -1,7 +1,9 @@
 import { PersonOff, AdminPanelSettings, Badge } from "@mui/icons-material";
-import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions } from "@mui/material";
+import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { EditUserQuery, EditUserQueryData } from "../../../query/EditUserQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { User } from "../../../types/User";
 
@@ -18,7 +20,7 @@ type UserData = {
 	userType: null | 'bot' | 'support';
 }
 
-export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void}) {
+export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void, reload: () => void}) {
 
 	const {t} = useTranslation();
 
@@ -26,7 +28,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 
 	const defaultData: UserData = {
 		password: null,
-		displayName: props.user.displayname,
+		displayName: props.user.displayname ? props.user.displayname : '',
 		avatar: props.user.avatar_url,
 		deactivated: props.user.deactivated === 1,
 		admin: props.user.admin === 1,
@@ -36,9 +38,36 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 	const [userData, setUserData] = useState<UserData>(defaultData);
 	const [querying, setQuerying] = useState(false);
 
-	useEffect(() => {
-		props.disableTabs(querying);
-	}, [querying]);
+	const sendQuery = async () => {
+		try{
+			props.disableTabs(true);
+			setQuerying(true);
+			const reqData: EditUserQueryData = {};
+			if(userData.password) {
+				reqData['password'] = userData.password.password;
+				reqData['logout'] = userData.password.logout;
+			}
+			if(userData.displayName) reqData['displayname'] = userData.displayName;
+			if(userData.avatar) reqData['avatar_url'] = userData.avatar;
+			//TODO: Use deactivate query for erasing all data
+			const req = new EditUserQuery(homeserver, {
+				uid: props.user.name,
+				data: {
+					...reqData,
+					admin: userData.admin,
+					deactivated: userData.deactivated,
+					user_type: userData.userType,
+				}
+			}, token);
+			await req.send();
+			props.reload();
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+			props.disableTabs(false);
+		}
+	}
 
 	return (
 		<>
@@ -63,11 +92,12 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 						<Badge/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.options.displayName.title')} secondary={t(`user.options.displayName.desc`)}/>
+					<TextField variant='standard' value={userData.displayName} disabled={querying} onChange={e => setUserData({...userData, displayName: e.currentTarget.value})}/>
 				</ListItem>
 			</List>
 		</CardContent>
 		<CardActions>
-			<Button sx={{ml: 'auto'}}>{t('common.confirm')}</Button>
+			<Button sx={{ml: 'auto'}} onClick={sendQuery}>{t('common.confirm')}</Button>
 		</CardActions>
 		</>
 	);
