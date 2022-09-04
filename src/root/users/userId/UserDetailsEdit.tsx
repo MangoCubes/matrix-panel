@@ -1,5 +1,5 @@
 import { PersonOff, AdminPanelSettings, Badge, Password } from "@mui/icons-material";
-import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField, DialogActions, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField, DialogActions, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -120,27 +120,59 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 	);
 }
 
+enum ErrorMsg {
+	None,
+	Empty,
+	Mismatch
+}
+
 function PasswordDialog(props: {user: User, open: boolean, close: () => void, confirm: (pw: string) => void}){
 
 	const [password, setPassword] = useState('');
+	const [verify, setVerify] = useState('');
+
+	const [error, setError] = useState<ErrorMsg>(ErrorMsg.None);
 
 	const {t} = useTranslation();
 
 	const confirm = () => {
-		props.confirm(password);
-		props.close();
+		if(password.length === 0) setError(ErrorMsg.Empty);
+		else if(password !== verify) setError(ErrorMsg.Mismatch);
+		else {
+			setError(ErrorMsg.None);
+			props.confirm(password);
+			props.close();
+		}
+	}
+
+	const getHelperText = () => {
+		if(error === ErrorMsg.Empty) return t('user.options.password.empty');
+		else if(error === ErrorMsg.Mismatch) return t('user.options.password.mismatch');
+		return ' ';
 	}
 
 	return (
 		<Dialog open={props.open} onClose={props.close}>
 			<DialogTitle>{t('user.options.password.dialogTitle', {uid: props.user.name})}</DialogTitle>
 			<DialogContent>
-				<TextField
-					variant='standard'
-					value={password.length === 0 ? '' : '•'.repeat(password.length - 1) + password[password.length - 1]}
-					onChange={(e) => setPassword(e.currentTarget.value)}
-					label={t('user.options.password.password')}
-				/>
+				<Stack spacing={1}>
+					<TextField
+						variant='standard'
+						value={password}
+						onChange={(e) => setPassword(e.currentTarget.value)}
+						label={t('user.options.password.password')}
+						error={error !== ErrorMsg.None}
+						helperText={getHelperText()}
+						type='password'
+					/>
+					<TextField
+						variant='standard'
+						value={verify}
+						onChange={(e) => setVerify(e.currentTarget.value)}
+						label={t('user.options.password.verify')}
+						type='password'
+					/>
+				</Stack>
 			</DialogContent>
 			<DialogActions>
 				<Button disabled={password.length === 0} onClick={confirm}>{t('common.confirm')}</Button>

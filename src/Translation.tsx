@@ -196,7 +196,10 @@ const resources = {
 						title: 'Set New Password',
 						reset: 'Reset',
 						desc: 'Reset a user\'s password, and make user log out from all devices. Mandatory for reactivating account.',
-						password: 'Password'
+						password: 'Password',
+						verify: 'Verify',
+						empty: 'Password cannot be empty.',
+						mismatch: 'Passwords do not match.'
 					},
 					displayName: {
 						title: 'Set Display Name',
