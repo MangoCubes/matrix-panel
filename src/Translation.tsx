@@ -206,6 +206,7 @@ const resources = {
 						desc: 'Set a name other users will see in a chatroom.',
 						displayName: 'Display Name'
 					},
+					success: 'User details updated successfully.'
 				},
 				sessions: {
 					title: 'Sessions',

@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { DeactivateQuery } from "../../../query/DeactivateQuery";
 import { EditUserQuery, EditUserQueryData } from "../../../query/EditUserQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { User } from "../../../types/User";
@@ -53,20 +54,23 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 				reqData['password'] = userData.password.password;
 				reqData['logout'] = userData.password.logout;
 			}
-			if(userData.displayName) reqData['displayname'] = userData.displayName;
+			if(userData.displayName !== null) reqData['displayname'] = userData.displayName;
 			if(userData.avatar) reqData['avatar_url'] = userData.avatar;
-			//TODO: Use deactivate query for erasing all data
+			if(defaultData.deactivated && !userData.deactivated) reqData['deactivated'] = false;
 			const req = new EditUserQuery(homeserver, {
 				uid: props.user.name,
 				data: {
 					...reqData,
 					admin: userData.admin,
-					deactivated: userData.deactivated,
 					user_type: userData.userType,
 				}
 			}, token);
-			await req.send();
+			if(!defaultData.deactivated && userData.deactivated){
+				const disableReq = new DeactivateQuery(homeserver, {user: props.user.name}, token);
+				await Promise.allSettled([disableReq.send(), req.send()]);
+			} else await req.send();
 			props.reload();
+			toast.success(t('user.options.success'));
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 		} finally {
