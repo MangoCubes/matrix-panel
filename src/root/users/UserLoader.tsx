@@ -5,7 +5,7 @@ import handleCommonErrors from "../../functions/handleCommonErrors";
 import { GetUsersQuery } from "../../query/GetUsersQuery";
 import { LoginContext } from "../../storage/LoginInfo";
 import { User } from "../../types/User";
-import { UserDetails } from "./userId/UserDetails";
+import { UserDetailsPage } from "./userId/UserDetailsPage";
 import { Users } from "./Users";
 
 export function UserLoader(){
@@ -47,7 +47,7 @@ export function UserLoader(){
 
 	return (
 		<Routes>
-			<Route path=':uid/*' element={<UserDetails users={users}/>}/>
+			<Route path=':uid/*' element={<UserDetailsPage users={users}/>}/>
 			<Route path='*' element={<Users users={users} reload={() => setReload(true)}/>}/>
 		</Routes>
 	);

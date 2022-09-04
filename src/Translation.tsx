@@ -174,8 +174,8 @@ const resources = {
 			user: {
 				title: 'Manage User "{{name}}"',
 				invalidUser: 'That user does not exist.',
-				details: {
-					title: 'User Details',
+				options: {
+					title: 'Edit User',
 					deactivate: {
 						title: 'Deactivate user',
 						desc: 'Mark a user as deactivated to prevent this account from being used.',
@@ -211,6 +211,9 @@ const resources = {
 				rooms: {
 					title: 'Joined Rooms',
 					id: 'Room ID'
+				},
+				details: {
+					title: 'User Details'
 				}
 			}
 		}
