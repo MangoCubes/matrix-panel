@@ -54,8 +54,14 @@ export function UserDetails(props: {users: User[] | null}){
 			else items.push(<Avatar alt={u.name} sx={{ width: 64, height: 64 }} key='avatar'>{u.name[1].toUpperCase()}</Avatar>);
 			items.push(
 				<Box key='name'>
-					<Typography variant='h6'>{u.name}</Typography>
-					<Typography variant='caption'>{u.name}</Typography>
+					{
+						u.displayname ? 
+							<>
+								<Typography variant='h6'>{u.displayname}</Typography>
+								<Typography variant='caption'>{u.name}</Typography>
+							</> :
+							<Typography variant='h6'>{u.name}</Typography>
+					}
 				</Box>
 			);
 			return <Stack direction='row' spacing={2}>{items}</Stack>;
