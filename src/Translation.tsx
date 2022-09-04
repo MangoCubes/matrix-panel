@@ -181,7 +181,8 @@ const resources = {
 						desc: 'Mark a user as deactivated to prevent this account from being used.',
 						deactivateSuccess: 'Account successfully deactivated.',
 						activateSuccess: 'Account successfully activated.',
-						descSelf: 'Mark a user as deactivated to prevent this account from being used. Warning: This account is the one you are currently logged in. Unexpected behaviours are expected if you disable your own account.'
+						descSelf: 'Mark a user as deactivated to prevent this account from being used. Warning: This account is the one you are currently logged in. Unexpected behaviours are expected if you disable your own account.',
+						noPassword: 'You must provide a password for this account in order to reactivate it.'
 					},
 					admin: {
 						title: 'Set As Administrator',
@@ -191,7 +192,10 @@ const resources = {
 						adminDisableSuccess: 'This user is no longer admin.'
 					},
 					password: {
-						title: 'Set Password For User {{uid}}',
+						dialogTitle: 'Reset Password For User {{uid}}',
+						title: 'Set New Password',
+						reset: 'Reset',
+						desc: 'Reset a user\'s password, and make user log out from all devices. Mandatory for reactivating account.',
 						password: 'Password'
 					},
 					displayName: {

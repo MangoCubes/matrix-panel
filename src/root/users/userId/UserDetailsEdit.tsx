@@ -1,7 +1,8 @@
-import { PersonOff, AdminPanelSettings, Badge } from "@mui/icons-material";
-import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField } from "@mui/material";
+import { PersonOff, AdminPanelSettings, Badge, Password } from "@mui/icons-material";
+import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField, DialogActions, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { EditUserQuery, EditUserQueryData } from "../../../query/EditUserQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -37,8 +38,13 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 
 	const [userData, setUserData] = useState<UserData>(defaultData);
 	const [querying, setQuerying] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	const sendQuery = async () => {
+		if(defaultData.deactivated && !userData.deactivated && userData.password === null){
+			toast.error(t('user.options.deactivate.noPassword'));
+			return;
+		}
 		try{
 			props.disableTabs(true);
 			setQuerying(true);
@@ -94,11 +100,51 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 					<ListItemText primary={t('user.options.displayName.title')} secondary={t(`user.options.displayName.desc`)}/>
 					<TextField variant='standard' value={userData.displayName} disabled={querying} onChange={e => setUserData({...userData, displayName: e.currentTarget.value})}/>
 				</ListItem>
+				<ListItem>
+					<ListItemIcon>
+						<Password/>	
+					</ListItemIcon>
+					<ListItemText primary={t('user.options.password.title')} secondary={t(`user.options.password.desc`)}/>
+					<Button onClick={() => setOpen(true)}>{t('user.options.password.reset')}</Button>
+				</ListItem>
 			</List>
 		</CardContent>
 		<CardActions>
 			<Button sx={{ml: 'auto'}} onClick={sendQuery}>{t('common.confirm')}</Button>
 		</CardActions>
+		<PasswordDialog user={props.user} open={open} close={() => setOpen(false)} confirm={(pw) => setUserData({...userData, password: {
+			password: pw,
+			logout: true
+		}})}/>
 		</>
 	);
+}
+
+function PasswordDialog(props: {user: User, open: boolean, close: () => void, confirm: (pw: string) => void}){
+
+	const [password, setPassword] = useState('');
+
+	const {t} = useTranslation();
+
+	const confirm = () => {
+		props.confirm(password);
+		props.close();
+	}
+
+	return (
+		<Dialog open={props.open} onClose={props.close}>
+			<DialogTitle>{t('user.options.password.dialogTitle', {uid: props.user.name})}</DialogTitle>
+			<DialogContent>
+				<TextField
+					variant='standard'
+					value={password.length === 0 ? '' : '•'.repeat(password.length - 1) + password[password.length - 1]}
+					onChange={(e) => setPassword(e.currentTarget.value)}
+					label={t('user.options.password.password')}
+				/>
+			</DialogContent>
+			<DialogActions>
+				<Button disabled={password.length === 0} onClick={confirm}>{t('common.confirm')}</Button>
+			</DialogActions>
+		</Dialog>
+	)
 }
