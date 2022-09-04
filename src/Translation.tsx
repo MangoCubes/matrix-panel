@@ -192,7 +192,12 @@ const resources = {
 					password: {
 						title: 'Set Password For User {{uid}}',
 						password: 'Password'
-					}
+					},
+					displayName: {
+						title: 'Set Display Name',
+						desc: 'Set a name other users will see in a chatroom.',
+						displayName: 'Display Name'
+					},
 				},
 				sessions: {
 					title: 'Sessions',

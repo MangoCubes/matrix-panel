@@ -1,4 +1,4 @@
-import { AdminPanelSettings, PersonOff } from "@mui/icons-material";
+import { AdminPanelSettings, PersonOff, Badge } from "@mui/icons-material";
 import { Switch, CardContent, List, ListItem, ListItemIcon, ListItemText, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,12 @@ type PromiseBoolean = {
 	value: boolean;
 }
 
+enum DialogType {
+	None,
+	Password,
+	Name
+}
+
 export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void}) {
 
 	const {t} = useTranslation();
@@ -23,7 +29,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 
 	const [deactivated, setDeactivated] = useState<PromiseBoolean>({value: props.user.deactivated === 1, loading: false});
 	const [admin, setAdmin] = useState<PromiseBoolean>({value: props.user.admin === 1, loading: false});
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState<DialogType>(DialogType.None);
 
 	const toggleAdmin = async () => {
 		const original = admin.value;
@@ -50,7 +56,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			if (e instanceof Error) handleCommonErrors(e, t);
 			setDeactivated({value: true, loading: false});
 		} finally {
-			setOpen(false);
+			setOpen(DialogType.None);
 		}
 	}
 
@@ -68,7 +74,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 	}
 
 	const clickToggle = () => {
-		if(deactivated.value) setOpen(true);
+		if(deactivated.value) setOpen(DialogType.Password);
 		else deactivateAccount();
 	}
 
@@ -85,7 +91,6 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 					</ListItemIcon>
 					<ListItemText primary={t('user.options.deactivate.title')} secondary={t('user.options.deactivate.desc')}/>
 					<Switch edge='end' checked={deactivated.value} disabled={props.user.name === uid || deactivated.loading} onChange={clickToggle}/>
-					<PasswordDialog user={props.user} open={open} close={() => setOpen(false)} confirm={activateAccount} querying={deactivated.loading}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon>
@@ -94,31 +99,51 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 					<ListItemText primary={t('user.options.admin.title')} secondary={t(`user.options.admin.desc${props.user.name === uid ? 'Self' : ''}`)}/>
 					<Switch edge='end' checked={admin.value} disabled={props.user.name === uid || admin.loading} onChange={toggleAdmin} />
 				</ListItem>
+				<ListItem>
+					<ListItemIcon>
+						<Badge/>	
+					</ListItemIcon>
+					<ListItemText primary={t('user.options.displayName.title')} secondary={t(`user.options.displayName.desc`)}/>
+					<Button>{t('common.edit')}</Button>
+				</ListItem>
 			</List>
+			<InputDialog user={props.user} type={open} close={() => setOpen(DialogType.None)} confirm={activateAccount} querying={deactivated.loading}/>
 		</CardContent>
 	);
 }
 
-function PasswordDialog(props: {user: User, open: boolean, close: () => void, confirm: (pw: string) => void, querying: boolean}){
+function InputDialog(props: {user: User, type: DialogType, close: () => void, confirm: (pw: string) => void, querying: boolean}){
 
-	const [password, setPassword] = useState('');
+	const [value, setValue] = useState('');
 
 	const {t} = useTranslation();
 
+	const title = {
+		[DialogType.None]: '',
+		[DialogType.Password]: t('user.options.password.title', {uid: props.user.name}),
+		[DialogType.Name]: t('user.options.displayName.title')
+	}
+
+	const label = {
+		[DialogType.None]: '',
+		[DialogType.Password]: t('user.options.password.password'),
+		[DialogType.Name]: t('user.options.displayName.displayName')
+	}
+
 	return (
-		<Dialog open={props.open} onClose={props.close}>
-			<DialogTitle>{t('user.options.password.title', {uid: props.user.name})}</DialogTitle>
+		<Dialog open={props.type !== DialogType.None} onClose={props.close}>
+			<DialogTitle>{title[props.type]}</DialogTitle>
 			<DialogContent>
 				<TextField
 					variant='standard'
-					value={password}
+					value={value}
 					disabled={props.querying}
-					onChange={(e) => setPassword(e.currentTarget.value)}
-					label={t('user.options.password.password')}
+					onChange={(e) => setValue(e.currentTarget.value)}
+					label={label[props.type]}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button disabled={password.length === 0 || props.querying} onClick={() => props.confirm(password)}>{t('common.confirm')}</Button>
+				<Button disabled={value.length === 0 || props.querying} onClick={() => props.confirm(value)}>{t('common.confirm')}</Button>
 			</DialogActions>
 		</Dialog>
 	)
