@@ -134,7 +134,9 @@ const resources = {
 							until: 'Purge messages until: ',
 							choose: 'Choose date & time',
 							descUntil: 'This will delete all messages sent between the start of this room to the time specified.',
-							notRoomStates: 'Room memberships and other room states will be preserved.'
+							notRoomStates: 'Room memberships and other room states will be preserved.',
+							noMessage: 'There are no messages to delete within the selected timeframe.',
+							deleteLocal: 'Delete local messages too'
 						}
 					}
 				},

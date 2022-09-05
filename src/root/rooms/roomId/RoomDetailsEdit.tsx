@@ -1,5 +1,5 @@
 import { AdminPanelSettings, Mail, PersonAdd, History } from "@mui/icons-material";
-import { Button, CardContent, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
+import { Button, CardContent, Checkbox, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,6 +14,7 @@ import { LoginContext } from "../../../storage/LoginInfo";
 import { MembershipEvent, RoomWithState } from "../../../types/Room";
 import { RoomID } from "../../../types/Types";
 import { Moment } from "moment";
+import { HTTPError } from "../../../class/error/HTTPError";
 
 export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, disableTabs: (to: boolean) => void}){
 
@@ -115,20 +116,27 @@ function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
 
 	const [range, setRange] = useState<Range>(Range.All);
 	const [until, setUntil] = useState<Date>(new Date());
+	const [local, setLocal] = useState(true);
 
 	const purge = async () => {
 		setQuerying(true);
 		try{
 			const req = new PurgeHistoryQuery(homeserver, {
 				rid: props.rid,
-				local: true,
+				local: local,
 				ts: range === Range.All ? new Date().getTime() : until.getTime()
 			}, token);
 			await req.send();
 			toast.success(t(`room.options.purge.success`));
 		} catch (e) {
-			console.log(until)
-			if (e instanceof Error) handleCommonErrors(e, t);
+			const locallyHandled = [404];
+			if (e instanceof Error) {
+				if(e instanceof HTTPError && locallyHandled.includes(e.errCode)){
+					if(e.errCode === 404) toast.error(t('room.options.purge.dialog.noMessage'))
+					return;
+				}
+				handleCommonErrors(e, t);
+			}
 		} finally {
 			setQuerying(false);
 		}
@@ -160,9 +168,10 @@ function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
 							</LocalizationProvider>
 						</Collapse>
 					</RadioGroup>
-					<DialogContentText>{rangeText()}</DialogContentText>
-					<DialogContentText>{t('room.options.purge.dialog.notRoomStates')}</DialogContentText>
+					<FormControlLabel control={<Checkbox checked={local} onChange={e => setLocal(e.target.checked)}/>} label={t('room.options.purge.dialog.deleteLocal')} />
 				</FormControl>
+				<DialogContentText>{rangeText()}</DialogContentText>
+				<DialogContentText>{t('room.options.purge.dialog.notRoomStates')}</DialogContentText>
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={purge} disabled={querying}>{t('common.confirm')}</Button>
