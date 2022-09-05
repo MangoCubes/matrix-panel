@@ -166,6 +166,7 @@ export type QueryParams = {
 	[QueryType.PurgeHistory]: {
 		rid: RoomID;
 		local: boolean;
+		ts: number;
 	}
 }
 

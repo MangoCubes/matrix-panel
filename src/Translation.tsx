@@ -122,6 +122,11 @@ const resources = {
 						desc: 'Give yourself highest permission available in this room. Try this if you are getting invalid permission error.',
 						success: 'You are now admin of this room.'
 					},
+					purge: {
+						name: 'Purge History',
+						desc: 'Delete message history of this room to free up disk space. Note that due to Synapse\'s implementation, most recent message event will not be deleted.',
+						success: 'History purge has been initialised. This operation may take a while.'
+					}
 				},
 				members: {
 					title: 'Room Members',

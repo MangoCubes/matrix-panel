@@ -1,10 +1,11 @@
-import { AdminPanelSettings, Mail, PersonAdd } from "@mui/icons-material";
+import { AdminPanelSettings, Mail, PersonAdd, History } from "@mui/icons-material";
 import { Button, CardContent, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { JoinRoomQuery } from "../../../query/JoinRoomQuery";
+import { PurgeHistoryQuery } from "../../../query/PurgeHistoryQuery";
 import { Query, QueryType } from "../../../query/Query";
 import { SetUserRoomAdminQuery } from "../../../query/SetUserRoomAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -30,12 +31,16 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 		await sendQuery(true, new SetUserRoomAdminQuery(homeserver, {rid: props.room.room_id, uid: uid}, token), isInvite ? t('room.options.join.success') : t('room.options.admin.success'));
 	}
 
+	const purgeHistory = async () => {
+		await sendQuery (false, new PurgeHistoryQuery(homeserver, {rid: props.room.room_id, local: true, ts: new Date().getTime()}, token), t(`room.options.purge.success`));
+	}
+
 	const sendQuery = async (reload: boolean, query: Query<QueryType>, success: string) => {
 		setQuerying(true);
 		try{
 			await query.send();
 			toast.success(success);
-			if(reload)props.reload();
+			if (reload) props.reload();
 		} catch (e) {
 			if (e instanceof Error) handleCommonErrors(e, t);
 		} finally {
@@ -80,6 +85,14 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 		<CardContent>
 			<List>
 				{getJoinAction()}
+				<ListItem secondaryAction={
+					<Button onClick={purgeHistory} disabled={querying}>{t('common.confirm')}</Button>
+				}>
+					<ListItemIcon>
+						<History/>
+					</ListItemIcon>
+					<ListItemText primary={t(`room.options.purge.name`)} secondary={t(`room.options.purge.desc`)}/>
+				</ListItem>
 			</List>
 		</CardContent>
 	)

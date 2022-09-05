@@ -9,7 +9,8 @@ export class PurgeHistoryQuery extends Query<QueryType.PurgeHistory>{
 				'Authorization': 'Bearer ' + this.token
 			},
 			body: JSON.stringify({
-				delete_local_events: this.data.local
+				delete_local_events: this.data.local,
+				purge_up_to_ts: this.data.ts
 			})
 		});
 	}
