@@ -17,11 +17,18 @@ export function RoomMembers(props: {room: Room, states: MembershipEvent[], reloa
 	const [sel, setSel] = useState<GridSelectionModel>([]);
 	const [querying, setQuerying] = useState(false);
 
-	const {homeserver, token} = useContext(LoginContext);
+	const {homeserver, uid, token} = useContext(LoginContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
-			{field: 'username', headerName: t('room.members.username'), flex: 2},
+			{
+				field: 'username',
+				headerName: t('room.members.username'),
+				flex: 2,
+				valueFormatter: (params: GridValueFormatterParams<string>) => {
+					return uid === params.value ? `${params.value} ${t('common.you')}` : params.value;
+				}
+			},
 			{field: 'displayName', headerName: t('room.members.displayName'), flex: 1},
 			{field: 'invitedBy', headerName: t('room.members.invitedBy'), flex: 2},
 			{

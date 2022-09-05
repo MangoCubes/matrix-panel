@@ -39,7 +39,7 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 		for(const r of props.users){
 			rows.push({
 				id: r.name,
-				uid: r.name === uid ? `${r.name} ${t('users.you')}` : r.name,
+				uid: r.name === uid ? `${r.name} ${t('common.you')}` : r.name,
 				displayName: r.displayname,
 				isAdmin: r.admin === 1,
 				isGuest: r.is_guest === 1,

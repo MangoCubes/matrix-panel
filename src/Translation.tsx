@@ -14,7 +14,8 @@ const resources = {
 				username: 'Username',
 				enabled: 'Enabled',
 				disabled: 'Disabled',
-				confirm: 'Confirm'
+				confirm: 'Confirm',
+				you: '(You)',
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -169,7 +170,6 @@ const resources = {
 				displayName: 'Display Name',
 				deactivated: 'Deactivated',
 				shadowBanned: 'Shadow Banned?',
-				you: '(You)',
 				countSelected: 'Selected {{count}} users',
 				deactivate: 'Deactivate selected users',
 				activate: 'Activate selected users'

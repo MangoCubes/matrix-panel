@@ -128,6 +128,7 @@ function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
 			}, token);
 			await req.send();
 			toast.success(t(`room.options.purge.success`));
+			props.close();
 		} catch (e) {
 			const locallyHandled = [404];
 			if (e instanceof Error) {
