@@ -1,7 +1,9 @@
 import { AdminPanelSettings, Mail, PersonAdd, History } from "@mui/icons-material";
-import { Button, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup } from "@mui/material";
+import { Button, CardContent, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { JoinRoomQuery } from "../../../query/JoinRoomQuery";
@@ -11,6 +13,7 @@ import { SetUserRoomAdminQuery } from "../../../query/SetUserRoomAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { MembershipEvent, RoomWithState } from "../../../types/Room";
 import { RoomID } from "../../../types/Types";
+import { Moment } from "moment";
 
 export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, disableTabs: (to: boolean) => void}){
 
@@ -111,14 +114,20 @@ function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
 	const [querying, setQuerying] = useState<boolean>(false);
 
 	const [range, setRange] = useState<Range>(Range.All);
+	const [until, setUntil] = useState<Date>(new Date());
 
 	const purge = async () => {
 		setQuerying(true);
 		try{
-			const req = new PurgeHistoryQuery(homeserver, {rid: props.rid, local: true, ts: new Date().getTime()}, token);
+			const req = new PurgeHistoryQuery(homeserver, {
+				rid: props.rid,
+				local: true,
+				ts: range === Range.All ? new Date().getTime() : until.getTime()
+			}, token);
 			await req.send();
 			toast.success(t(`room.options.purge.success`));
 		} catch (e) {
+			console.log(until)
 			if (e instanceof Error) handleCommonErrors(e, t);
 		} finally {
 			setQuerying(false);
@@ -139,6 +148,17 @@ function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
 					<RadioGroup value={Range.All} onChange={(e) => setRange(e.target.value as Range)}>
 						<FormControlLabel value={Range.All} control={<Radio checked={range === Range.All}/>} label={t('room.options.purge.dialog.all')} />
 						<FormControlLabel value={Range.Until} control={<Radio checked={range === Range.Until}/>} label={t('room.options.purge.dialog.until')} />
+						<Collapse unmountOnExit in={range === Range.Until}>
+							<LocalizationProvider dateAdapter={AdapterMoment}>
+								<DatePicker
+									value={until}
+									onChange={e => setUntil((e as unknown as Moment).toDate())} // Temporary fix
+									renderInput={p => (
+										<TextField {...p} variant='standard'/>
+									)}
+								/>
+							</LocalizationProvider>
+						</Collapse>
 					</RadioGroup>
 					<DialogContentText>{rangeText()}</DialogContentText>
 					<DialogContentText>{t('room.options.purge.dialog.notRoomStates')}</DialogContentText>

@@ -132,6 +132,7 @@ const resources = {
 							all: 'Purge all messages',
 							descAll: 'This will delete all messages in this room.',
 							until: 'Purge messages until: ',
+							choose: 'Choose date & time',
 							descUntil: 'This will delete all messages sent between the start of this room to the time specified.',
 							notRoomStates: 'Room memberships and other room states will be preserved.'
 						}
