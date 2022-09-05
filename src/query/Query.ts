@@ -25,7 +25,8 @@ export enum QueryType{
 	SetAlias,
 	SetCanonicalAlias,
 	EditUser,
-	GetUserMembership
+	GetUserMembership,
+	PurgeHistory
 }
 
 export type QueryResponse = {
@@ -82,6 +83,9 @@ export type QueryResponse = {
 	[QueryType.GetUserMembership]: {
 		joined_rooms: RoomID[];
 		total: number;
+	};
+	[QueryType.PurgeHistory]: {
+		purge_id: string;
 	};
 }
 
@@ -159,6 +163,10 @@ export type QueryParams = {
 	[QueryType.GetUserMembership]: {
 		uid: FullUserID;
 	};
+	[QueryType.PurgeHistory]: {
+		rid: RoomID;
+		local: boolean;
+	}
 }
 
 export abstract class Query<T extends QueryType>{
