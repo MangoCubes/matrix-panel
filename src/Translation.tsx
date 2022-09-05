@@ -122,20 +122,6 @@ const resources = {
 						desc: 'Give yourself highest permission available in this room. Try this if you are getting invalid permission error.',
 						success: 'You are now admin of this room.'
 					},
-					alias: {
-						name: 'Edit Room Alias',
-						nameUnset: 'Set Room Alias',
-						desc: 'Set a unique room alias to make it easier to discover.',
-						newAlias: 'New Alias',
-						setNewAlias: 'Set New Alias',
-						duplicate: 'A room with alias {{alias}} already exists.',
-						success: 'Alias {{alias}} set for room {{rid}}.',
-						missingServerName: 'The alias is missing the server name. (The part that comes after ":")'
-					},
-					notMember: {
-						name: 'Currently Not A Member',
-						desc: 'You must be a member of this room to see all available actions.'
-					}
 				},
 				members: {
 					title: 'Room Members',
