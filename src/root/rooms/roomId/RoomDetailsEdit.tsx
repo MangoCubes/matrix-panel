@@ -1,5 +1,5 @@
 import { AdminPanelSettings, Mail, PersonAdd, History } from "@mui/icons-material";
-import { Button, CardContent, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Button, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -10,6 +10,7 @@ import { Query, QueryType } from "../../../query/Query";
 import { SetUserRoomAdminQuery } from "../../../query/SetUserRoomAdminQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { MembershipEvent, RoomWithState } from "../../../types/Room";
+import { RoomID } from "../../../types/Types";
 
 export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, disableTabs: (to: boolean) => void}){
 
@@ -18,6 +19,7 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 	const {homeserver, token, uid} = useContext(LoginContext);
 
 	const [querying, setQuerying] = useState<boolean>(false);
+	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
 		props.disableTabs(querying);
@@ -29,10 +31,6 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 
 	const setRoomAdmin = async (isInvite: boolean) => {
 		await sendQuery(true, new SetUserRoomAdminQuery(homeserver, {rid: props.room.room_id, uid: uid}, token), isInvite ? t('room.options.join.success') : t('room.options.admin.success'));
-	}
-
-	const purgeHistory = async () => {
-		await sendQuery (false, new PurgeHistoryQuery(homeserver, {rid: props.room.room_id, local: true, ts: new Date().getTime()}, token), t(`room.options.purge.success`));
 	}
 
 	const sendQuery = async (reload: boolean, query: Query<QueryType>, success: string) => {
@@ -86,7 +84,7 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 			<List>
 				{getJoinAction()}
 				<ListItem secondaryAction={
-					<Button onClick={purgeHistory} disabled={querying}>{t('common.confirm')}</Button>
+					<Button onClick={() => setOpen(true)} disabled={querying}>{t('room.options.purge.purge')}</Button>
 				}>
 					<ListItemIcon>
 						<History/>
@@ -94,6 +92,62 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 					<ListItemText primary={t(`room.options.purge.name`)} secondary={t(`room.options.purge.desc`)}/>
 				</ListItem>
 			</List>
+			<PurgeDialog rid={props.room.room_id} open={open} close={() => setOpen(false)}/>
 		</CardContent>
 	)
+}
+
+enum Range {
+	All = 'All',
+	Until = 'Until'
+}
+
+function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
+
+	const {t} = useTranslation();
+
+	const {homeserver, token} = useContext(LoginContext);
+
+	const [querying, setQuerying] = useState<boolean>(false);
+
+	const [range, setRange] = useState<Range>(Range.All);
+
+	const purge = async () => {
+		setQuerying(true);
+		try{
+			const req = new PurgeHistoryQuery(homeserver, {rid: props.rid, local: true, ts: new Date().getTime()}, token);
+			await req.send();
+			toast.success(t(`room.options.purge.success`));
+		} catch (e) {
+			if (e instanceof Error) handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+		}
+	}
+
+	const rangeText = () => {
+		if(range === Range.All) return t('room.options.purge.dialog.descAll');
+		else return t('room.options.purge.dialog.descUntil');
+	}
+
+	return (
+		<Dialog open={props.open} onClose={props.close}>
+			<DialogTitle>{t(`room.options.purge.name`)}</DialogTitle>
+			<DialogContent>
+				<FormControl>
+					<FormLabel>{t('room.options.purge.dialog.select')}</FormLabel>
+					<RadioGroup value={Range.All} onChange={(e) => setRange(e.target.value as Range)}>
+						<FormControlLabel value={Range.All} control={<Radio checked={range === Range.All}/>} label={t('room.options.purge.dialog.all')} />
+						<FormControlLabel value={Range.Until} control={<Radio checked={range === Range.Until}/>} label={t('room.options.purge.dialog.until')} />
+					</RadioGroup>
+					<DialogContentText>{rangeText()}</DialogContentText>
+					<DialogContentText>{t('room.options.purge.dialog.notRoomStates')}</DialogContentText>
+				</FormControl>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={purge} disabled={querying}>{t('common.confirm')}</Button>
+			</DialogActions>
+		</Dialog>
+	)
+
 }

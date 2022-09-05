@@ -124,8 +124,17 @@ const resources = {
 					},
 					purge: {
 						name: 'Purge History',
+						purge: 'Purge',
 						desc: 'Delete message history of this room to free up disk space. Note that due to Synapse\'s implementation, most recent message event will not be deleted.',
-						success: 'History purge has been initialised. This operation may take a while.'
+						success: 'History purge has been initialised. This operation may take a while.',
+						dialog: {
+							select: 'Purge range',
+							all: 'Purge all messages',
+							descAll: 'This will delete all messages in this room.',
+							until: 'Purge messages until: ',
+							descUntil: 'This will delete all messages sent between the start of this room to the time specified.',
+							notRoomStates: 'Room memberships and other room states will be preserved.'
+						}
 					}
 				},
 				members: {
