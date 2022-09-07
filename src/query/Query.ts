@@ -27,7 +27,8 @@ export enum QueryType{
 	EditUser,
 	GetUserMembership,
 	PurgeHistory,
-	GenerateUserToken
+	GenerateUserToken,
+	Logout
 }
 
 export type QueryResponse = {
@@ -91,6 +92,7 @@ export type QueryResponse = {
 	[QueryType.GenerateUserToken]: {
 		access_token: string;
 	};
+	[QueryType.Logout]: {};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -176,6 +178,7 @@ export type QueryParams = {
 		valid_until_ms?: number;
 		uid: FullUserID;
 	};
+	[QueryType.Logout]: {};
 }
 
 export abstract class Query<T extends QueryType>{
