@@ -3,7 +3,7 @@ import { Query, QueryType } from "./Query";
 export class SendNoticeQuery extends Query<QueryType.SendNotice>{
 	async fetch(): Promise<Response> {
 		return await fetch(`${this.homeserver}/_synapse/admin/v1/send_server_notice`, {
-			method: 'GET',
+			method: 'POST',
 			signal: this.con.signal,
 			headers: {
 				'Authorization': 'Bearer ' + this.token

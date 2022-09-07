@@ -1,20 +1,28 @@
 import { Key } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Box, Typography, CardContent, Collapse, Dialog, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, Stack, TextField, Button } from "@mui/material";
+import { Box, Typography, CardContent, Collapse, Dialog, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, Stack, TextField, Button, DialogActions } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { Moment } from "moment";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GenerateUserTokenQuery } from "../../../query/GenerateUserTokenQuery";
+import { SendNoticeQuery } from "../../../query/SendNoticeQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
 import { User } from "../../../types/User";
+
+enum DialogType {
+	None,
+	Token,
+	Notice
+}
 
 export function UserActions(props: {user: User}){
 
 	const {t} = useTranslation();
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(DialogType.None);
 
 	const {uid} = useContext(LoginContext);
 
@@ -26,12 +34,62 @@ export function UserActions(props: {user: User}){
 						<Key/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.actions.genToken.title')} secondary={t(props.user.name === uid ? `user.actions.genToken.cannotGenSelf` : `user.actions.genToken.desc`)}/>
-					<Button disabled={props.user.name === uid} onClick={() => setOpen(true)}>{t('common.create')}</Button>
+					<Button disabled={props.user.name === uid} onClick={() => setOpen(DialogType.Token)}>{t('common.create')}</Button>
 				</ListItem>
 			</List>
-			<TokenDialog user={props.user} open={open} close={() => setOpen(false)}/>
+			<List>
+				<ListItem>
+					<ListItemIcon>
+						<Key/>	
+					</ListItemIcon>
+					<ListItemText primary={t('user.actions.notice.title')} secondary={t(`user.actions.notice.desc`)}/>
+					<Button onClick={() => setOpen(DialogType.Notice)}>{t('common.send')}</Button>
+				</ListItem>
+			</List>
+			<TokenDialog user={props.user} open={open === DialogType.Token} close={() => setOpen(DialogType.None)}/>
+			<NoticeDialog user={props.user} open={open === DialogType.Notice} close={() => setOpen(DialogType.None)}/>
 		</CardContent>
 	);
+}
+
+function NoticeDialog(props: {user: User, open: boolean, close: () => void}){
+
+	const {homeserver, token} = useContext(LoginContext);
+
+	const [querying, setQuerying] = useState(false);
+	const [message, setMessage] = useState('');
+
+	const {t} = useTranslation();
+
+	useEffect(() => {
+		return () => setMessage('');
+	}, []);
+
+	const send = async () => {
+		setQuerying(true);
+		try{
+			const req = new SendNoticeQuery(homeserver, {uid: props.user.name, message: message}, token);
+			await req.send();
+			toast.success(t('user.actions.notice.success'));
+			props.close();
+		} catch (e) {
+			if(e instanceof Error)handleCommonErrors(e, t);
+		} finally {
+			setQuerying(false);
+		}
+	}
+
+	return (
+		<Dialog open={props.open} onClose={props.close}>
+			<DialogTitle>{t(`user.actions.notice.dialog.title`)}</DialogTitle>
+			<DialogContent>
+				<TextField value={message} onChange={e => setMessage(e.currentTarget.value)} disabled={querying} variant='standard' label={t('user.actions.notice.dialog.label')}/>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={send} disabled={message === '' || querying}>{t('common.send')}</Button>
+			</DialogActions>
+		</Dialog>
+	)
 }
 
 enum Validity {

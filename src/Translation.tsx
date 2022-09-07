@@ -17,6 +17,7 @@ const resources = {
 				confirm: 'Confirm',
 				you: '(You)',
 				create: 'Create',
+				send: 'Send'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -248,6 +249,15 @@ const resources = {
 						expiryCond: 'Token will not expire even if this user logs out from everything using /logout/all endpoint. However, the token will expire if you call this endpoint (/logout/all) yourself.',
 						tokenHere: 'Generated token will appear here:',
 						cannotGenSelf: 'Token cannot be generated for your own account.'
+					},
+					notice: {
+						title: 'Send Server Notice',
+						desc: 'Send a notice from the server to this user.',
+						dialog: {
+							title: 'Enter Notice Message',
+							label: 'Message'
+						},
+						success: 'Notice has been sent to this user.'
 					}
 				}
 			}
