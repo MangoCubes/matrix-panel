@@ -174,7 +174,7 @@ export type QueryParams = {
 	};
 	[QueryType.GenerateUserToken]: {
 		valid_until_ms?: number;
-		uid: UserID;
+		uid: FullUserID;
 	};
 }
 

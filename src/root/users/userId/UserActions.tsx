@@ -1,11 +1,14 @@
 import { Key } from "@mui/icons-material";
-import { Button, CardContent, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, Typography, CardContent, Collapse, Dialog, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, Stack, TextField, Button } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { Moment } from "moment";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
+import { GenerateUserTokenQuery } from "../../../query/GenerateUserTokenQuery";
+import { LoginContext } from "../../../storage/LoginInfo";
 import { User } from "../../../types/User";
 
 export function UserActions(props: {user: User}){
@@ -36,6 +39,8 @@ enum Validity {
 
 function TokenDialog(props: {user: User, open: boolean, close: () => void}){
 
+	const {homeserver, token} = useContext(LoginContext);
+
 	const [until, setUntil] = useState<Date | null>(null);
 	const [validity, setValidity] = useState<Validity>(Validity.Indef);
 	const [querying, setQuerying] = useState(false);
@@ -46,7 +51,9 @@ function TokenDialog(props: {user: User, open: boolean, close: () => void}){
 	const generate = async () => {
 		setQuerying(true);
 		try{
-			props.close();
+			const req = new GenerateUserTokenQuery(homeserver, {uid: props.user.name, valid_until_ms: until ? until.getDate() : undefined}, token);
+			const res = await req.send();
+			setUserToken(res.access_token);
 		} catch (e) {
 			if(e instanceof Error)handleCommonErrors(e, t);
 		} finally {
@@ -63,28 +70,36 @@ function TokenDialog(props: {user: User, open: boolean, close: () => void}){
 		<Dialog open={props.open} onClose={props.close}>
 		<DialogTitle>{t(`user.actions.genToken.title`)}</DialogTitle>
 		<DialogContent>
-			<FormControl>
-				<FormLabel>{t('user.actions.genToken.expiry')}</FormLabel>
-				<RadioGroup value={Validity.Indef} onChange={(e) => setValidity(e.target.value as Validity)}>
-					<FormControlLabel value={Validity.Indef} control={<Radio checked={validity === Validity.Indef}/>} label={t('user.actions.genToken.indef')} />
-					<FormControlLabel value={Validity.Until} control={<Radio checked={validity === Validity.Until}/>} label={t('user.actions.genToken.until')} />
-					<Collapse unmountOnExit in={validity === Validity.Until}>
-						<LocalizationProvider dateAdapter={AdapterMoment}>
-							<DatePicker
-								value={until}
-								onChange={e => setUntil((e as unknown as Moment).toDate())} // Temporary fix
-								renderInput={p => (
-									<TextField {...p} variant='standard'/>
-								)}
-							/>
-						</LocalizationProvider>
-					</Collapse>
-				</RadioGroup>
-			</FormControl>
-			<DialogContentText>{validityText()}</DialogContentText>
-			<DialogContentText>{t('user.actions.genToken.expiryCond')}</DialogContentText>
-			<DialogContentText>{t('user.actions.genToken.tokenHere')}</DialogContentText>
-			<Button onClick={generate} disabled={querying}>{t('common.create')}</Button>
+			<Stack spacing={1}>
+				<Box>
+					<FormControl>
+						<FormLabel>{t('user.actions.genToken.expiry')}</FormLabel>
+						<RadioGroup value={Validity.Indef} onChange={(e) => setValidity(e.target.value as Validity)}>
+							<FormControlLabel value={Validity.Indef} control={<Radio checked={validity === Validity.Indef}/>} label={t('user.actions.genToken.indef')} />
+							<FormControlLabel value={Validity.Until} control={<Radio checked={validity === Validity.Until}/>} label={t('user.actions.genToken.until')} />
+							<Collapse unmountOnExit in={validity === Validity.Until}>
+								<LocalizationProvider dateAdapter={AdapterMoment}>
+									<DatePicker
+										value={until}
+										onChange={e => setUntil((e as unknown as Moment).toDate())} // Temporary fix
+										renderInput={p => (
+											<TextField {...p} variant='standard'/>
+										)}
+									/>
+								</LocalizationProvider>
+							</Collapse>
+						</RadioGroup>
+					</FormControl>
+					<DialogContentText>{validityText()}</DialogContentText>
+					<DialogContentText>{t('user.actions.genToken.expiryCond')}</DialogContentText>
+				</Box>
+				<Divider variant='middle'/>
+				<Box>
+					<DialogContentText>{t('user.actions.genToken.tokenHere')}</DialogContentText>
+					<Typography>{userToken}</Typography>
+					<LoadingButton loading={querying} onClick={generate}>{t('common.create')}</LoadingButton>
+				</Box>
+			</Stack>
 		</DialogContent>
 	</Dialog>
 	)
