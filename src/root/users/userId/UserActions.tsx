@@ -16,6 +16,8 @@ export function UserActions(props: {user: User}){
 	const {t} = useTranslation();
 	const [open, setOpen] = useState(false);
 
+	const {uid} = useContext(LoginContext);
+
 	return (
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<List>
@@ -23,8 +25,8 @@ export function UserActions(props: {user: User}){
 					<ListItemIcon>
 						<Key/>	
 					</ListItemIcon>
-					<ListItemText primary={t('user.actions.genToken.title')} secondary={t(`user.actions.genToken.desc`)}/>
-					<Button onClick={() => setOpen(true)}>{t('common.create')}</Button>
+					<ListItemText primary={t('user.actions.genToken.title')} secondary={t(props.user.name === uid ? `user.actions.genToken.cannotGenSelf` : `user.actions.genToken.desc`)}/>
+					<Button disabled={props.user.name === uid} onClick={() => setOpen(true)}>{t('common.create')}</Button>
 				</ListItem>
 			</List>
 			<TokenDialog user={props.user} open={open} close={() => setOpen(false)}/>

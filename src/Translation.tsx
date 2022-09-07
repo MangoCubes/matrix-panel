@@ -244,7 +244,8 @@ const resources = {
 						until: 'Valid until:',
 						descUntil: 'Token will be valid until set date.',
 						expiryCond: 'Token will not expire even if this user logs out from everything using /logout/all endpoint. However, the token will expire if you call this endpoint (/logout/all) yourself.',
-						tokenHere: 'Generated token will appear here:'
+						tokenHere: 'Generated token will appear here:',
+						cannotGenSelf: 'Token cannot be generated for your own account.'
 					}
 				}
 			}
