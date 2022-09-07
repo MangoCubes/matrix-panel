@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { User } from "../../../types/User";
+import { UserActions } from "./UserActions";
 import { UserDetails } from "./UserDetails";
 import { UserDetailsEdit } from "./UserDetailsEdit";
 import { UserDevices } from "./UserDevices";
@@ -15,7 +16,8 @@ enum TabName {
 	Options = 'options',
 	Sessions = 'sessions',
 	Devices = 'devices',
-	Rooms = 'rooms'
+	Rooms = 'rooms',
+	Actions = 'actions'
 }
 
 export function UserDetailsPage(props: {users: User[] | null, reload: () => void}){
@@ -86,6 +88,7 @@ export function UserDetailsPage(props: {users: User[] | null, reload: () => void
 		else if(currentTab === TabName.Devices) return <UserDevices user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Sessions) return <UserSessions user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Rooms) return <UserRooms user={user}/>
+		else if(currentTab === TabName.Actions) return <UserActions user={user}/>
 		else return <Box sx={{flex: 1}}></Box>;
 	}
 
@@ -110,6 +113,7 @@ export function UserDetailsPage(props: {users: User[] | null, reload: () => void
 						<Tab disabled={disableTabs || props.users === null} value={TabName.Sessions} label={t('user.sessions.title')}/>
 						<Tab disabled={disableTabs || props.users === null} value={TabName.Devices} label={t('user.devices.title')}/>
 						<Tab disabled={disableTabs || props.users === null} value={TabName.Rooms} label={t('user.rooms.title')}/>
+						<Tab disabled={disableTabs || props.users === null} value={TabName.Actions} label={t('user.actions.title')}/>
 					</Tabs>
 				</Box>
 				{getCurrentContent()}

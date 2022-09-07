@@ -16,6 +16,7 @@ const resources = {
 				disabled: 'Disabled',
 				confirm: 'Confirm',
 				you: '(You)',
+				create: 'Create',
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -231,6 +232,20 @@ const resources = {
 				},
 				details: {
 					title: 'User Details'
+				},
+				actions: {
+					title: 'User Actions',
+					genToken: {//user.actions.genToken.title
+						title: 'Generate Access Token',
+						desc: 'Generate access token that can be used as a way to impersonate this user. The user will not be able to see that you have generated one.',
+						expiry: 'Select token expiry',
+						indef: 'Indefinite (No expiry)',
+						descIndef: 'Token will not expire and can be used indefinitely.',
+						until: 'Valid until:',
+						descUntil: 'Token will be valid until set date.',
+						expiryCond: 'Token will not expire even if this user logs out from everything using /logout/all endpoint. However, the token will expire if you call this endpoint (/logout/all) yourself.',
+						tokenHere: 'Generated token will appear here:'
+					}
 				}
 			}
 		}
