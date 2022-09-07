@@ -1,4 +1,4 @@
-import { Key } from "@mui/icons-material";
+import { Campaign, Key } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Typography, CardContent, Collapse, Dialog, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, Stack, TextField, Button, DialogActions } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
@@ -7,6 +7,7 @@ import { Moment } from "moment";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { HTTPError } from "../../../class/error/HTTPError";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GenerateUserTokenQuery } from "../../../query/GenerateUserTokenQuery";
 import { SendNoticeQuery } from "../../../query/SendNoticeQuery";
@@ -40,7 +41,7 @@ export function UserActions(props: {user: User}){
 			<List>
 				<ListItem>
 					<ListItemIcon>
-						<Key/>	
+						<Campaign/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.actions.notice.title')} secondary={t(`user.actions.notice.desc`)}/>
 					<Button onClick={() => setOpen(DialogType.Notice)}>{t('common.send')}</Button>
@@ -73,7 +74,14 @@ function NoticeDialog(props: {user: User, open: boolean, close: () => void}){
 			toast.success(t('user.actions.notice.success'));
 			props.close();
 		} catch (e) {
-			if(e instanceof Error)handleCommonErrors(e, t);
+			const locallyHandled = [400];
+			if (e instanceof Error) {
+				if(e instanceof HTTPError && locallyHandled.includes(e.errCode)){
+					if(e.errCode === 400) toast.error(t('user.actions.notice.notEnabled'));
+					return;
+				}
+				handleCommonErrors(e, t);
+			}
 		} finally {
 			setQuerying(false);
 		}

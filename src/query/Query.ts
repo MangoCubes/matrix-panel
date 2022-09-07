@@ -215,8 +215,8 @@ export abstract class Query<T extends QueryType>{
 
 	private async process(res: Response) {
 		const ret = await res.json();
-		if(res.status < 200 || res.status > 299) throw new HTTPError(res.status, ret.errcode);
 		console.log(ret);
+		if(res.status < 200 || res.status > 299) throw new HTTPError(res.status, ret.errcode);
 		return ret as QueryResponse[T];
 	}
 }

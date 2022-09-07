@@ -257,7 +257,8 @@ const resources = {
 							title: 'Enter Notice Message',
 							label: 'Message'
 						},
-						success: 'Notice has been sent to this user.'
+						success: 'Notice has been sent to this user.',
+						notEnabled: 'Server notice feature has not been enabled on this server. Please enable this in your server\'s homeserver.yaml.'
 					}
 				}
 			}
