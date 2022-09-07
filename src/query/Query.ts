@@ -26,7 +26,8 @@ export enum QueryType{
 	SetCanonicalAlias,
 	EditUser,
 	GetUserMembership,
-	PurgeHistory
+	PurgeHistory,
+	GenerateUserToken
 }
 
 export type QueryResponse = {
@@ -86,6 +87,9 @@ export type QueryResponse = {
 	};
 	[QueryType.PurgeHistory]: {
 		purge_id: string;
+	};
+	[QueryType.GenerateUserToken]: {
+		access_token: string;
 	};
 }
 
@@ -167,7 +171,11 @@ export type QueryParams = {
 		rid: RoomID;
 		local: boolean;
 		ts: number;
-	}
+	};
+	[QueryType.GenerateUserToken]: {
+		valid_until_ms?: number;
+		uid: UserID;
+	};
 }
 
 export abstract class Query<T extends QueryType>{
