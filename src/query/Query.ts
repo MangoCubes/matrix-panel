@@ -206,9 +206,9 @@ export abstract class Query<T extends QueryType>{
 	abstract fetch(): Promise<Response>;
 
 	private async process(res: Response) {
-		const ret = (await res.json()) as QueryResponse[T];
-		if(res.status < 200 || res.status > 299) throw new HTTPError(res.status);
+		const ret = await res.json();
+		if(res.status < 200 || res.status > 299) throw new HTTPError(res.status, ret.errcode);
 		console.log(ret);
-		return ret;
+		return ret as QueryResponse[T];
 	}
 }
