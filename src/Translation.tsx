@@ -47,7 +47,9 @@ const resources = {
 				rooms: 'Rooms',
 				spaces: 'Spaces',
 				users: 'Users',
-				overview: 'Overview'
+				overview: 'Overview',
+				logout: 'Logout',
+				logoutSuccess: 'You have been logged out.'
 			},
 			rooms: {
 				title: 'Manage Rooms',
