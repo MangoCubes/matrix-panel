@@ -28,7 +28,8 @@ export enum QueryType{
 	GetUserMembership,
 	PurgeHistory,
 	GenerateUserToken,
-	Logout
+	Logout,
+	SendNotice
 }
 
 export type QueryResponse = {
@@ -93,6 +94,9 @@ export type QueryResponse = {
 		access_token: string;
 	};
 	[QueryType.Logout]: {};
+	[QueryType.SendNotice]: {
+		event_id: string;
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
@@ -179,6 +183,10 @@ export type QueryParams = {
 		uid: FullUserID;
 	};
 	[QueryType.Logout]: {};
+	[QueryType.SendNotice]: {
+		uid: FullUserID;
+		message: string;
+	};
 }
 
 export abstract class Query<T extends QueryType>{
