@@ -92,6 +92,12 @@ const resources = {
 						shared: 'All previous events in this room to members',
 						world_readable: 'All previous events in this room to anyone'
 					},
+					guest: {
+						name: 'Guest Access',
+						can_join: 'Allowed',
+						forbidden: 'Forbidden'
+					},
+					version: 'Room Version',
 					joinRule: {
 						name: 'Joining Rule',
 						public: 'Anyone can join',

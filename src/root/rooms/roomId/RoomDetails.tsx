@@ -1,4 +1,4 @@
-import { AccountTree, Add, History, Info, Lock, PersonAdd, SupervisorAccount } from "@mui/icons-material";
+import { AccountTree, Add, History, Info, Lock, NoAccounts, PersonAdd, PrivacyTip, SupervisorAccount } from "@mui/icons-material";
 import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress, IconButton } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -122,6 +122,14 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 				<ListItem>
 					<ListItemIcon><PersonAdd/></ListItemIcon>
 					<ListItemText primary={getJoinRuleText()} secondary={t('room.details.joinRule.name')}/>
+				</ListItem>
+				<ListItem>
+					<ListItemIcon><NoAccounts/></ListItemIcon>
+					<ListItemText primary={t('room.details.guest.' + props.room.guest_access)} secondary={t('room.details.guest.name')}/>
+				</ListItem>
+				<ListItem>
+					<ListItemIcon><PrivacyTip/></ListItemIcon>
+					<ListItemText primary={props.room.version} secondary={t('room.details.version')}/>
 				</ListItem>
 				{additionalItems()}
 			</List>
