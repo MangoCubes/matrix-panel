@@ -29,7 +29,8 @@ export enum QueryType{
 	PurgeHistory,
 	GenerateUserToken,
 	Logout,
-	SendNotice
+	SendNotice,
+	GetServerVersion
 }
 
 export type QueryResponse = {
@@ -96,6 +97,12 @@ export type QueryResponse = {
 	[QueryType.Logout]: {};
 	[QueryType.SendNotice]: {
 		event_id: string;
+	};
+	[QueryType.GetServerVersion]: {
+		server: {
+			name: string;
+			version: string;
+		};
 	};
 }
 
@@ -187,6 +194,7 @@ export type QueryParams = {
 		uid: FullUserID;
 		message: string;
 	};
+	[QueryType.GetServerVersion]: {};
 }
 
 export abstract class Query<T extends QueryType>{
