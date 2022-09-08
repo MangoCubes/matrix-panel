@@ -17,7 +17,8 @@ const resources = {
 				confirm: 'Confirm',
 				you: '(You)',
 				create: 'Create',
-				send: 'Send'
+				send: 'Send',
+				help: 'Help'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -40,7 +41,9 @@ const resources = {
 				login: 'Login',
 				wrong: 'Wrong username or password.',
 				notAdmin: 'You are not admin on this server.',
-				success: 'You have successfully logged in as {{name}}.'
+				success: 'You have successfully logged in as {{name}}.',
+				helpTitle: 'How To Become Admin',
+				helpBody: 'Server admin differs from room admin, and there are none by default. To become a server admin, you must set \'admin\' value to 1 in the \'users\' table. Visit the following website for more information.'
 			},
 			sidebar: {
 				reload: 'Reload',

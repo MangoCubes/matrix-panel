@@ -11,7 +11,7 @@ export function ConfirmationPopup(props: {open: boolean, cancel: () => void, con
 	}
 
 	return (
-		<Dialog open={props.open}>
+		<Dialog open={props.open} onClose={props.cancel}>
 			<DialogTitle>{props.title}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>{props.body}</DialogContentText>

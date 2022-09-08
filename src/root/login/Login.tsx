@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button, Stack } from "@mui/material";
+import { Box, Typography, TextField, Button, Stack, Dialog, DialogContent, DialogContentText, DialogTitle, Link, Divider } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ export function Login () {
 	const [password, setPassword] = useState('');
 	const [homeserver, setHomeserver] = useState(preset === null ? '': preset);
 	const [querying, setQuerying] = useState<boolean>(false);
+	const [open, setOpen] = useState(false);
 	
 	const login = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -69,6 +70,24 @@ export function Login () {
 				<TextField required disabled={querying} variant='standard' label={t('login.password')} type='password' value={password} onChange={(e) => setPassword(e.currentTarget.value)}/>
 				<Button disabled={querying} type='submit' fullWidth>{t('login.login')}</Button>
 			</Stack>
+			<Divider sx={{mt: 2}}/>
+			<Button onClick={() => setOpen(true)}>{t('common.help')}</Button>
+			<AdminHelpDialog open={open} close={() => setOpen(false)}/>
 		</Box>
+	)
+}
+
+function AdminHelpDialog(props: {open: boolean, close: () => void}) {
+
+	const {t} = useTranslation();
+
+	return (
+		<Dialog open={props.open} onClose={props.close}>
+			<DialogTitle>{t('login.helpTitle')}</DialogTitle>
+			<DialogContent>
+				<DialogContentText>{t('login.helpBody')}</DialogContentText>
+				<Link href='#' onClick={() => window.open('https://matrix-org.github.io/synapse/latest/usage/administration/admin_api/index.html')}>https://matrix-org.github.io/synapse/latest/usage/administration/admin_api/index.html</Link>
+			</DialogContent>
+		</Dialog>
 	)
 }
