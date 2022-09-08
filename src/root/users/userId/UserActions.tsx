@@ -80,7 +80,8 @@ function NoticeDialog(props: {user: User, open: boolean, close: () => void}){
 					if(e.errCode === 400) toast.error(t('user.actions.notice.notEnabled'));
 					return;
 				}
-				handleCommonErrors(e, t);
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
 			}
 		} finally {
 			setQuerying(false);
@@ -123,7 +124,10 @@ function TokenDialog(props: {user: User, open: boolean, close: () => void}){
 			const res = await req.send();
 			setUserToken(res.access_token);
 		} catch (e) {
-			if(e instanceof Error)handleCommonErrors(e, t);
+			if(e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 		}

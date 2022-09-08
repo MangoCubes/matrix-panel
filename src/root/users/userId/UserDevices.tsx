@@ -52,7 +52,10 @@ export function UserDevices(props: {user: User, disableTabs: (to: boolean) => vo
 			toast.success(t('user.devices.success', {count: devices.length}));
 			setReload(true);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 		}
@@ -67,7 +70,10 @@ export function UserDevices(props: {user: User, disableTabs: (to: boolean) => vo
 			const res = await req.send();
 			setDevices(res.devices);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 

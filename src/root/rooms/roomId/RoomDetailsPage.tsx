@@ -60,7 +60,10 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 			const res = await req.send();
 			setCurrentState({states: res.state, room: room, rooms: roomList, step: LoadState.Done});
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 

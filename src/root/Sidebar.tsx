@@ -29,7 +29,10 @@ export function Sidebar(){
 			toast.success(t('sidebar.logoutSuccess'));
 			sessionStorage.clear();
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 		}

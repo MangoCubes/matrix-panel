@@ -44,7 +44,10 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 			toast.success(success);
 			if (reload) props.reload();
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 		}
@@ -136,7 +139,8 @@ function PurgeDialog(props: {rid: RoomID, open: boolean, close: () => void}) {
 					if(e.errCode === 404) toast.error(t('room.options.purge.dialog.noMessage'))
 					return;
 				}
-				handleCommonErrors(e, t);
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
 			}
 		} finally {
 			setQuerying(false);

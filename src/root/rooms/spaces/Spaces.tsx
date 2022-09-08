@@ -2,6 +2,7 @@ import { Refresh } from "@mui/icons-material";
 import { AppBar, Box, CircularProgress, IconButton, List, Toolbar, Typography } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { BulkGetRoomState } from "../../../query/bulk/BulkGetRoomState";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -41,7 +42,10 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 			}
 			setRoomStates(roomStates);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 

@@ -72,7 +72,10 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 			props.reload();
 			toast.success(t('user.options.success'));
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 			props.disableTabs(false);

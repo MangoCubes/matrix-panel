@@ -49,7 +49,10 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 			toast.success(t('room.details.deleteSuccess', {rid: props.room.room_id}));
 			nav('../');
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 		}

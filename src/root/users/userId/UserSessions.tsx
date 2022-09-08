@@ -2,6 +2,7 @@ import { CardContent } from "@mui/material";
 import { GridColumns, DataGrid, GridValueFormatterParams } from "@mui/x-data-grid";
 import { useRef, useContext, useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GetSessionsQuery } from "../../../query/GetSessionsQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -39,7 +40,10 @@ export function UserSessions(props: {user: User, disableTabs: (disable: boolean)
 			const res = await req.send();
 			setSessions(res.devices[''].sessions[0]);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@ import { CardContent } from "@mui/material";
 import { GridColumns, DataGrid } from "@mui/x-data-grid";
 import { useState, useRef, useContext, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GetUserMembershipQuery } from "../../../query/GetUserMembershipQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
@@ -34,7 +35,10 @@ export default function UserRooms(props: {user: User}) {
 			const res = await req.send();
 			setRooms(res.joined_rooms);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 

@@ -52,7 +52,8 @@ export function Login () {
 					}
 					return;
 				}
-				handleCommonErrors(e, t);
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
 			}
 		} finally {
 			setQuerying(false);

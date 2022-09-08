@@ -1,6 +1,7 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Routes, Route } from "react-router-dom";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../functions/handleCommonErrors";
 import { GetUsersQuery } from "../../query/GetUsersQuery";
 import { LoginContext } from "../../storage/LoginInfo";
@@ -31,7 +32,10 @@ export function UserLoader(){
 			if(idx !== -1) userList.unshift(userList.splice(idx, 1)[0]);
 			setUsers(res.users);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 

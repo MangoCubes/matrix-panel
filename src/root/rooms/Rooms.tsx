@@ -81,7 +81,10 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 			else toast.warn(t('rooms.bulkPartialDelete', {success: len, failed: res.length - len}));
 			props.reload();
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		} finally {
 			setQuerying(false);
 		}

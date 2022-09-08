@@ -79,7 +79,8 @@ export function RoomMembers(props: {room: Room, states: MembershipEvent[], reloa
 					if(e.errCode === 403) toast.error(t('room.members.cannotRemoveAdmin')); // TODO: Synapse admin API does not provide a way for server admin to manipulate room states regardless of other's membership. When that becomes possible, remove this.
 					return;
 				}
-				handleCommonErrors(e, t);
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
 			}
 		} finally {
 			setQuerying(false);

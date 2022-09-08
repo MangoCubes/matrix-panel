@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Routes } from "react-router-dom";
+import { toast } from "react-toastify";
 import handleCommonErrors from "../../functions/handleCommonErrors";
 import { GetRoomsQuery } from "../../query/GetRoomsQuery";
 import { LoginContext } from "../../storage/LoginInfo";
@@ -29,7 +30,10 @@ export function RoomLoader(){
 			const res = await req.send();
 			setRooms(res.rooms);
 		} catch (e) {
-			if (e instanceof Error) handleCommonErrors(e, t);
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
 		}
 	}
 
