@@ -106,7 +106,7 @@ export type QueryResponse = {
 	};
 }
 
-export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login> ? AccessToken : null;
+export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login | QueryType.GetServerVersion> ? AccessToken : null;
 
 export type QueryParams = {
 	[QueryType.Login]: {

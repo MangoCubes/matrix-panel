@@ -1,7 +1,7 @@
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Skeleton, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-export function InfoCard(props: {title: string, value: string}){
+export function InfoCard(props: {title: string, value: string | null}){
 
 	const {t} = useTranslation();
 
@@ -10,7 +10,7 @@ export function InfoCard(props: {title: string, value: string}){
 			<Card>
 				<CardContent>
 					<Typography>{t(props.title)}</Typography>
-					<Typography variant='h5'>{props.value}</Typography>
+					<Typography variant='h5'>{props.value === null ? <Skeleton/> : props.value}</Typography>
 				</CardContent>
 			</Card>
 		</Grid>
