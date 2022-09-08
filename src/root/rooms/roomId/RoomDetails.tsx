@@ -25,7 +25,7 @@ function RoomChildren(props: {parent: Room, children: Room[]}){
 			</IconButton>
 		}>
 			<ListItemIcon><AccountTree/></ListItemIcon>
-			<ListItemText primary={t('room.details.children.value', {count: props.children.length})} secondary={t('room.details.children.name')}/>
+			<ListItemText primary={t('room.details.children.name')} secondary={t('room.details.children.value', {count: props.children.length})}/>
 		</ListItem>
 		</>
 	)
@@ -75,7 +75,7 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 		if (parent) items.push (
 			<ListItem key='parent'>
 				<ListItemIcon><SupervisorAccount/></ListItemIcon>
-				<ListItemText primary={<Link href='#' onClick={() => nav(`/rooms/${parent.state_key}`)}>{parent.state_key}</Link>} secondary={t('room.details.parent')}/>
+				<ListItemText primary={t('room.details.parent')} secondary={<Link href='#' onClick={() => nav(`/rooms/${parent.state_key}`)}>{parent.state_key}</Link>}/>
 			</ListItem>
 		);
 		if(childrenRooms.length !== 0) items.push(<RoomChildren key='children' parent={props.room} children={childrenRooms}/>);
@@ -109,27 +109,27 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 			<List>
 				<ListItem>
 					<ListItemIcon><Add/></ListItemIcon>
-					<ListItemText primary={<Link href='#' onClick={() => nav(`/users/${props.room.creator}`)}>{props.room.creator}</Link>} secondary={t('room.details.creator')}/>
+					<ListItemText primary={t('room.details.creator')} secondary={<Link href='#' onClick={() => nav(`/users/${props.room.creator}`)}>{props.room.creator}</Link>}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><Lock color={props.room.encryption === null ? 'error' : 'success'}/></ListItemIcon>
-					<ListItemText primary={props.room.encryption === null ? t('common.disabled') : `${t('common.enabled')} (${props.room.encryption})`} secondary={t('room.details.encryption')}/>
+					<ListItemText primary={t('room.details.encryption')} secondary={props.room.encryption === null ? t('common.disabled') : `${t('common.enabled')} (${props.room.encryption})`}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><History/></ListItemIcon>
-					<ListItemText primary={t('room.details.history.' + props.room.history_visibility)} secondary={t('room.details.history.name')}/>
+					<ListItemText primary={t('room.details.history.name')} secondary={t('room.details.history.' + props.room.history_visibility)}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><PersonAdd/></ListItemIcon>
-					<ListItemText primary={getJoinRuleText()} secondary={t('room.details.joinRule.name')}/>
+					<ListItemText primary={t('room.details.joinRule.name')} secondary={getJoinRuleText()}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><NoAccounts/></ListItemIcon>
-					<ListItemText primary={t('room.details.guest.' + props.room.guest_access)} secondary={t('room.details.guest.name')}/>
+					<ListItemText primary={t('room.details.guest.name')} secondary={t('room.details.guest.' + props.room.guest_access)}/>
 				</ListItem>
 				<ListItem>
 					<ListItemIcon><PrivacyTip/></ListItemIcon>
-					<ListItemText primary={props.room.version} secondary={t('room.details.version')}/>
+					<ListItemText primary={t('room.details.version')} secondary={props.room.version}/>
 				</ListItem>
 				{additionalItems()}
 			</List>
