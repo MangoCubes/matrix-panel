@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
+import { Overview } from "./Overview";
 import { RoomLoader } from "./rooms/RoomLoader";
 import { Sidebar } from "./Sidebar";
 import { UserLoader } from "./users/UserLoader";
@@ -12,6 +13,7 @@ export function MainPage(){
 				<Routes>
 					<Route path={'rooms/*'} element={<RoomLoader/>}/>
 					<Route path={'users/*'} element={<UserLoader/>}/>
+					<Route path={''} element={<Overview/>}/>
 				</Routes>
 			</Box>
 		</Box>

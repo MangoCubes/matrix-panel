@@ -44,13 +44,13 @@ export function Login () {
 				nav('/');
 			} else toast.error(t('login.notAdmin')); // Should not be reachable, though
 		} catch (e) {
-			const locallyHandled = [403];
+			const locallyHandled = [404, 403];
 			if (e instanceof Error) {
 				if(e instanceof HTTPError && locallyHandled.includes(e.errCode)){
 					if(e.errCode === 403) {
 						if (auth) toast.error(t('login.notAdmin'));
 						else toast.error(t('login.wrong'));
-					}
+					} else if(e.errCode === 404) toast.error(t('login.notFound'));
 					return;
 				}
 				const msg = handleCommonErrors(e);
