@@ -71,7 +71,7 @@ export function MainPage(){
 					<Routes>
 						<Route path={'rooms/*'} element={<RoomLoader rooms={rooms}/>}/>
 						<Route path={'users/*'} element={<UserLoader users={users}/>}/>
-						<Route path={''} element={<Overview/>}/>
+						<Route path={''} element={<Overview rooms={rooms} users={users}/>}/>
 					</Routes>
 				</Box>
 			</Box>

@@ -14,7 +14,7 @@ export function Users(props: {users: User[] | null}){
 	const nav = useNavigate();
 
 	const {uid} = useContext(LoginContext);
-	const {reloadRooms} = useContext(ReloadContext);
+	const {reloadUsers} = useContext(ReloadContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -61,7 +61,7 @@ export function Users(props: {users: User[] | null}){
 					<Box sx={{flex: 1}}/>
 					<Tooltip title={t('common.reload')} key='reload'>
 						<span>
-							<IconButton onClick={reloadRooms} disabled={props.users === null}>
+							<IconButton onClick={reloadUsers} disabled={props.users === null}>
 								<Refresh/>
 							</IconButton>
 						</span>

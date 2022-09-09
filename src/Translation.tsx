@@ -47,7 +47,10 @@ const resources = {
 				notFound: 'Cannot login. Make sure the server runs Synapse as this web app is not compatible with others.'
 			},
 			overview: {
-				version: 'Synapse Version'	
+				version: 'Synapse version',
+				userCount: 'Total number of users',
+				roomCount: 'Total number of rooms',
+				spaceCount: 'Total number of spaces'
 			},
 			sidebar: {
 				reload: 'Reload',
