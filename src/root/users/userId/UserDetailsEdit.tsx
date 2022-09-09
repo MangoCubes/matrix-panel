@@ -1,12 +1,13 @@
 import { PersonOff, AdminPanelSettings, Badge, Password } from "@mui/icons-material";
 import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField, DialogActions, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { DeactivateQuery } from "../../../query/DeactivateQuery";
 import { EditUserQuery, EditUserQueryData } from "../../../query/EditUserQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
+import { ReloadContext } from "../../../storage/Reloads";
 import { User } from "../../../types/User";
 
 
@@ -22,9 +23,11 @@ type UserData = {
 	userType: null | 'bot' | 'support';
 }
 
-export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void, reload: () => void}) {
+export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void}) {
 
 	const {t} = useTranslation();
+
+	const {reloadUsers} = useContext(ReloadContext);
 
 	const {homeserver, uid, token} = useContext(LoginContext);
 
@@ -69,7 +72,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 				const disableReq = new DeactivateQuery(homeserver, {user: props.user.name}, token);
 				await Promise.allSettled([disableReq.send(), req.send()]);
 			} else await req.send();
-			props.reload();
+			reloadUsers();
 			toast.success(t('user.options.success'));
 		} catch (e) {
 			if (e instanceof Error) {

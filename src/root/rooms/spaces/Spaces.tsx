@@ -6,13 +6,14 @@ import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { BulkGetRoomState } from "../../../query/bulk/BulkGetRoomState";
 import { LoginContext } from "../../../storage/LoginInfo";
+import { ReloadContext } from "../../../storage/Reloads";
 import { Room, RoomWithState } from "../../../types/Room";
 import { RoomID } from "../../../types/Types";
 import { SpaceItem } from "./SpaceItem";
 
 export type RoomMap = {[rid: RoomID]: RoomWithState};
 
-export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
+export function Spaces(props: {rooms: Room[] | null}){
 
 	const [roomStates, setRoomStates] = useState<RoomMap | null>(null);
 
@@ -21,6 +22,7 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 	const {t} = useTranslation();
 
 	const {homeserver, token} = useContext(LoginContext);
+	const {reloadRooms} = useContext(ReloadContext);
 
 	const getStates = async (rooms: Room[]) => {
 		setRoomStates(null);
@@ -75,7 +77,7 @@ export function Spaces(props: {rooms: Room[] | null, reload: () => void}){
 		if(list.length === 0) return (
 			<Box sx={{flex: 1, flexFlow: 'column'}} display='flex' alignItems='center' justifyContent='center'>
 				<Typography>{t('spaces.noSpace')}</Typography>
-				<IconButton onClick={() => props.reload()}>
+				<IconButton onClick={reloadRooms}>
 					<Refresh/>
 				</IconButton>
 			</Box>

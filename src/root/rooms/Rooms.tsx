@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import handleCommonErrors from "../../functions/handleCommonErrors";
 import { BulkDeleteRooms } from "../../query/bulk/BulkDeleteRooms";
 import { LoginContext } from "../../storage/LoginInfo";
+import { ReloadContext } from "../../storage/Reloads";
 import { Room } from "../../types/Room";
 import { RoomID } from "../../types/Types";
 import { ConfirmationPopup } from "../popup/ConfirmationPopup";
@@ -17,10 +18,10 @@ type MemberCount = {
 	local: number;
 }
 
-export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
+export function Rooms(props: {rooms: Room[] | null}){
 
 	const {t} = useTranslation();
-
+	
 	const nav = useNavigate();
 
 	const [sel, setSel] = useState<GridSelectionModel>([]);
@@ -28,6 +29,7 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 	const [open, setOpen] = useState(false);
 
 	const {homeserver, token} = useContext(LoginContext);
+	const {reloadRooms} = useContext(ReloadContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -79,7 +81,7 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 			for(const r of res) if(r === null) len--;
 			if(len === res.length) toast.success(t('rooms.bulkDelete', {count: len}));
 			else toast.warn(t('rooms.bulkPartialDelete', {success: len, failed: res.length - len}));
-			props.reload();
+			reloadRooms();
 		} catch (e) {
 			if (e instanceof Error) {
 				const msg = handleCommonErrors(e);
@@ -94,7 +96,7 @@ export function Rooms(props: {rooms: Room[] | null, reload: () => void}){
 		if(sel.length === 0) return (
 			<Tooltip title={t('common.reload')}>
 				<span>
-					<IconButton edge='end' onClick={props.reload} disabled={props.rooms === null || querying}>
+					<IconButton edge='end' onClick={reloadRooms} disabled={props.rooms === null || querying}>
 						<Refresh/>
 					</IconButton>
 				</span>

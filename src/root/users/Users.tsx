@@ -5,14 +5,16 @@ import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../storage/LoginInfo";
+import { ReloadContext } from "../../storage/Reloads";
 import { User } from "../../types/User";
-export function Users(props: {users: User[] | null, reload: () => void}){
+export function Users(props: {users: User[] | null}){
 
 	const {t} = useTranslation();
 
 	const nav = useNavigate();
 
 	const {uid} = useContext(LoginContext);
+	const {reloadUsers} = useContext(ReloadContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
@@ -59,7 +61,7 @@ export function Users(props: {users: User[] | null, reload: () => void}){
 					<Box sx={{flex: 1}}/>
 					<Tooltip title={t('common.reload')} key='reload'>
 						<span>
-							<IconButton onClick={props.reload} disabled={props.users === null}>
+							<IconButton onClick={reloadUsers} disabled={props.users === null}>
 								<Refresh/>
 							</IconButton>
 						</span>

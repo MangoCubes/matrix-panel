@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GetRoomStateQuery } from "../../../query/GetRoomStateQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
+import { ReloadContext } from "../../../storage/Reloads";
 import { Room, RoomState, RoomWithState } from "../../../types/Room";
 import { RoomDetails } from "./RoomDetails";
 import { RoomDetailsEdit } from "./RoomDetailsEdit";
@@ -40,13 +41,14 @@ type Loading = {
 
 type AllLoadingStates = Loading | {step: LoadState.Invalid};
 
-export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void}){
+export function RoomDetailsPage(props: {rooms: Room[] | null}){
 
 	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
 	const [disableTabs, setDisableTabs] = useState<boolean>(false);
 	const [currentState, setCurrentState] = useState<AllLoadingStates>({step: LoadState.LoadingRoom});
 
 	const {homeserver, token} = useContext(LoginContext);
+	const {reloadRooms} = useContext(ReloadContext);
 
 	const con = useRef<AbortController | null>(null);
 
@@ -131,7 +133,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 			...l.room,
 			states: l.states
 		};
-		if(currentTab === TabName.Options) return <RoomDetailsEdit fullReload={props.reload} reload={reloadStates} room={room} disableTabs={setDisableTabs}/>;
+		if(currentTab === TabName.Options) return <RoomDetailsEdit fullReload={reloadRooms} reload={reloadStates} room={room} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Members) {
 			const states = [];
 			for(const s of l.states) if(s.type === 'm.room.member') states.push(s);
@@ -154,7 +156,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 				<Box sx={{flex: 1}}/>
 				<Tooltip title={t('common.reload')}>
 					<span>
-						<IconButton edge='end' onClick={props.reload} disabled={props.rooms === null || currentState.step !== LoadState.Done}>
+						<IconButton edge='end' onClick={reloadRooms} disabled={props.rooms === null || currentState.step !== LoadState.Done}>
 							<Refresh/>
 						</IconButton>
 					</span>
