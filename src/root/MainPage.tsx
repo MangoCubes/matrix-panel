@@ -63,7 +63,11 @@ export function MainPage(){
 	return (
 		<ReloadContext.Provider value={{
 			reloadUsers: getUsers,
-			reloadRooms: getRooms
+			reloadRooms: getRooms,
+			reloadAll: async () => {
+				getUsers();
+				getRooms();
+			}
 		}}>
 			<Box sx={{display: 'flex', width: '100vw', height: '100vh'}}>
 				<Sidebar/>
