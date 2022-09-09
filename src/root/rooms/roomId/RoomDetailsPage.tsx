@@ -131,7 +131,7 @@ export function RoomDetailsPage(props: {rooms: Room[] | null, reload: () => void
 			...l.room,
 			states: l.states
 		};
-		if(currentTab === TabName.Options) return <RoomDetailsEdit reload={props.reload} room={room} disableTabs={setDisableTabs}/>;
+		if(currentTab === TabName.Options) return <RoomDetailsEdit reload={reloadStates} room={room} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Members) {
 			const states = [];
 			for(const s of l.states) if(s.type === 'm.room.member') states.push(s);

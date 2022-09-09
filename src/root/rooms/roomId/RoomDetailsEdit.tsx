@@ -109,7 +109,8 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 	}
 
 	const toggleBlock = async () => {
-		await sendQuery(true, new BlockRoomQuery(homeserver, {rid: props.room.room_id, block: !blocked}, token), t(`room.options.block.success${blocked ? 'Unblock' : ''}`));
+		await sendQuery(false, new BlockRoomQuery(homeserver, {rid: props.room.room_id, block: !blocked}, token), t(`room.options.block.success${blocked ? 'Unblock' : ''}`));
+		getBlockedStatus();
 	}
 
 	const getBlockedItem = () => {
