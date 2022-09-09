@@ -31,7 +31,8 @@ export enum QueryType{
 	Logout,
 	SendNotice,
 	GetServerVersion,
-	BlockRoom
+	BlockRoom,
+	GetBlockStatus
 }
 
 export type QueryResponse = {
@@ -105,7 +106,11 @@ export type QueryResponse = {
 			version: string;
 		};
 	};
-	[QueryType.BlockRoom]: {};	
+	[QueryType.BlockRoom]: {};
+	[QueryType.GetBlockStatus]: {
+		block: boolean;
+		user_id: FullUserID;
+	};
 }
 
 export type NeedToken<T extends QueryType> = T extends Exclude<QueryType, QueryType.Login | QueryType.GetServerVersion> ? AccessToken : null;
@@ -200,7 +205,10 @@ export type QueryParams = {
 	[QueryType.BlockRoom]: {
 		rid: RoomID;
 		block: boolean;
-	}
+	};
+	[QueryType.GetBlockStatus]: {
+		rid: RoomID;
+	};
 }
 
 export abstract class Query<T extends QueryType>{
