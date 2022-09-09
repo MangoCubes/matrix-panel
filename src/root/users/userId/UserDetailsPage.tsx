@@ -20,7 +20,7 @@ enum TabName {
 	Actions = 'actions'
 }
 
-export function UserDetailsPage(props: {users: User[] | null, reload: () => void}){
+export function UserDetailsPage(props: {users: User[] | null}){
 
 	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
 	const [disableTabs, setDisableTabs] = useState<boolean>(false);
@@ -84,7 +84,7 @@ export function UserDetailsPage(props: {users: User[] | null, reload: () => void
 		const user = props.users.find(u => u.name === uid);
 		if(!user) return false;
 		if(currentTab === TabName.Details) return <UserDetails/>;
-		else if(currentTab === TabName.Options) return <UserDetailsEdit user={user} disableTabs={setDisableTabs} reload={props.reload}/>;
+		else if(currentTab === TabName.Options) return <UserDetailsEdit user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Devices) return <UserDevices user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Sessions) return <UserSessions user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Rooms) return <UserRooms user={user}/>
