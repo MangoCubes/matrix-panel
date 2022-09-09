@@ -30,21 +30,23 @@ export function UserActions(props: {user: User}){
 	return (
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<List>
-				<ListItem>
+				<ListItem secondaryAction={
+					<Button disabled={props.user.name === uid} onClick={() => setOpen(DialogType.Token)}>{t('common.create')}</Button>
+				}>
 					<ListItemIcon>
 						<Key/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.actions.genToken.title')} secondary={t(props.user.name === uid ? `user.actions.genToken.cannotGenSelf` : `user.actions.genToken.desc`)}/>
-					<Button disabled={props.user.name === uid} onClick={() => setOpen(DialogType.Token)}>{t('common.create')}</Button>
 				</ListItem>
 			</List>
 			<List>
-				<ListItem>
+				<ListItem secondaryAction={
+					<Button onClick={() => setOpen(DialogType.Notice)}>{t('common.send')}</Button>
+				}>
 					<ListItemIcon>
 						<Campaign/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.actions.notice.title')} secondary={t(`user.actions.notice.desc`)}/>
-					<Button onClick={() => setOpen(DialogType.Notice)}>{t('common.send')}</Button>
 				</ListItem>
 			</List>
 			<TokenDialog user={props.user} open={open === DialogType.Token} close={() => setOpen(DialogType.None)}/>

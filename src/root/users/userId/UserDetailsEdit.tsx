@@ -86,19 +86,21 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 		<>
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<List>
-				<ListItem>
+				<ListItem secondaryAction={
+					<Switch edge='end' checked={userData.deactivated} disabled={querying} onChange={() => setUserData({...userData, deactivated: !userData.deactivated})}/>
+				}>
 					<ListItemIcon>
 						<PersonOff/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.options.deactivate.title')} secondary={t(`user.options.deactivate.desc${props.user.name === uid ? 'Self' : ''}`)}/>
-					<Switch edge='end' checked={userData.deactivated} disabled={querying} onChange={() => setUserData({...userData, deactivated: !userData.deactivated})}/>
 				</ListItem>
-				<ListItem>
+				<ListItem secondaryAction={
+					<Switch edge='end' checked={userData.admin} disabled={props.user.name === uid || querying} onChange={() => setUserData({...userData, admin: !userData.admin})} />
+				}>
 					<ListItemIcon>
 						<AdminPanelSettings/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.options.admin.title')} secondary={t(`user.options.admin.desc${props.user.name === uid ? 'Self' : ''}`)}/>
-					<Switch edge='end' checked={userData.admin} disabled={props.user.name === uid || querying} onChange={() => setUserData({...userData, admin: !userData.admin})} />
 				</ListItem>
 				<ListItem>
 					<ListItemIcon>
@@ -107,12 +109,13 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 					<ListItemText primary={t('user.options.displayName.title')} secondary={t(`user.options.displayName.desc`)}/>
 					<TextField variant='standard' value={userData.displayName} disabled={querying} onChange={e => setUserData({...userData, displayName: e.currentTarget.value})}/>
 				</ListItem>
-				<ListItem>
+				<ListItem secondaryAction={
+					<Button onClick={() => setOpen(true)}>{t('user.options.password.reset')}</Button>
+				}>
 					<ListItemIcon>
 						<Password/>	
 					</ListItemIcon>
 					<ListItemText primary={t('user.options.password.title')} secondary={t(`user.options.password.desc`)}/>
-					<Button onClick={() => setOpen(true)}>{t('user.options.password.reset')}</Button>
 				</ListItem>
 			</List>
 		</CardContent>
