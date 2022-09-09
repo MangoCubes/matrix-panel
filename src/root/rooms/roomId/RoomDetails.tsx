@@ -1,12 +1,8 @@
 import { AccountTree, Add, History, Info, Lock, NoAccounts, PersonAdd, PrivacyTip, SupervisorAccount, Error as ErrorIcon } from "@mui/icons-material";
-import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress, IconButton } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { CardContent, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress, IconButton } from "@mui/material";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import handleCommonErrors from "../../../functions/handleCommonErrors";
-import { DeleteRoomQuery } from "../../../query/DeleteRoomQuery";
-import { LoginContext } from "../../../storage/LoginInfo";
 import { Room, RoomJoinRuleEvent, RoomState } from "../../../types/Room";
 import { ChildrenDialog } from "./ChildrenDialog";
 
@@ -35,28 +31,7 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 
 	const {t} = useTranslation();
 
-	const {homeserver, token} = useContext(LoginContext);
-
-	const [querying, setQuerying] = useState<boolean>(false);
-
 	const nav = useNavigate();
-
-	const deleteRoom = async () => {
-		setQuerying(true);
-		try{
-			const req = new DeleteRoomQuery(homeserver, {rid: props.room.room_id}, token);
-			await req.send();
-			toast.success(t('room.details.deleteSuccess', {rid: props.room.room_id}));
-			nav('../');
-		} catch (e) {
-			if (e instanceof Error) {
-				const msg = handleCommonErrors(e);
-				if (msg) toast.error(t(msg));
-			}
-		} finally {
-			setQuerying(false);
-		}
-	}
 
 	const additionalItems = () => {
 		if(props.states === null) return (
@@ -84,10 +59,6 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 		if(childrenRooms.length !== 0) items.push(<RoomChildren key='children' parent={props.room} children={childrenRooms}/>);
 		return items;
 	}
-
-	useEffect(() => {
-		props.disableTabs(querying);
-	}, [querying]);
 
 	const getJoinRuleText = () => {
 		const rule = t('room.details.joinRule.' + props.room.join_rules);
@@ -134,7 +105,6 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 	}
 
 	return (
-		<>
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<List>
 				<ListItem>
@@ -149,9 +119,5 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 				{additionalItems()}
 			</List>
 		</CardContent>
-		<CardActions>
-			<Button sx={{ml: 'auto'}} color='error' disabled={querying} onClick={() => deleteRoom()}>{t('room.details.delete')}</Button>
-		</CardActions>
-		</>
 	);
 }

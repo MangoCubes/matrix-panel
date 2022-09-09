@@ -1,4 +1,4 @@
-import { AdminPanelSettings, Mail, PersonAdd, History, Block } from "@mui/icons-material";
+import { AdminPanelSettings, Mail, PersonAdd, History, Block, Delete } from "@mui/icons-material";
 import { Button, CardContent, Checkbox, CircularProgress, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -17,8 +17,10 @@ import { Moment } from "moment";
 import { HTTPError } from "../../../class/error/HTTPError";
 import { GetBlockStatusQuery } from "../../../query/GetBlockStatusQuery";
 import { BlockRoomQuery } from "../../../query/BlockRoomQuery";
+import { useNavigate } from "react-router-dom";
+import { DeleteRoomQuery } from "../../../query/DeleteRoomQuery";
 
-export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, disableTabs: (to: boolean) => void}){
+export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, fullReload: () => void, disableTabs: (to: boolean) => void}){
 
 	const {t} = useTranslation();
 
@@ -27,6 +29,8 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 	const [querying, setQuerying] = useState<boolean>(false);
 	const [open, setOpen] = useState(false);
 	const [blocked, setBlocked] = useState<boolean | null>(null);
+
+	const nav = useNavigate();
 
 	const con = useRef<AbortController>(new AbortController());
 
@@ -57,6 +61,12 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 
 	const setRoomAdmin = async (isInvite: boolean) => {
 		await sendQuery(true, new SetUserRoomAdminQuery(homeserver, {rid: props.room.room_id, uid: uid}, token), isInvite ? t('room.options.join.success') : t('room.options.admin.success'));
+	}
+
+	const deleteRoom = async () => {
+		await sendQuery(false, new DeleteRoomQuery(homeserver, {rid: props.room.room_id}, token), t('room.details.deleteSuccess', {rid: props.room.room_id}));
+		props.fullReload();
+		nav('../');
 	}
 
 	const sendQuery = async (reload: boolean, query: Query<QueryType>, success: string) => {
@@ -144,6 +154,14 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 					<ListItemText primary={t(`room.options.purge.name`)} secondary={t(`room.options.purge.desc`)}/>
 				</ListItem>
 				{getBlockedItem()}
+				<ListItem secondaryAction={
+					<Button color='error' disabled={querying} onClick={deleteRoom}>{t('common.delete')}</Button>
+				}>
+					<ListItemIcon>
+						<Delete/>
+					</ListItemIcon>
+					<ListItemText primary={t(`room.options.delete.name`)} secondary={t(`room.options.delete.desc`)}/>
+				</ListItem>
 			</List>
 			<PurgeDialog rid={props.room.room_id} open={open} close={() => setOpen(false)}/>
 		</CardContent>

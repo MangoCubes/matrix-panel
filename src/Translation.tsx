@@ -88,7 +88,6 @@ const resources = {
 				noName: '<Unnamed>',
 				details: {
 					title: 'Room Details',
-					delete: 'Delete Room',
 					deleteSuccess: 'Room "{{rid}}" has been deleted successfully.',
 					creator: 'Room Creator',
 					encryption: 'Encryption',
@@ -170,6 +169,10 @@ const resources = {
 							noMessage: 'There are no messages to delete within the selected timeframe.',
 							deleteLocal: 'Delete local messages too'
 						}
+					},
+					delete: {
+						name: 'Delete Room',
+						desc: 'Delete a room. This action is irreversible.'
 					}
 				},
 				members: {
