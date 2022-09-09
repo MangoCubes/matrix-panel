@@ -140,6 +140,16 @@ const resources = {
 						desc: 'Give yourself highest permission available in this room. Try this if you are getting invalid permission error.',
 						success: 'You are now admin of this room.'
 					},
+					block: {
+						name: 'Block Room',
+						nameUnblock: 'Unblock Room',
+						desc: 'Block room to prevent all users from joining this room.',
+						descUnblock: 'Unblock room to allow users to join this room again.',
+						block: 'Block',
+						unblock: 'Unblock',
+						success: 'Room is now blocked.',
+						successUnblock: 'Room is now unblocked.'
+					},
 					purge: {
 						name: 'Purge History',
 						purge: 'Purge',

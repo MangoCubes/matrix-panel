@@ -1,7 +1,7 @@
-import { AdminPanelSettings, Mail, PersonAdd, History } from "@mui/icons-material";
-import { Button, CardContent, Checkbox, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
+import { AdminPanelSettings, Mail, PersonAdd, History, Block } from "@mui/icons-material";
+import { Button, CardContent, Checkbox, CircularProgress, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, List, ListItem, ListItemIcon, ListItemText, Radio, RadioGroup, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { toast } from "react-toastify";
@@ -15,6 +15,8 @@ import { MembershipEvent, RoomWithState } from "../../../types/Room";
 import { RoomID } from "../../../types/Types";
 import { Moment } from "moment";
 import { HTTPError } from "../../../class/error/HTTPError";
+import { GetBlockStatusQuery } from "../../../query/GetBlockStatusQuery";
+import { BlockRoomQuery } from "../../../query/BlockRoomQuery";
 
 export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void, disableTabs: (to: boolean) => void}){
 
@@ -24,10 +26,30 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 
 	const [querying, setQuerying] = useState<boolean>(false);
 	const [open, setOpen] = useState(false);
+	const [blocked, setBlocked] = useState<boolean | null>(null);
+
+	const con = useRef<AbortController>(new AbortController());
 
 	useEffect(() => {
 		props.disableTabs(querying);
 	}, [querying]);
+
+	const getBlockedStatus = async () => {
+		try{
+			const req = new GetBlockStatusQuery(homeserver, {rid: props.room.room_id}, token, con.current);
+			const res = await req.send();
+			setBlocked(res.block);
+		} catch(e){
+			if (e instanceof Error) {
+				const msg = handleCommonErrors(e);
+				if (msg) toast.error(t(msg));
+			}
+		}
+	}
+
+	useEffect(() => {
+		getBlockedStatus();
+	}, []);
 
 	const joinRoom = async () => {
 		await sendQuery(true, new JoinRoomQuery(homeserver, {rid: props.room.room_id}, token), t('room.options.join.success'));
@@ -86,6 +108,28 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 		)
 	}
 
+	const toggleBlock = async () => {
+		await sendQuery(true, new BlockRoomQuery(homeserver, {rid: props.room.room_id, block: !blocked}, token), t(`room.options.block.success${blocked ? 'Unblock' : ''}`));
+	}
+
+	const getBlockedItem = () => {
+		if(blocked === null) return (
+			<ListItem>
+				<CircularProgress/>
+			</ListItem>
+		);
+		else return (
+			<ListItem secondaryAction={
+				<Button onClick={toggleBlock} disabled={querying}>{t(`room.options.block.${blocked ? 'unblock' : 'block'}`)}</Button>
+			}>
+				<ListItemIcon>
+					<Block/>
+				</ListItemIcon>
+				<ListItemText primary={t(`room.options.block.name${blocked ? 'Unblock' : ''}`)} secondary={t(`room.options.block.desc${blocked ? 'Unblock' : ''}`)}/>
+			</ListItem>
+		);
+	}
+
 	return (
 		<CardContent>
 			<List>
@@ -98,6 +142,7 @@ export function RoomDetailsEdit(props: {room: RoomWithState, reload: () => void,
 					</ListItemIcon>
 					<ListItemText primary={t(`room.options.purge.name`)} secondary={t(`room.options.purge.desc`)}/>
 				</ListItem>
+				{getBlockedItem()}
 			</List>
 			<PurgeDialog rid={props.room.room_id} open={open} close={() => setOpen(false)}/>
 		</CardContent>
