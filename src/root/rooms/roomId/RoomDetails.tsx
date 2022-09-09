@@ -1,4 +1,4 @@
-import { AccountTree, Add, History, Info, Lock, NoAccounts, PersonAdd, PrivacyTip, SupervisorAccount } from "@mui/icons-material";
+import { AccountTree, Add, History, Info, Lock, NoAccounts, PersonAdd, PrivacyTip, SupervisorAccount, Error as ErrorIcon } from "@mui/icons-material";
 import { CardContent, CardActions, Button, List, ListItem, ListItemIcon, ListItemText, Link, CircularProgress, IconButton } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -106,6 +106,33 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 		} else return rule;
 	}
 
+	const roomDetails = () => {
+		if(props.room.joined_members === 0) return [
+			<ListItem key='dead'>
+				<ListItemIcon><ErrorIcon/></ListItemIcon>
+				<ListItemText primary={t('room.details.dead.name')} secondary={t('room.details.dead.desc')}/>
+			</ListItem>
+		];
+		else return [
+			<ListItem key='enc'>
+				<ListItemIcon><Lock color={props.room.encryption === null ? 'error' : 'success'}/></ListItemIcon>
+				<ListItemText primary={t('room.details.encryption')} secondary={props.room.encryption === null ? t('common.disabled') : `${t('common.enabled')} (${props.room.encryption})`}/>
+			</ListItem>,
+			<ListItem key='history'>
+				<ListItemIcon><History/></ListItemIcon>
+				<ListItemText primary={t('room.details.history.name')} secondary={t('room.details.history.' + props.room.history_visibility)}/>
+			</ListItem>,
+			<ListItem key='joinRule'>
+				<ListItemIcon><PersonAdd/></ListItemIcon>
+				<ListItemText primary={t('room.details.joinRule.name')} secondary={getJoinRuleText()}/>
+			</ListItem>,
+			<ListItem key='guest'>
+				<ListItemIcon><NoAccounts/></ListItemIcon>
+				<ListItemText primary={t('room.details.guest.name')} secondary={t('room.details.guest.' + props.room.guest_access)}/>
+			</ListItem>
+		]
+	}
+
 	return (
 		<>
 		<CardContent sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
@@ -114,22 +141,7 @@ export function RoomDetails(props: {allRooms: Room[], room: Room, states: RoomSt
 					<ListItemIcon><Add/></ListItemIcon>
 					<ListItemText primary={t('room.details.creator')} secondary={<Link href='#' onClick={() => nav(`/users/${props.room.creator}`)}>{props.room.creator}</Link>}/>
 				</ListItem>
-				<ListItem>
-					<ListItemIcon><Lock color={props.room.encryption === null ? 'error' : 'success'}/></ListItemIcon>
-					<ListItemText primary={t('room.details.encryption')} secondary={props.room.encryption === null ? t('common.disabled') : `${t('common.enabled')} (${props.room.encryption})`}/>
-				</ListItem>
-				<ListItem>
-					<ListItemIcon><History/></ListItemIcon>
-					<ListItemText primary={t('room.details.history.name')} secondary={t('room.details.history.' + props.room.history_visibility)}/>
-				</ListItem>
-				<ListItem>
-					<ListItemIcon><PersonAdd/></ListItemIcon>
-					<ListItemText primary={t('room.details.joinRule.name')} secondary={getJoinRuleText()}/>
-				</ListItem>
-				<ListItem>
-					<ListItemIcon><NoAccounts/></ListItemIcon>
-					<ListItemText primary={t('room.details.guest.name')} secondary={t('room.details.guest.' + props.room.guest_access)}/>
-				</ListItem>
+				{roomDetails()}
 				<ListItem>
 					<ListItemIcon><PrivacyTip/></ListItemIcon>
 					<ListItemText primary={t('room.details.version')} secondary={props.room.version}/>

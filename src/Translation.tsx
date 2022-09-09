@@ -92,6 +92,10 @@ const resources = {
 					deleteSuccess: 'Room "{{rid}}" has been deleted successfully.',
 					creator: 'Room Creator',
 					encryption: 'Encryption',
+					dead: {
+						name: 'Dead Room',
+						desc: 'This room has no members, and therefore one can join this room anymore. You can delete this room in Room Options tab.'
+					},
 					history: {
 						name: 'History Visibility',
 						invited: 'Since they were invited',
