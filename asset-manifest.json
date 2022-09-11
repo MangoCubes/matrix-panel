@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/matrix-panel/static/css/main.3d10672c.css",
-    "main.js": "/matrix-panel/static/js/main.07a24148.js",
+    "main.js": "/matrix-panel/static/js/main.bf81c842.js",
     "index.html": "/matrix-panel/index.html",
     "main.3d10672c.css.map": "/matrix-panel/static/css/main.3d10672c.css.map",
-    "main.07a24148.js.map": "/matrix-panel/static/js/main.07a24148.js.map"
+    "main.bf81c842.js.map": "/matrix-panel/static/js/main.bf81c842.js.map"
   },
   "entrypoints": [
     "static/css/main.3d10672c.css",
-    "static/js/main.07a24148.js"
+    "static/js/main.bf81c842.js"
   ]
 }
