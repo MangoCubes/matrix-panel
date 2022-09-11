@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Room } from "../../../types/Room";
 import { User } from "../../../types/User";
 import { UserActions } from "./UserActions";
 import { UserDetails } from "./UserDetails";
@@ -20,7 +21,7 @@ enum TabName {
 	Actions = 'actions'
 }
 
-export function UserDetailsPage(props: {users: User[] | null}){
+export function UserDetailsPage(props: {users: User[] | null, rooms: Room[] | null}){
 
 	const [currentTab, setCurrentTab] = useState<TabName>(TabName.Details);
 	const [disableTabs, setDisableTabs] = useState<boolean>(false);
@@ -87,7 +88,7 @@ export function UserDetailsPage(props: {users: User[] | null}){
 		else if(currentTab === TabName.Options) return <UserDetailsEdit user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Devices) return <UserDevices user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Sessions) return <UserSessions user={user} disableTabs={setDisableTabs}/>;
-		else if(currentTab === TabName.Rooms) return <UserRooms user={user}/>
+		else if(currentTab === TabName.Rooms) return <UserRooms user={user} rooms={props.rooms}/>
 		else if(currentTab === TabName.Actions) return <UserActions user={user}/>
 		else return <Box sx={{flex: 1}}></Box>;
 	}

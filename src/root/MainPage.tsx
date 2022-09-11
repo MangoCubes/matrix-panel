@@ -74,7 +74,7 @@ export function MainPage(){
 				<Box sx={{flex: 1, height: '100%'}}>
 					<Routes>
 						<Route path={'rooms/*'} element={<RoomLoader rooms={rooms}/>}/>
-						<Route path={'users/*'} element={<UserLoader users={users}/>}/>
+						<Route path={'users/*'} element={<UserLoader users={users} rooms={rooms}/>}/>
 						<Route path={''} element={<Overview rooms={rooms} users={users}/>}/>
 					</Routes>
 				</Box>

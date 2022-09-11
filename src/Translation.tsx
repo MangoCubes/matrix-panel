@@ -267,7 +267,8 @@ const resources = {
 				},
 				rooms: {
 					title: 'Joined Rooms',
-					id: 'Room ID'
+					id: 'Room ID',
+					name: 'Room Name'
 				},
 				types: {
 					normal: 'Normal',

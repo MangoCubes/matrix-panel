@@ -1,4 +1,4 @@
-import { CardContent } from "@mui/material";
+import { Button, CardActions, CardContent } from "@mui/material";
 import { GridColumns, DataGrid } from "@mui/x-data-grid";
 import { useState, useRef, useContext, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,14 +6,15 @@ import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GetUserMembershipQuery } from "../../../query/GetUserMembershipQuery";
 import { LoginContext } from "../../../storage/LoginInfo";
+import { Room } from "../../../types/Room";
 import { RoomID } from "../../../types/Types";
 import { User } from "../../../types/User";
 
-export default function UserRooms(props: {user: User}) {
+export default function UserRooms(props: {user: User, rooms: Room[] | null}) {
 	const {t} = useTranslation();
 
-	const [reload, setReload] = useState(true);
 	const [rooms, setRooms] = useState<RoomID[] | null>(null);
+	const [rows, setRows] = useState<{id: string, name: string}[] | null>(null);
 
 	const con = useRef<AbortController | null>(null);
 
@@ -22,13 +23,13 @@ export default function UserRooms(props: {user: User}) {
 	const columns = useMemo<GridColumns>(
 		() => [
 			{field: 'id', headerName: t('user.rooms.id'), flex: 2},
+			{field: 'name', headerName: t('user.rooms.name'), flex: 2}
 		],
 		[]
 	);
 
 	const getRooms = async () => {
 		setRooms(null);
-		setReload(false);
 		try{
 			const req = new GetUserMembershipQuery(homeserver, {uid: props.user.name}, token);
 			con.current = req.con;
@@ -43,8 +44,12 @@ export default function UserRooms(props: {user: User}) {
 	}
 
 	useEffect(() => {
-		if(reload) getRooms();
-	}, [reload]);
+		getRooms();
+	}, []);
+
+	useEffect(() => {
+		getRows();
+	}, [rooms, props.rooms]);
 
 	useEffect(() => {
 		return () => {
@@ -53,15 +58,19 @@ export default function UserRooms(props: {user: User}) {
 	}, []);
 
 	const getRows = () => {
-		if(rooms){
+		if(rooms && props.rooms){
 			const rows = [];
 			for(const r of rooms){
+				const room = props.rooms.find(room => room.room_id === r);
+				if(!room) continue;
 				rows.push({
 					id: r,
+					name: room.name
 				});
 			}
+			setRows(rows);
 			return rows;
-		} else return [];
+		} else setRows(null);
 	}
 
 	return (
@@ -70,10 +79,13 @@ export default function UserRooms(props: {user: User}) {
 			<DataGrid
 				sx={{flex: 1}}
 				columns={columns}
-				rows={getRows()}
-				loading={rooms === null}
+				rows={rows === null ? [] : rows}
+				loading={rows === null}
 			/>
 		</CardContent>
+		<CardActions>
+			<Button onClick={getRooms}>{t('common.reload')}</Button>
+		</CardActions>
 		</>
 	);
 }
