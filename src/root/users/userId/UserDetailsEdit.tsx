@@ -1,5 +1,5 @@
 import { PersonOff, AdminPanelSettings, Badge, Password } from "@mui/icons-material";
-import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField, DialogActions, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, FormControl, TextField, DialogActions, Dialog, DialogContent, DialogTitle, Stack, MenuItem, Select } from "@mui/material";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -10,6 +10,11 @@ import { LoginContext } from "../../../storage/LoginInfo";
 import { ReloadContext } from "../../../storage/Reloads";
 import { User } from "../../../types/User";
 
+enum Type {
+	Normal = 'normal',
+	Support = 'support',
+	Bot = 'bot'
+}
 
 type UserData = {
 	password: null | {
@@ -20,7 +25,7 @@ type UserData = {
 	avatar: string | null;
 	deactivated: boolean;
 	admin: boolean;
-	userType: null | 'bot' | 'support';
+	userType: Type;
 }
 
 export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) => void}) {
@@ -37,7 +42,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 		avatar: props.user.avatar_url,
 		deactivated: props.user.deactivated === 1,
 		admin: props.user.admin === 1,
-		userType: props.user.user_type
+		userType: props.user.user_type === null ? Type.Normal : (props.user.user_type === 'bot' ? Type.Bot : Type.Support)
 	}
 
 	const [userData, setUserData] = useState<UserData>(defaultData);
@@ -65,7 +70,7 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 				data: {
 					...reqData,
 					admin: userData.admin,
-					user_type: userData.userType,
+					user_type: userData.userType === null ? null : (userData.userType === 'bot' ? 'bot' : 'support')
 				}
 			}, token);
 			if(!defaultData.deactivated && userData.deactivated){
@@ -114,6 +119,18 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 				</ListItem>
 				<ListItem secondaryAction={
 					<Button onClick={() => setOpen(true)}>{t('user.options.password.reset')}</Button>
+				}>
+					<ListItemIcon>
+						<Password/>	
+					</ListItemIcon>
+					<ListItemText primary={t('user.options.password.title')} secondary={t(`user.options.password.desc`)}/>
+				</ListItem>
+				<ListItem secondaryAction={
+					<Select label={t('user.types.type')} value={userData.userType} onChange={e => setUserData({...userData, userType: e.target.value as Type})} variant='standard'>
+						<MenuItem value={Type.Normal}>{t('user.types.normal')}</MenuItem>
+						<MenuItem value={Type.Bot}>{t('user.types.bot')}</MenuItem>
+						<MenuItem value={Type.Support}>{t('user.types.support')}</MenuItem>
+					</Select>
 				}>
 					<ListItemIcon>
 						<Password/>	

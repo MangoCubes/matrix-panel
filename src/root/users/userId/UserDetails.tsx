@@ -47,7 +47,7 @@ export function UserDetails(props: {user: User}){
 					<ListItemIcon>
 						<ManageAccounts/>
 					</ListItemIcon>
-					<ListItemText primary={t('user.details.accountType')} secondary={t(`user.details.${type}`)}/>
+					<ListItemText primary={t('user.details.accountType')} secondary={t(`user.types.${type}`)}/>
 				</ListItem>
 			</List>
 		</CardContent>

@@ -269,6 +269,12 @@ const resources = {
 					title: 'Joined Rooms',
 					id: 'Room ID'
 				},
+				types: {
+					normal: 'Normal',
+					support: 'Support',
+					bot: 'Bot',
+					type: 'Account Type'
+				},
 				details: {
 					title: 'User Details',
 					accountCreatedAt: 'Account Created At',
@@ -278,9 +284,7 @@ const resources = {
 					active: 'Active',
 					deactivated: 'Deactivated',
 					shadowBanned: 'Shadow Banned',
-					normal: 'Normal',
-					support: 'Support',
-					bot: 'Bot'
+					
 				},
 				actions: {
 					title: 'User Actions',
