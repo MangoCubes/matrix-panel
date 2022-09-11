@@ -1,7 +1,8 @@
-import { Button, CardActions, CardContent } from "@mui/material";
-import { GridColumns, DataGrid } from "@mui/x-data-grid";
+import { Button, CardActions, CardContent, Link } from "@mui/material";
+import { GridColumns, DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState, useRef, useContext, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import handleCommonErrors from "../../../functions/handleCommonErrors";
 import { GetUserMembershipQuery } from "../../../query/GetUserMembershipQuery";
@@ -14,15 +15,19 @@ export default function UserRooms(props: {user: User, rooms: Room[] | null}) {
 	const {t} = useTranslation();
 
 	const [rooms, setRooms] = useState<RoomID[] | null>(null);
-	const [rows, setRows] = useState<{id: string, name: string}[] | null>(null);
+	const [rows, setRows] = useState<{id: RoomID, name: string}[] | null>(null);
 
 	const con = useRef<AbortController | null>(null);
+
+	const nav = useNavigate();
 
 	const {homeserver, token} = useContext(LoginContext);
 
 	const columns = useMemo<GridColumns>(
 		() => [
-			{field: 'id', headerName: t('user.rooms.id'), flex: 2},
+			{field: 'id', headerName: t('user.rooms.id'), flex: 2, renderCell: (params: GridRenderCellParams<RoomID>) => (
+				<Link href='#' onClick={() => nav(`/rooms/${params.value}`)}>{params.value}</Link>
+			)},
 			{field: 'name', headerName: t('user.rooms.name'), flex: 2}
 		],
 		[]
