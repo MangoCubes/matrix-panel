@@ -1,4 +1,4 @@
-import { PersonOff, AdminPanelSettings, Badge, Password } from "@mui/icons-material";
+import { PersonOff, AdminPanelSettings, Badge, Password, ManageAccounts } from "@mui/icons-material";
 import { CardContent, List, ListItem, ListItemIcon, ListItemText, Switch, Button, CardActions, TextField, DialogActions, Dialog, DialogContent, DialogTitle, Stack, MenuItem, Select } from "@mui/material";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -126,16 +126,16 @@ export function UserDetailsEdit(props: {user: User, disableTabs: (to: boolean) =
 					<ListItemText primary={t('user.options.password.title')} secondary={t(`user.options.password.desc`)}/>
 				</ListItem>
 				<ListItem secondaryAction={
-					<Select label={t('user.types.type')} value={userData.userType} onChange={e => setUserData({...userData, userType: e.target.value as Type})} variant='standard'>
+					<Select label={t('user.types.type')} value={userData.userType} disabled={querying} onChange={e => setUserData({...userData, userType: e.target.value as Type})} variant='standard'>
 						<MenuItem value={Type.Normal}>{t('user.types.normal')}</MenuItem>
 						<MenuItem value={Type.Bot}>{t('user.types.bot')}</MenuItem>
 						<MenuItem value={Type.Support}>{t('user.types.support')}</MenuItem>
 					</Select>
 				}>
 					<ListItemIcon>
-						<Password/>	
+						<ManageAccounts/>	
 					</ListItemIcon>
-					<ListItemText primary={t('user.options.password.title')} secondary={t(`user.options.password.desc`)}/>
+					<ListItemText primary={t('user.options.type.title')} secondary={t(`user.options.type.desc`)}/>
 				</ListItem>
 			</List>
 		</CardContent>

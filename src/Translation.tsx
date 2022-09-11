@@ -249,6 +249,10 @@ const resources = {
 						desc: 'Set a name other users will see in a chatroom.',
 						displayName: 'Display Name'
 					},
+					type: {
+						title: 'Set Account Type',
+						desc: 'Edit what type of account this will be.'
+					},
 					success: 'User details updated successfully.'
 				},
 				sessions: {
