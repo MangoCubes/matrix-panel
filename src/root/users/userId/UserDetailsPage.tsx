@@ -83,7 +83,7 @@ export function UserDetailsPage(props: {users: User[] | null}){
 		);
 		const user = props.users.find(u => u.name === uid);
 		if(!user) return false;
-		if(currentTab === TabName.Details) return <UserDetails/>;
+		if(currentTab === TabName.Details) return <UserDetails user={user}/>;
 		else if(currentTab === TabName.Options) return <UserDetailsEdit user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Devices) return <UserDevices user={user} disableTabs={setDisableTabs}/>;
 		else if(currentTab === TabName.Sessions) return <UserSessions user={user} disableTabs={setDisableTabs}/>;

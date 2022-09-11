@@ -56,7 +56,7 @@ export function Overview(props: {users: User[] | null, rooms: Room[] | null}) {
 					</Tooltip>
 				</Toolbar>
 			</AppBar>
-				<Box m={2} sx={{flex: 1}}>
+			<Box m={2} sx={{flex: 1}}>
 				<Grid
 					container
 					spacing={2}

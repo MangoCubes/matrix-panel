@@ -18,7 +18,9 @@ const resources = {
 				you: '(You)',
 				create: 'Create',
 				send: 'Send',
-				help: 'Help'
+				help: 'Help',
+				yes: 'Yes',
+				no: 'No'
 			},
 			error: {
 				cannotConnect: 'Failed to query Matrix server.',
@@ -268,7 +270,17 @@ const resources = {
 					id: 'Room ID'
 				},
 				details: {
-					title: 'User Details'
+					title: 'User Details',
+					accountCreatedAt: 'Account Created At',
+					adminStatus: 'Admin Status',
+					accountStatus: 'Account Status',
+					accountType: 'Account Type',
+					active: 'Active',
+					deactivated: 'Deactivated',
+					shadowBanned: 'Shadow Banned',
+					normal: 'Normal',
+					support: 'Support',
+					bot: 'Bot'
 				},
 				actions: {
 					title: 'User Actions',
